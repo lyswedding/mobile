@@ -175,7 +175,7 @@ class _SignupState extends State<Signup> {
             ),
             child: FlatButton(
               child: Text(
-                "REGISTER",
+                "REGISTERr",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
