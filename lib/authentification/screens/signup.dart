@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/authentification/component/button.dart';
-import 'package:lys_wedding/authentification/component/custom_input.dart';
+import 'package:lys_wedding/authentification/components/button.dart';
+import 'package:lys_wedding/authentification/components/custom_input.dart';
 import 'package:lys_wedding/authentification/screens/login.dart';
 
 class Signup extends StatefulWidget {
@@ -24,26 +24,28 @@ class _SignupState extends State<Signup> {
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(children: [
-      Container(
-          height: 300,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(90)),
-              color: Colors.orange),
-          child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                Container(height: 150, child: Image.asset("images/icon.png")),
-                Container(
-                  padding: const EdgeInsets.only(right: 30),
-                  alignment: Alignment.bottomRight,
-                  child: const Text(
-                    "Register",
-                    style: TextStyle(fontSize: 40, color: Colors.white),
-                  ),
-                )
-              ]))),
+      Padding(padding: EdgeInsets.only(top: 50)),
+      Container(height: 100, child: Image.asset("images/icon.png")),
+      // Container(
+      //     height: 300,
+      //     decoration: const BoxDecoration(
+      //         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(90)),
+      //         color: Colors.orange),
+      //     child: Center(
+      //         child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //             crossAxisAlignment: CrossAxisAlignment.center,
+      //             children: [
+      //           Container(height: 150, child: Image.asset("images/icon.png")),
+      //           Container(
+      //             padding: const EdgeInsets.only(right: 30),
+      //             alignment: Alignment.bottomRight,
+      //             child: const Text(
+      //               "Register",
+      //               style: TextStyle(fontSize: 40, color: Colors.white),
+      //             ),
+      //           )
+      //         ]))),
       CustomInput(
         icon: const Icon(
           Icons.person,
@@ -67,6 +69,18 @@ class _SignupState extends State<Signup> {
         hint: "Confirm Password",
         controller: passwordController,
       ),
+      Container(
+        margin: EdgeInsets.only(left: 20),
+        child: Row(
+          children: [
+            Icon(Icons.check_box_outline_blank),
+            Text(
+              "I agree to terms of service and privacy policy",
+            )
+          ],
+        ),
+      ),
+
       GestureDetector(
         onTap: () {},
         child: Container(
@@ -79,7 +93,7 @@ class _SignupState extends State<Signup> {
                   colors: [(new Color(0xffF5591F)), new Color(0xffF2861E)],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight),
-              borderRadius: BorderRadius.circular(50),
+              borderRadius: BorderRadius.circular(10),
               color: Colors.grey[200],
               boxShadow: const [
                 BoxShadow(
@@ -98,6 +112,43 @@ class _SignupState extends State<Signup> {
                       ));
                 })),
       ),
+      Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Row(
+            children: const <Widget>[
+              Expanded(
+                child: Divider(
+                  color: Colors.black,
+                  height: 8.0,
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                'or continue with ',
+                style: TextStyle(color: Colors.black),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Divider(
+                  color: Colors.black,
+                  height: 8.0,
+                ),
+              )
+            ],
+          )),
+      Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(height: 100, child: Image.asset("images/icon.png")),
+              Container(height: 100, child: Image.asset("images/icon.png"))
+            ],
+          )),
       Container(
         margin: const EdgeInsets.only(top: 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [

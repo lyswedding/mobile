@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/home/screens/favorite/component/title_pages.dart';
+import 'package:lys_wedding/home/screens/favorite/components/title_pages.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({Key? key}) : super(key: key);
@@ -9,7 +9,7 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  String valuechoose = 'Item 1';
+  String valuechoose = 'prestataire';
   var Listitems = [
     "prestataire",
     "aaaa",

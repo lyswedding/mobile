@@ -15,11 +15,11 @@ class CustomInputState extends State<CustomInput> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.only(left: 20, right: 20, top: 40),
+      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
       padding: const EdgeInsets.only(left: 20, right: 20),
       height: 54,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(10),
         color: Colors.grey[200],
         boxShadow: [
           const BoxShadow(

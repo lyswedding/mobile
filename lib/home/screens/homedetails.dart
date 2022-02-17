@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/home/component/shared/item_row.dart';
-import 'package:lys_wedding/home/component/shared/title_for_pagrs.dart';
+import 'package:lys_wedding/home/components/shared/item_row.dart';
+import 'package:lys_wedding/home/components/shared/title_for_pagrs.dart';
 
 class HomeDetails extends StatefulWidget {
   const HomeDetails({Key? key}) : super(key: key);

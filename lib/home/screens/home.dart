@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/home/screens/favorite/screens/favoritePage.dart';
 import 'package:lys_wedding/home/screens/homedetails.dart';
-import 'package:lys_wedding/home/screens/liste.dart/screens/liste.dart';
 import 'package:lys_wedding/home/screens/profil/screens/profil.dart';
-import 'package:lys_wedding/home/search/screens/search.dart';
+import 'package:lys_wedding/home/screens/search/screens/search.dart';
+
+import 'liste/screens/liste.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -23,17 +24,11 @@ class _HomeState extends State<Home> {
     FavoritePage(),
     ProfilPage()
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[currentIndex],
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
-        backgroundColor: Colors.black,
-        child: const Icon(Icons.add),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.orange,
         unselectedItemColor: Colors.black,

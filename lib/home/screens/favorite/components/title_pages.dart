@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/home/screens/home.dart';
+
+import '../../homedetails.dart';
 
 class TitlePages extends StatelessWidget {
   const TitlePages({Key? key, required this.title}) : super(key: key);
@@ -13,11 +16,17 @@ class TitlePages extends StatelessWidget {
       Container(
           child: Row(
         children: [
-          const Icon(
-            Icons.arrow_back,
-          ),
+          IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Home(),
+                    ));
+              }),
           const Padding(
-            padding: EdgeInsets.only(left: 110),
+            padding: EdgeInsets.only(left: 90),
           ),
           Text(
             title,
