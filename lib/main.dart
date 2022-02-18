@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/screens/login.dart';
 import 'package:lys_wedding/authentification/screens/signup.dart';
-import 'package:lys_wedding/home/screens/home.dart';
+import 'package:lys_wedding/home/screens/buttom-navigation-bar.dart';
 
 void main() {
   runApp(const MyApp());

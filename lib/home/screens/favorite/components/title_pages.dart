@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/home/screens/home.dart';
-
-import '../../homedetails.dart';
+import 'package:lys_wedding/home/screens/buttom-navigation-bar.dart';
 
 class TitlePages extends StatelessWidget {
   const TitlePages({Key? key, required this.title}) : super(key: key);
