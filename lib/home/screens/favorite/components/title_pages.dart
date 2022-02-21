@@ -17,11 +17,7 @@ class TitlePages extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.pop(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Home(),
-                    ));
+                Navigator.pop(context);
               }),
           const Padding(
             padding: EdgeInsets.only(left: 90),
