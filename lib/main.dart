@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/screens/login.dart';
 import 'package:lys_wedding/authentification/screens/signup.dart';
+import 'package:lys_wedding/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/authentification/screens/splash_screen.dart';
 import 'package:lys_wedding/home/screens/home.dart';
 
