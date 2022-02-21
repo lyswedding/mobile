@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/authentification/components/button.dart';
 import 'package:lys_wedding/authentification/components/custom_input.dart';
 import 'package:lys_wedding/authentification/screens/signup.dart';
-import 'package:lys_wedding/home/screens/homedetails.dart';
 
-import '../../home/screens/home.dart';
+import '../../home/screens/buttom-navigation-bar.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
