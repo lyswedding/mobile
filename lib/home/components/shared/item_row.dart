@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ItemRow extends StatelessWidget {
-  const ItemRow(
+  ItemRow(
       {Key? key,
       required this.color,
       required this.title,
       required this.height,
       required this.width,
-      required this.Image})
+      required this.images})
       : super(key: key);
 
   final String title;
   final double height, width;
   final Color color;
-  final Image;
+  List images = [];
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class ItemRow extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
-                          image: AssetImage(Image), fit: BoxFit.fill)),
+                          image: AssetImage(images[index]), fit: BoxFit.fill)),
                 ),
               ),
             )
