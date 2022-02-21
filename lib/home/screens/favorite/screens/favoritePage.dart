@@ -19,6 +19,7 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('favoris'),),
         body: SingleChildScrollView(
             child: Column(children: [
       TitlePages(title: "Favorite"),

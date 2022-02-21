@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/screens/login.dart';
 import 'package:lys_wedding/authentification/screens/signup.dart';
+import 'package:lys_wedding/authentification/screens/splash_screen.dart';
 import 'package:lys_wedding/home/screens/home.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: Login(),
+      home: SplashScreen(),
     );
   }
 }
