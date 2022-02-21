@@ -45,99 +45,22 @@ class ItemListSearch extends StatelessWidget {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                                // Align(
-                                //   alignment: Alignment.bottomLeft,
-                                //   child: Container(
-                                //     decoration: BoxDecoration(
-                                //       color: Colors.white,
-                                //       borderRadius: BorderRadius.only(
-                                //         bottomLeft: Radius.circular(5.0),
-                                //         bottomRight: Radius.circular(5.0),
-                                //       ),
-                                //     ),
-                                //     child: Column(
-                                //       children: [
-                                //         Row(
-                                //           children: [
-                                //             Padding(
-                                //               padding: const EdgeInsets.only(
-                                //                   bottom: 40.0,
-                                //                   top: 10,
-                                //                   left: 5),
-                                //               child: Text(
-                                //                 text,
-                                //                 textAlign: TextAlign.center,
-                                //                 style: TextStyle(
-                                //                     color: Colors.black,
-                                //                     fontFamily: 'IranSansLight',
-                                //                     fontSize: 15.0),
-                                //               ),
-                                //             ),
-                                //           ],
-                                //         ),
-                                //       ],
-                                //     ),
-                                //   ),
-                                // ),
-                                // Align(
-                                //     alignment: Alignment.bottomLeft,
-                                //     child: Row(
-                                //       children: [
-                                //         Padding(
-                                //           padding: const EdgeInsets.only(
-                                //               bottom: 60.0, top: 10, left: 8),
-                                //         ),
-                                //         Icon(Icons.location_on_outlined),
-                                //         Text(
-                                //           "Coiffure ,maquillage ",
-                                //           textAlign: TextAlign.left,
-                                //           style: TextStyle(
-                                //               color: Colors.grey,
-                                //               fontFamily: 'IranSansLight',
-                                //               fontSize: 15.0),
-                                //         ),
-                                //       ],
-                                //     )),
-                                // Align(
-                                //     alignment: Alignment.bottomLeft,
-                                //     child: Row(
-                                //       children: [
-                                //         Padding(
-                                //           padding: const EdgeInsets.only(
-                                //               bottom: 40.0, top: 10, left: 8),
-                                //         ),
-                                //         Icon(Icons.location_on_outlined),
-                                //         Text(
-                                //           "1901 Thornridge Cir. Shiloh, Hawaii ",
-                                //           textAlign: TextAlign.left,
-                                //           style: TextStyle(
-                                //               color: Colors.grey,
-                                //               fontFamily: 'IranSansLight',
-                                //               fontSize: 15.0),
-                                //         ),
-                                //       ],
-                                //     )),
-                                // Align(
-                                //     alignment: Alignment.bottomLeft,
-                                //     child: Row(
-                                //       children: [
-                                //         Padding(
-                                //             padding: EdgeInsets.only(
-                                //                 left: 130, bottom: 100)),
-                                //         Icon(Icons.ac_unit),
-                                //         Text(
-                                //           "text",
-                                //           textAlign: TextAlign.left,
-                                //           style: TextStyle(
-                                //               color: Colors.grey,
-                                //               fontFamily: 'IranSansLight',
-                                //               fontSize: 15.0),
-                                //         ),
-                                //       ],
-                                //     )),
                                 Align(
                                     alignment: Alignment.topRight,
-                                    child: Icon(Icons.favorite)),
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Icon(
+                                        Icons.favorite,
+                                        color: Colors.white,
+                                        size: 35,
+                                      ),
+                                      // Icon(Icons.favorite))),
+                                    ))
                               ],
                             ),
                             Padding(
@@ -151,16 +74,32 @@ class ItemListSearch extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                    children: [Text("data"), Text("data")],
+                                    children: [
+                                      Text(text),
+                                      Row(
+                                        children: [
+                                          Text("412"),
+                                          Padding(padding: EdgeInsets.all(5)),
+                                          Text("views",
+                                              style:
+                                                  TextStyle(color: Colors.grey))
+                                        ],
+                                      )
+                                    ],
                                   ),
                                   Row(
-                                    children: [Text("Coiffure ,maquillage")],
+                                    children: [
+                                      Text("Coiffure ,maquillage",
+                                          style: TextStyle(color: Colors.grey))
+                                    ],
                                   ),
                                   Row(
                                     children: [
                                       Icon(Icons.location_on_outlined),
                                       Text(
-                                          "1901 Thornridge Cir. Shiloh, Hawaii")
+                                        "1901 Thornridge Cir. Shiloh, Hawaii",
+                                        style: TextStyle(color: Colors.grey),
+                                      )
                                     ],
                                   ),
                                 ],
