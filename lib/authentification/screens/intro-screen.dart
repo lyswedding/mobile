@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:intro_slider/scrollbar_behavior_enum.dart';
+import 'package:lys_wedding/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/home/screens/home.dart';
 
 

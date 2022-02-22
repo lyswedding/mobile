@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/authentification/screens/intro-screen.dart';
 import 'package:lys_wedding/constants.dart';
+import 'package:lys_wedding/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/home/screens/home.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -15,7 +16,7 @@ class SplashScreen extends StatelessWidget {
         const Duration(seconds: 5),
             () =>
             Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) =>  IntroScreen()))
+                builder: (BuildContext context) =>  Home()))
             );
     return Scaffold(
       backgroundColor: splashscreenColor,

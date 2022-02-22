@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/constants.dart';
 
 class CustomInput extends StatefulWidget {
   final icon;
@@ -17,10 +18,10 @@ class CustomInputState extends State<CustomInput> {
       alignment: Alignment.center,
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
       padding: const EdgeInsets.only(left: 20, right: 20),
-      height: 54,
+      height: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey[200],
+        color: whiteColor,
         boxShadow: [
           const BoxShadow(
               offset: const Offset(0, 10),

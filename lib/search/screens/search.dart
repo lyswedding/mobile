@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/components/custom_input.dart';
-import 'package:lys_wedding/home/components/item_list.dart';
-import 'package:lys_wedding/home/components/item_list.dart';
-import 'package:lys_wedding/home/components/list-images.dart';
-import 'package:lys_wedding/home/screens/favorite/components/listsfav.dart';
-import 'package:lys_wedding/home/screens/search/components/list_item_search.dart';
+import 'package:lys_wedding/home/components/shared/item_list.dart';
+import 'package:lys_wedding/search/components/list_item_search.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);

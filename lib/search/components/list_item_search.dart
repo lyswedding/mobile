@@ -26,7 +26,7 @@ class ItemListSearch extends StatelessWidget {
                         margin: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                 blurRadius: 0.5,
                                 color: Colors.white,
@@ -77,7 +77,7 @@ class ItemListSearch extends StatelessWidget {
                                     children: [
                                       Text(text),
                                       Row(
-                                        children: [
+                                        children: const [
                                           Text("412"),
                                           Padding(padding: EdgeInsets.all(5)),
                                           Text("views",
@@ -88,13 +88,13 @@ class ItemListSearch extends StatelessWidget {
                                     ],
                                   ),
                                   Row(
-                                    children: [
+                                    children: const [
                                       Text("Coiffure ,maquillage",
                                           style: TextStyle(color: Colors.grey))
                                     ],
                                   ),
                                   Row(
-                                    children: [
+                                    children: const [
                                       Icon(Icons.location_on_outlined),
                                       Text(
                                         "1901 Thornridge Cir. Shiloh, Hawaii",

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/home/components/item_list.dart';
+import 'package:lys_wedding/home/components/shared/item_list.dart';
 import 'package:lys_wedding/home/components/list-images.dart';
 import 'package:lys_wedding/home/components/shared/item_row.dart';
 

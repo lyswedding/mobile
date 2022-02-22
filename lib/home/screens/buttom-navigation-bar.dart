@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/home/screens/favorite/screens/favoritePage.dart';
+import 'package:lys_wedding/favorite/screens/favoritePage.dart';
 import 'package:lys_wedding/home/screens/home.dart';
-import 'package:lys_wedding/home/screens/profil/screens/profil.dart';
-import 'package:lys_wedding/home/screens/search/screens/search.dart';
+import 'package:lys_wedding/search/screens/search.dart';
+import 'package:lys_wedding/liste/screens/liste_page.dart';
+import 'package:lys_wedding/profil/screens/profil.dart';
 
-import 'liste/screens/liste.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
