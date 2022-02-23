@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/components/custom_input.dart';
 import 'package:lys_wedding/authentification/screens/signup.dart';
+import 'package:lys_wedding/home/screens/liste/screens/add-list/screens/add-lists.dart';
+import 'package:lys_wedding/home/screens/liste/screens/liste.dart';
 
 import '../../home/screens/buttom-navigation-bar.dart';
 
@@ -90,7 +92,7 @@ class _LoginState extends State<Login> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Home()));
+                              builder: (context) => const AddList()));
                     },
                     child: Text(
                       "Sign up",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/authentification/screens/login.dart';
 import 'package:lys_wedding/home/screens/liste/screens/add-list/components/add-list-input.dart';
 
 import '../../liste.dart';
@@ -26,7 +27,8 @@ class _AddListState extends State<AddList> {
           ),
           leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ListePage()));
               },
               icon: const Icon(
                 Icons.arrow_back,

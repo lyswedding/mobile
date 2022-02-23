@@ -26,6 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+        // backgroundColor: Colors.grey[200],
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -76,7 +77,7 @@ class _SearchPageState extends State<SearchPage> {
                 )
               ],
             ),
-            ItemList(text: "text", items: items, width: 150, height: 50),
+            ItemList(text: "", items: items, width: 150, height: 50),
             Row(children: const [
               Padding(padding: EdgeInsets.only(left: 16, top: 50, bottom: 10)),
               Text("Results"),

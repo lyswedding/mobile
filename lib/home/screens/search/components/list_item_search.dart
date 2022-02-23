@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/home/screens/search/screens/prestataire/screens/prestataire.dart';
 
 class ItemListSearch extends StatelessWidget {
   const ItemListSearch({
@@ -16,33 +17,41 @@ class ItemListSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Card(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: items
-                  .map((element) => Container(
-                        width: 380.0,
-                        height: 280.0,
-                        margin: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 0.5,
-                                color: Colors.white,
-                              )
-                            ]),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: items
+              .map((element) => Container(
+                    width: 380.0,
+                    height: 280.0,
+                    margin: EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white,
+                          )
+                        ]),
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const prestatairer()));
+                        },
                         child: Column(
                           children: [
                             Stack(
                               children: <Widget>[
                                 Align(
                                   alignment: Alignment.topCenter,
-                                  child: Image.asset(
-                                    element,
-                                    height: 200,
-                                    width: 400,
-                                    fit: BoxFit.cover,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.asset(
+                                      element,
+                                      height: 200,
+                                      width: 400,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                                 Align(
@@ -75,7 +84,18 @@ class ItemListSearch extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(text),
+                                      Container(
+                                          child: Row(
+                                        children: [
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 25, right: 10)),
+                                          Text(
+                                            text,
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                        ],
+                                      )),
                                       Row(
                                         children: [
                                           Text("412"),
@@ -89,13 +109,22 @@ class ItemListSearch extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 12, bottom: 30)),
                                       Text("Coiffure ,maquillage",
-                                          style: TextStyle(color: Colors.grey))
+                                          style: TextStyle(
+                                              color: Colors.grey[600]))
                                     ],
                                   ),
                                   Row(
                                     children: [
-                                      Icon(Icons.location_on_outlined),
+                                      Padding(
+                                          padding: EdgeInsets.only(left: 9)),
+                                      Icon(
+                                        Icons.location_on_outlined,
+                                        color: Colors.grey,
+                                      ),
                                       Text(
                                         "1901 Thornridge Cir. Shiloh, Hawaii",
                                         style: TextStyle(color: Colors.grey),
@@ -106,9 +135,9 @@ class ItemListSearch extends StatelessWidget {
                               ),
                             )
                           ],
-                        ),
-                      ))
-                  .toList())),
+                        )),
+                  ))
+              .toList()),
     );
   }
 }
