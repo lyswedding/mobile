@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/home/screens/profil/screens/modif_profil/screens/modif_profil.dart';
 
 class ProfilPage extends StatefulWidget {
   const ProfilPage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class _ProfilPageState extends State<ProfilPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+        backgroundColor: Colors.grey[200],
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -33,7 +35,7 @@ class _ProfilPageState extends State<ProfilPage> {
         body: SingleChildScrollView(
           child: Column(children: [
             Image.asset(
-              "images/icon.png",
+              "images/adel.png",
               scale: 3,
             ),
             const Text(
@@ -44,116 +46,123 @@ class _ProfilPageState extends State<ProfilPage> {
               "UserName@gmail.com",
               style: TextStyle(fontSize: 15),
             ),
-            Card(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.orange),
-                      height: 50,
-                      width: 800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Row(children: const [
-                              Icon(Icons.person),
-                              Padding(padding: EdgeInsets.only(left: 20)),
-                              Text('Informations'),
-                            ]),
-                          ),
-                          const Icon(Icons.arrow_forward_ios_outlined),
-                        ],
-                      )),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.orange),
-                      height: 50,
-                      width: 800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Row(children: const [
-                              Icon(Icons.favorite),
-                              Padding(padding: EdgeInsets.only(left: 20)),
-                              Text('prestataires'),
-                            ]),
-                          ),
-                          const Icon(Icons.arrow_forward_ios_outlined),
-                        ],
-                      )),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.orange),
-                      height: 50,
-                      width: 800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Row(children: const [
-                              Icon(Icons.list),
-                              Padding(padding: EdgeInsets.only(left: 20)),
-                              Text('Listes'),
-                            ]),
-                          ),
-                          const Icon(Icons.arrow_forward_ios_outlined),
-                        ],
-                      )),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.orange),
-                      height: 50,
-                      width: 800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Row(children: const [
-                              Icon(Icons.settings),
-                              Padding(padding: EdgeInsets.only(left: 20)),
-                              Text('Paramètres'),
-                            ]),
-                          ),
-                          const Icon(Icons.arrow_forward_ios_outlined),
-                        ],
-                      )),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.orange),
-                      height: 50,
-                      width: 800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Row(children: const [
-                              Icon(Icons.logout),
-                              Padding(padding: EdgeInsets.only(left: 20)),
-                              Text('Deconnexion'),
-                            ]),
-                          ),
-                          const Icon(Icons.arrow_forward_ios_outlined),
-                        ],
-                      )),
-                ],
-              ),
+            Column(
+              children: <Widget>[
+                Container(
+                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white),
+                    height: 50,
+                    width: 800,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ProfilPageModif()));
+                          },
+                          child: Row(children: const [
+                            Icon(Icons.person),
+                            Padding(padding: EdgeInsets.only(left: 20)),
+                            Text('Informations'),
+                            Padding(padding: EdgeInsets.only(right: 180)),
+                            const Icon(Icons.arrow_forward_ios_outlined),
+                          ]),
+                        )),
+                      ],
+                    )),
+                Container(
+                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white),
+                    height: 50,
+                    width: 800,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Row(children: const [
+                            Icon(Icons.favorite),
+                            Padding(padding: EdgeInsets.only(left: 20)),
+                            Text('prestataires'),
+                          ]),
+                        ),
+                        const Icon(Icons.arrow_forward_ios_outlined),
+                      ],
+                    )),
+                Container(
+                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white),
+                    height: 50,
+                    width: 800,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Row(children: const [
+                            Icon(Icons.list),
+                            Padding(padding: EdgeInsets.only(left: 20)),
+                            Text('Listes'),
+                          ]),
+                        ),
+                        const Icon(Icons.arrow_forward_ios_outlined),
+                      ],
+                    )),
+                Container(
+                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white),
+                    height: 50,
+                    width: 800,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Row(children: const [
+                            Icon(Icons.settings),
+                            Padding(padding: EdgeInsets.only(left: 20)),
+                            Text('Paramètres'),
+                          ]),
+                        ),
+                        const Icon(Icons.arrow_forward_ios_outlined),
+                      ],
+                    )),
+                Container(
+                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white),
+                    height: 50,
+                    width: 800,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Row(children: const [
+                            Icon(Icons.logout),
+                            Padding(padding: EdgeInsets.only(left: 20)),
+                            Text('Deconnexion'),
+                          ]),
+                        ),
+                        const Icon(Icons.arrow_forward_ios_outlined),
+                      ],
+                    )),
+              ],
             )
           ]),
         ));
