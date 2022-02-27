@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/screens/login.dart';
-import 'package:lys_wedding/home/screens/liste/screens/add-list/components/add-list-input.dart';
+import 'package:lys_wedding/home/screens/liste/screens/add_list/components/add-list-input.dart';
 
 import '../../liste.dart';
 
