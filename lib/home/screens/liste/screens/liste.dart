@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/authentification/screens/login.dart';
+import 'package:lys_wedding/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/home/screens/favorite/components/listsfav.dart';
 import 'package:lys_wedding/home/screens/liste/screens/add-list/screens/add-lists.dart';
 
@@ -25,7 +27,8 @@ class _ListePageState extends State<ListePage> {
         ),
         leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
             },
             icon: const Icon(
               Icons.arrow_back,
@@ -39,7 +42,7 @@ class _ListePageState extends State<ListePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const AddList(),
+                builder: (context) => const Login(),
               ));
         },
         backgroundColor: Colors.black,

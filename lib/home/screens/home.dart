@@ -30,8 +30,12 @@ class _HomeDetailsState extends State<HomeDetails> {
             "Bonjour",
             style: TextStyle(color: Colors.black),
           ),
-          leading: Transform.translate(
-            offset: const Offset(10, 0),
+          leading: Container(
+            //  Transform.translate(
+            // offset: const Offset(10, 0),
+            padding: EdgeInsets.only(top: 10),
+            // margin: EdgeInsets.symmetric(vertical: 5),
+
             child: Image.asset(
               "images/adel.png",
               height: 50,
