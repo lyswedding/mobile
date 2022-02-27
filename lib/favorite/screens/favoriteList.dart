@@ -3,18 +3,17 @@ import 'package:lys_wedding/constants.dart';
 import 'package:lys_wedding/liste/components/list_component.dart';
 import 'package:lys_wedding/search/components/list_item_search.dart';
 
-class FavoritePage extends StatefulWidget {
-  const FavoritePage({Key? key}) : super(key: key);
+class FavoriteList extends StatefulWidget {
+  const FavoriteList({Key? key}) : super(key: key);
 
   @override
-  _FavoritePageState createState() => _FavoritePageState();
+  _FavoriteListState createState() => _FavoriteListState();
 }
 
-class _FavoritePageState extends State<FavoritePage>
+class _FavoriteListState extends State<FavoriteList>
     with TickerProviderStateMixin {
   String valuechoose = 'prestataire';
   late AnimationController animationController;
-  late TabController _nestedTabController;
 
   var Listitems = [
     "prestataire",
@@ -36,24 +35,13 @@ class _FavoritePageState extends State<FavoritePage>
   void initState() {
     // TODO: implement initState
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
-
-    _nestedTabController = new TabController(length: 2, vsync: this);
-
+        duration: Duration(milliseconds: 2000), vsync: this);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _nestedTabController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
         backgroundColor: scaffoldBGColor,
         appBar: AppBar(
@@ -78,35 +66,32 @@ class _FavoritePageState extends State<FavoritePage>
             child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(children: [
-            TabBar(
-              controller: _nestedTabController,
-              indicatorColor: Colors.teal,
-              labelColor: Colors.teal,
-              unselectedLabelColor: Colors.black54,
-              isScrollable: true,
-              tabs: const <Widget>[
-                Tab(
-                  text: "Listes",
-                ),
-                Tab(
-                  text: "Prestataires",
-                ),
-              ],
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: DropdownButton(
+                value: valuechoose,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: Listitems.map((String Listitems) {
+                  return DropdownMenuItem(
+                    value: Listitems,
+                    child: Text(Listitems),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(
+                    () {
+                      valuechoose = newValue!;
+                    },
+                  );
+                },
+              ),
             ),
-            SizedBox(
-              height: screenHeight,
-              child: TabBarView(
-                  controller: _nestedTabController,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _buildListFavoriteLists(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _buildListFavoriteProviders(),
-                    ),
-                  ]),
+            //_buildListFavoriteProviders(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildListFavoriteProviders(),
             ),
           ]),
         )));
