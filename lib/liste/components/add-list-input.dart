@@ -21,20 +21,11 @@ class _AddListInputState extends State<AddListInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Padding(padding: EdgeInsets.only(left: 25)),
-            Text(
-              widget.titre,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        CustomInput(
-          hint: widget.hint,
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: CustomInput(
+            hint: widget.hint,
+          ),
         ),
       ],
     );

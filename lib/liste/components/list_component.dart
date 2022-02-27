@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/animation.dart';
 import 'package:lys_wedding/constants.dart';
 import 'package:lys_wedding/liste/components/common_card.dart';
+import 'package:lys_wedding/liste/screens/list_details.dart';
 
 class ListComponent extends StatelessWidget {
   final AnimationController animationController;
@@ -17,8 +18,10 @@ class ListComponent extends StatelessWidget {
     return ListCellAnimationView(
       animation: animation,
       animationController: animationController,
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
+      child: GestureDetector(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ListDetails()));
+        },
         child: CommonCard(
           color: whiteColor,
           radius: 10,
@@ -54,7 +57,7 @@ class ListComponent extends StatelessWidget {
                               children: [
                                 Icon(Icons.bookmark),
                                 Text(
-                                  'data',
+                                  '25',
                                   style: GoogleFonts.poppins(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400,

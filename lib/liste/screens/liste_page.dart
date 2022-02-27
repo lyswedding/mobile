@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/constants.dart';
 import 'package:lys_wedding/favorite/components/listsfav.dart';
+import 'package:lys_wedding/home/components/shared/category_item.dart';
 import 'package:lys_wedding/home/components/shared/search_bar.dart';
 import 'package:lys_wedding/liste/screens/add-lists.dart';
 
@@ -17,7 +18,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     animationController = AnimationController(
-        duration: Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
   @override
@@ -43,16 +44,20 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
               color: Colors.black,
             )),
       ),
-      body: SingleChildScrollView(
-          child: Column(children: const [
-            SearchBar(),
-            ListUser(height: 65, width: 40)])),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+            child: Column(children: [
+              const SearchBar(),
+              _buildCategories(),
+              const ListUser(height: 65, width: 40)])),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>  AddList(),
+                builder: (context) =>  const AddList(),
               ));
         },
         backgroundColor: Colors.black,
@@ -60,4 +65,34 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       ),
     );
   }
+
+  Widget _buildCategories(){
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 50,
+              child: ListView.builder(
+                  itemCount: 10,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    var animation = Tween(begin: 0.0, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: animationController,
+                        curve: const Interval((1 / 6) *5, 1.0,
+                            curve: Curves.fastOutSlowIn),
+                      ),
+                    );
+                    animationController.forward();
+                    return CategoryItemList('text','images/9.jpg',animationController,animation);
+                  }
+
+              ),
+            ),
+          )),
+    );
+  }
+
 }

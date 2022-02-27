@@ -10,7 +10,8 @@ class FavoritePage extends StatefulWidget {
   _FavoritePageState createState() => _FavoritePageState();
 }
 
-class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMixin{
+class _FavoritePageState extends State<FavoritePage>
+    with TickerProviderStateMixin {
   String valuechoose = 'prestataire';
   late AnimationController animationController;
 
@@ -37,11 +38,12 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
         duration: Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: scaffoldBGColor,
+        backgroundColor: scaffoldBGColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -61,93 +63,95 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
               )),
         ),
         body: SingleChildScrollView(
-            child: Column(children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: DropdownButton(
+                value: valuechoose,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: Listitems.map((String Listitems) {
+                  return DropdownMenuItem(
+                    value: Listitems,
+                    child: Text(Listitems),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(
+                    () {
+                      valuechoose = newValue!;
+                    },
+                  );
+                },
+              ),
             ),
-            child: DropdownButton(
-              value: valuechoose,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              items: Listitems.map((String Listitems) {
-                return DropdownMenuItem(
-                  value: Listitems,
-                  child: Text(Listitems),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(
-                  () {
-                    valuechoose = newValue!;
-                  },
-                );
-              },
+            //_buildListFavoriteProviders(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildListFavoriteLists(),
             ),
-          ),
-        //_buildListFavoriteProviders(),
-              _buildListFavoriteLists(),
-        ])));
+          ]),
+        )));
   }
-  
-  Widget _buildListFavoriteLists(){
+
+  Widget _buildListFavoriteLists() {
     return SingleChildScrollView(
         child: Column(
-          children: [
-            SizedBox(
-              height: 800,
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                     crossAxisCount: 2,
-                   // crossAxisSpacing: 5,
-                   // mainAxisSpacing: 5,
-                    childAspectRatio: 0.6
-
-                  ),
-                itemCount: 10,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  var animation = Tween(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animationController,
-                      curve: const Interval((1 / 6) *5, 1.0,
-                          curve: Curves.fastOutSlowIn),
-                    ),
-                  );
-                  animationController.forward();
-                  return ListComponent(animationController: animationController, animation: animation);
-                }
-
-              ),
-            )
-          ],
-        ));
-  }
-
-  Widget _buildListFavoriteProviders(){
-    return SingleChildScrollView(
-        child: SizedBox(
+      children: [
+        SizedBox(
           height: 800,
           child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  childAspectRatio: 1/4,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  // crossAxisSpacing: 5,
+                  // mainAxisSpacing: 5,
+                  childAspectRatio: 0.6),
               itemCount: 10,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 var animation = Tween(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(
                     parent: animationController,
-                    curve: const Interval((1 / 6) *5, 1.0,
+                    curve: const Interval((1 / 6) * 5, 1.0,
                         curve: Curves.fastOutSlowIn),
                   ),
                 );
                 animationController.forward();
-                return ItemListSearch(text: 'text', items: items, width: 200, height: 50);
-              }
+                return ListComponent(
+                    animationController: animationController,
+                    animation: animation);
+              }),
+        )
+      ],
+    ));
+  }
 
-          ),
-        ));
+  Widget _buildListFavoriteProviders() {
+    return SingleChildScrollView(
+        child: SizedBox(
+      height: 800,
+      child: ListView.builder(
+          itemCount: 10,
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, index) {
+            var animation = Tween(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                parent: animationController,
+                curve: const Interval((1 / 6) * 5, 1.0,
+                    curve: Curves.fastOutSlowIn),
+              ),
+            );
+            animationController.forward();
+            return ItemListSearch(
+              text: 'text',
+              items: items,
+              animation: animation,
+              animationController: animationController,
+            );
+          }),
+    ));
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/components/custom_input.dart';
 import 'package:lys_wedding/constants.dart';
+import 'package:lys_wedding/search/screens/filter_page.dart';
 
 
 
@@ -16,33 +17,38 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(right: 30),
+      padding: const EdgeInsets.only(right: 16),
       child:  Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 5,
+            flex: 6,
             child: Container(
              // margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
               //height: MediaQuery.of(context).size.height * .10,
-              child: CustomInput(
+              child: const CustomInput(
                 icon: Icon(Icons.search),
                 hint: "search",
               ),
             ),
           ),
-          Expanded(
-            child: Container(
-              height: 50,
-              //width: 70,
-              decoration: BoxDecoration(
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.tune,
-                  size: 24,
+          GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>FilterPage()));
+            },
+            child: Expanded(
+              child: Container(
+                height: 50,
+                //width: 70,
+                decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.tune,
+                    size: 24,
+                  ),
                 ),
               ),
             ),

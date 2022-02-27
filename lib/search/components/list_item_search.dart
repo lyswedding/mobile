@@ -1,114 +1,148 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/animation.dart';
+import 'package:lys_wedding/constants.dart';
+import 'package:lys_wedding/liste/components/common_card.dart';
 
 class ItemListSearch extends StatelessWidget {
   const ItemListSearch({
     Key? key,
     required this.text,
     required this.items,
-    required this.width,
-    required this.height,
+    required this.animation,
+    required this.animationController,
   }) : super(key: key);
 
   final List items;
   final String text;
-  final double width, height;
+  final AnimationController animationController;
+  final Animation<double> animation;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Card(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: items
-                  .map((element) => Container(
-                        width: 380.0,
-                        height: 280.0,
-                        margin: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            boxShadow: const [
-                              BoxShadow(
-                                blurRadius: 0.5,
-                                color: Colors.white,
-                              )
-                            ]),
-                        child: Column(
+    return ListCellAnimationView(
+      animation: animation,
+      animationController: animationController,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CommonCard(
+          color: whiteColor,
+          radius: 10,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    //ProfilePicture(restaurantId: hotelData.id,),
+                    AspectRatio(
+                        aspectRatio: 2,
+                        child: Image.asset(
+                          'images/14.jpg',
+                          fit: BoxFit.cover,
+                        )),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
                           children: [
-                            Stack(
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Image.asset(
-                                    element,
-                                    height: 200,
-                                    width: 400,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Align(
-                                    alignment: Alignment.topRight,
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey[200],
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Icon(
-                                        Icons.favorite,
-                                        color: Colors.white,
-                                        size: 35,
-                                      ),
-                                      // Icon(Icons.favorite))),
-                                    ))
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                bottom: 1,
+                            Expanded(
+                              flex: 6,
+                              child: Text(
+                                text,
+                                textAlign: TextAlign.left,
+                                style: titleTextStyle,
                               ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                            ),
+                            Expanded(
+                              flex: 4,
+                              child: Row(
                                 children: [
-                                  Padding(padding: EdgeInsets.only(right: 10)),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(text),
-                                      Row(
-                                        children: const [
-                                          Text("412"),
-                                          Padding(padding: EdgeInsets.all(5)),
-                                          Text("views",
-                                              style:
-                                                  TextStyle(color: Colors.grey))
-                                        ],
-                                      )
-                                    ],
+                                  Icon(
+                                    Icons.pin_drop,
+                                    size: 12,
+                                    color: Theme.of(context).primaryColor,
                                   ),
-                                  Row(
-                                    children: const [
-                                      Text("Coiffure ,maquillage",
-                                          style: TextStyle(color: Colors.grey))
-                                    ],
-                                  ),
-                                  Row(
-                                    children: const [
-                                      Icon(Icons.location_on_outlined),
-                                      Text(
-                                        "1901 Thornridge Cir. Shiloh, Hawaii",
-                                        style: TextStyle(color: Colors.grey),
-                                      )
-                                    ],
+                                  Text(
+                                    "aaa",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: subTitleTextStyle,
                                   ),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
-                      ))
-                  .toList())),
+                        Text(
+                          'subTxt',
+                          style: subTitleTextStyle,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.pin_drop,
+                              size: 12,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            Text(
+                              "aaa",
+                              overflow: TextOverflow.ellipsis,
+                              style: subTitleTextStyle,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor:
+                          Theme.of(context).primaryColor.withOpacity(0.1),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(16.0),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.white.withOpacity(1),
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(32.0),
+                        ),
+                        onTap: () {},
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: const Icon(
+                            Icons.favorite_border_rounded,
+                            color: Color(0xffEB5890),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -32,7 +32,7 @@ class ItemList extends StatelessWidget {
                             decoration: BoxDecoration(
                                 color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(10)),
-                            child: Icon(
+                            child: const Icon(
                               Icons.favorite,
                               color: Colors.white,
                               size: 30,
@@ -45,15 +45,14 @@ class ItemList extends StatelessWidget {
                             child: Text(
                               text,
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                                  const TextStyle(color: Colors.white, fontSize: 15),
                             )),
                       )
                     ],
                   ),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: AssetImage(element),

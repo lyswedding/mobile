@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/components/custom_input.dart';
+import 'package:lys_wedding/constants.dart';
+import 'package:lys_wedding/home/components/shared/category_item.dart';
 import 'package:lys_wedding/home/components/shared/item_list.dart';
+import 'package:lys_wedding/home/components/shared/search_bar.dart';
 import 'package:lys_wedding/search/components/list_item_search.dart';
 
 class SearchPage extends StatefulWidget {
@@ -10,7 +13,7 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List items = [
     "images/4.jpg",
     "images/3.jpg",
@@ -19,10 +22,22 @@ class _SearchPageState extends State<SearchPage> {
     "images/5.jpg",
     "images/6.jpg",
   ];
+  late AnimationController animationController;
+  late AnimationController animationController1;
+  @override
+  void initState() {
+    // TODO: implement initState
+    animationController = AnimationController(
+        duration: Duration(milliseconds: 2000), vsync: this);
+    animationController1 = AnimationController(
+        duration: Duration(milliseconds: 2000), vsync: this);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: scaffoldBGColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -43,46 +58,76 @@ class _SearchPageState extends State<SearchPage> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                    height: MediaQuery.of(context).size.height * .10,
-                    child: CustomInput(
-                      icon: Icon(Icons.search),
-                      hint: "search",
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(right: 10),
-                    height: 50,
-                    width: 1,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Icon(
-                      Icons.tune,
-                      size: 20,
-                    ),
-                  ),
-                )
-              ],
+            const SearchBar(),
+            //ItemList(text: "text", items: items, width: 150, height: 50),
+            _buildCategories(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                Text("Results"),
+                Text("view more")
+              ]),
             ),
-            ItemList(text: "text", items: items, width: 150, height: 50),
-            Row(children: const [
-              Padding(padding: EdgeInsets.only(left: 16, top: 50, bottom: 10)),
-              Text("Results"),
-              Padding(padding: EdgeInsets.only(left: 250, top: 50, bottom: 0)),
-              Text("view more")
-            ]),
-            ItemListSearch(
-                text: "Jane Cooper", items: items, width: 300, height: 300)
+            _buildListFavoriteProviders(),
+
           ]),
         ));
   }
+
+  Widget _buildListFavoriteProviders(){
+    return SingleChildScrollView(
+        child: SizedBox(
+          height: 800,
+          child: ListView.builder(
+              itemCount: 10,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                var animation = Tween(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: animationController,
+                    curve: const Interval((1 / 6) *5, 1.0,
+                        curve: Curves.fastOutSlowIn),
+                  ),
+                );
+                animationController.forward();
+                return ItemListSearch(text: 'Jane Cooper', items: items,animationController: animationController,animation: animation,);
+              }
+
+          ),
+        ));
+  }
+
+  Widget _buildCategories(){
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 80,
+              child: ListView.builder(
+                  itemCount: 10,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    var animation = Tween(begin: 0.0, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: animationController1,
+                        curve: const Interval((1 / 6) *5, 1.0,
+                            curve: Curves.fastOutSlowIn),
+                      ),
+                    );
+                    animationController1.forward();
+                    return CategoryItem('text','images/9.jpg',animationController1,animation);
+                  }
+
+              ),
+            ),
+          )),
+    );
+  }
+
+
+
 }

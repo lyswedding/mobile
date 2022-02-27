@@ -1,28 +1,37 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/authentification/components/custom_input.dart';
+import 'package:lys_wedding/constants.dart';
 import 'package:lys_wedding/liste/components/add-list-input.dart';
-import 'liste_page.dart';
-import '';
+import 'package:lys_wedding/liste/screens/list_tasks.dart';
 
-class AddList extends StatefulWidget {
-  const AddList({Key? key}) : super(key: key);
+import 'liste_page.dart';
+
+
+class TaskUpdate extends StatefulWidget {
+  const TaskUpdate({Key? key}) : super(key: key);
 
   @override
-  _AddListState createState() => _AddListState();
+  _TaskUpdateState createState() => _TaskUpdateState();
 }
 
-class _AddListState extends State<AddList> {
+class _TaskUpdateState extends State<TaskUpdate> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: scaffoldBGColor,
         appBar: AppBar(
+          actions: [
+            IconButton(onPressed: (){}, icon: Icon(Icons.edit,color: primaryColor,)),
+          ],
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           centerTitle: true,
           title: const Text(
-            "Ajouter liste",
+            "task update",
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           leading: IconButton(
               onPressed: () {
@@ -40,19 +49,33 @@ class _AddListState extends State<AddList> {
             ),
             const AddListInput(
               titre: "Titre",
-              hint: "Nom de liste",
+              hint: "Nom de tache",
             ),
             const AddListInput(
               titre: "Description",
               hint: "Description",
             ),
             const AddListInput(
-              titre: "Taches",
-              hint: "LOrem ipsum dolor ...",
+              titre: "Cout",
+              hint: "Cout",
             ),
             const AddListInput(
-              titre: "",
-              hint: "Ajouter une tache",
+              titre: "Note",
+              hint: "Note",
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CustomInput(
+                hint: '22 Fev 2022',
+                icon: Icon(EvaIcons.calendar),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CustomInput(
+                hint: 'tags',
+                icon: Icon(EvaIcons.pricetags),
+              ),
             ),
             GestureDetector(
               onTap: () {},
@@ -64,7 +87,7 @@ class _AddListState extends State<AddList> {
                   height: 54,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey[300],
+                    color: primaryColor,
                     boxShadow: const [
                       BoxShadow(
                           offset: Offset(0, 10),
@@ -74,13 +97,13 @@ class _AddListState extends State<AddList> {
                   ),
                   child: TextButton(
                     style: TextButton.styleFrom(
-                      primary: Colors.black,
+                      primary: whiteColor,
                     ),
                     onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ListePage()));
+                              builder: (context) => ListTasks()));
                     },
                     child: const Text(
                       "Enregistrer",
