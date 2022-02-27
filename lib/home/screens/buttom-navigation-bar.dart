@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/home/screens/favorite/screens/favoritePage.dart';
+import 'package:lys_wedding/home/screens/favorite/screens/favorite_Page.dart';
 import 'package:lys_wedding/home/screens/home.dart';
 import 'package:lys_wedding/home/screens/profil/screens/profil.dart';
 import 'package:lys_wedding/home/screens/search/screens/search.dart';

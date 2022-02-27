@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/screens/login.dart';
 import 'package:lys_wedding/home/screens/buttom-navigation-bar.dart';
-import 'package:lys_wedding/home/screens/favorite/components/listsfav.dart';
-import 'package:lys_wedding/home/screens/liste/screens/add-list/screens/add-lists.dart';
+import 'package:lys_wedding/home/screens/favorite/components/lists_fav.dart';
+import 'package:lys_wedding/home/screens/liste/screens/add_list/screens/add_lists.dart';
 
 class ListePage extends StatefulWidget {
   const ListePage({Key? key}) : super(key: key);

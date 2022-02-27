@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/home/components/item_list.dart';
-import 'package:lys_wedding/home/components/list-images.dart';
+import 'package:lys_wedding/home/components/list_images.dart';
 import 'package:lys_wedding/home/screens/search/screens/prestataire/components/list_detail_prest.dart';
 
-class prestatairer extends StatefulWidget {
-  const prestatairer({Key? key}) : super(key: key);
+class Prestatairer extends StatefulWidget {
+  const Prestatairer({Key? key}) : super(key: key);
 
   @override
-  _prestatairerState createState() => _prestatairerState();
+  _PrestatairerState createState() => _PrestatairerState();
 }
 
-class _prestatairerState extends State<prestatairer> {
+class _PrestatairerState extends State<Prestatairer> {
   List items = [
     "images/4.jpg",
     "images/3.jpg",

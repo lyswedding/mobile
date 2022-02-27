@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/authentification/components/custom_input.dart';
 import 'package:lys_wedding/authentification/screens/signup.dart';
-import 'package:lys_wedding/home/screens/liste/screens/add-list/screens/add-lists.dart';
-import 'package:lys_wedding/home/screens/liste/screens/liste.dart';
+import 'package:lys_wedding/home/screens/liste/screens/add_list/screens/add_lists.dart';
+// import 'package:lys_wedding/home/screens/liste/screens/add_list/screens/add-lists.dart';
+// import 'package:lys_wedding/home/screens/liste/screens/add_list/screens/add-lists.dart';
+// // import 'package:lys_wedding/home/screens/liste/screens/add_list/screens/add_lists.dart';
 
 import '../../home/screens/buttom-navigation-bar.dart';
 
@@ -24,10 +26,11 @@ class _LoginState extends State<Login> {
 
   Widget Loginwidget() {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(padding: EdgeInsets.only(top: 50)),
+            Padding(padding: EdgeInsets.only(top: 50, bottom: 10)),
             Container(height: 100, child: Image.asset("images/icon.png")),
             // Container(
             //     height: 300,
@@ -52,12 +55,12 @@ class _LoginState extends State<Login> {
             //           )
             //         ]))),
             CustomInput(
-              icon: Icon(Icons.email, color: Colors.orange),
+              icon: Icon(Icons.email_outlined, color: Colors.black),
               hint: 'Enter your email',
               controller: emailController,
             ),
             CustomInput(
-              icon: const Icon(Icons.lock_outline, color: Colors.orange),
+              icon: const Icon(Icons.lock_outline, color: Colors.black),
               hint: "Enter password",
               controller: passwordController,
             ),
@@ -141,8 +144,21 @@ class _LoginState extends State<Login> {
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(height: 100, child: Image.asset("images/icon.png")),
-                Container(height: 100, child: Image.asset("images/icon.png"))
+                Container(
+                    height: 70,
+                    margin: EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white),
+                    child: Image.asset("images/21.png")),
+                Padding(padding: EdgeInsets.all(20)),
+                Container(
+                    height: 70,
+                    margin: EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white),
+                    child: Image.asset("images/22.png")),
               ],
             )),
 
