@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/search_bar.dart';
-import 'package:lys_wedding/UI/home/screens/search/components/list_item_search.dart';
+import 'package:lys_wedding/UI/search/components/list_item_search.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 
@@ -91,7 +91,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   ),
                 );
                 animationController.forward();
-                return ItemListSearch(text: 'Jane Cooper', items: items);
+                return ItemListSearch(text: 'Jane Cooper', items: items,animation: animation,animationController: animationController,);
               }
 
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
-import 'package:lys_wedding/UI/home/screens/liste/screens/add_list/screens/add_lists.dart';
+import 'package:lys_wedding/UI/liste/screens/add-lists.dart';
 
 
 class Login extends StatefulWidget {

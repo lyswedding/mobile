@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/UI/home/screens/search/components/list_item_search.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
+import 'package:lys_wedding/UI/search/components/list_item_search.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -163,8 +163,8 @@ class _FavoritePageState extends State<FavoritePage>
             return ItemListSearch(
               text: 'text',
               items: items,
-              // animation: animation,
-              // animationController: animationController,
+              animation: animation,
+              animationController: animationController,
             );
           }),
     ));

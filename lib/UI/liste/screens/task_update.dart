@@ -1,7 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
-import 'package:lys_wedding/UI/home/screens/liste/screens/add_list/components/add-list-input.dart';
+import 'package:lys_wedding/UI/liste/components/add-list-input.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'list_tasks.dart';
 import 'liste_page.dart';

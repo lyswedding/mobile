@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/authentification/screens/signup.dart';
 
 class CustomButton extends StatefulWidget {
   final String text;

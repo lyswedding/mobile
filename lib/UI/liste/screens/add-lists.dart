@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/UI/home/screens/liste/screens/add_list/components/add-list-input.dart';
+import 'package:lys_wedding/UI/liste/components/add-list-input.dart';
 import 'liste_page.dart';
 
 
