@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:lys_wedding/authentification/screens/splash_screen.dart';
+import 'UI/authentification/screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
