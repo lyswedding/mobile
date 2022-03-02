@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/search_bar.dart';
 import 'package:lys_wedding/UI/search/components/list_item_search.dart';
+import 'package:lys_wedding/UI/search/servises/service_list.dart';
+import 'package:lys_wedding/models/List_search.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
+import '../components/lys_items_list.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -13,16 +16,21 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
-  List items = [
-    "images/4.jpg",
-    "images/3.jpg",
-    "images/2.jpg",
-    "images/4.jpg",
-    "images/5.jpg",
-    "images/6.jpg",
-  ];
+  ListSearch? search;
+  bool isLoaded = false;
+  final ServiceList _service = ServiceList();
   late AnimationController animationController;
   late AnimationController animationController1;
+
+  fetchsearch() async {
+    search = await _service.getPrestataire();
+    if (search != null) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -31,12 +39,15 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     animationController1 = AnimationController(
         duration: Duration(milliseconds: 2000), vsync: this);
     super.initState();
+    fetchsearch();
+    print(search?.providers);
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: scaffoldBGColor,
+        backgroundColor: scaffoldBGColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -63,70 +74,69 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                Text("Results"),
-                Text("view more")
-              ]),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [Text("Results"), Text("view more")]),
             ),
             _buildListFavoriteProviders(),
-
           ]),
         ));
   }
 
-  Widget _buildListFavoriteProviders(){
+  Widget _buildListFavoriteProviders() {
     return SingleChildScrollView(
         child: SizedBox(
-          height: 800,
-          child: ListView.builder(
-              itemCount: 10,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                var animation = Tween(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: animationController,
-                    curve: const Interval((1 / 6) *5, 1.0,
-                        curve: Curves.fastOutSlowIn),
-                  ),
-                );
-                animationController.forward();
-                return ItemListSearch(text: 'Jane Cooper', items: items,animation: animation,animationController: animationController,);
-              }
-
-          ),
-        ));
+      height: 800,
+      child: ListView.builder(
+          itemCount: search?.providers.length,
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, index) {
+            var animation = Tween(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                parent: animationController,
+                curve: const Interval((1 / 6) * 5, 1.0,
+                    curve: Curves.fastOutSlowIn),
+              ),
+            );
+            animationController.forward();
+            if (search != null) {
+              return ItemListSearch(
+                  animation: animation,
+                  animationController: animationController,
+                  text: '',
+                  items: search!.providers
+                      .map((e) => ListItem(image: e.cover, label: e.name))
+                      .toList());
+            }
+            return LysItemsList(items: const []);
+          }),
+    ));
   }
 
-  Widget _buildCategories(){
+  Widget _buildCategories() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 80,
-              child: ListView.builder(
-                  itemCount: 10,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    var animation = Tween(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animationController1,
-                        curve: const Interval((1 / 6) *5, 1.0,
-                            curve: Curves.fastOutSlowIn),
-                      ),
-                    );
-                    animationController1.forward();
-                    return CategoryItem('text','images/9.jpg',animationController1,animation);
-                  }
-
-              ),
-            ),
-          )),
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          height: 80,
+          child: ListView.builder(
+              itemCount: 10,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                var animation = Tween(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: animationController1,
+                    curve: const Interval((1 / 6) * 5, 1.0,
+                        curve: Curves.fastOutSlowIn),
+                  ),
+                );
+                animationController1.forward();
+                return CategoryItem(
+                    'text', 'images/9.jpg', animationController1, animation);
+              }),
+        ),
+      )),
     );
   }
-
-
-
 }

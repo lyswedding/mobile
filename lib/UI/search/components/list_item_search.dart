@@ -3,7 +3,13 @@ import 'package:lys_wedding/UI/liste/components/common_card.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
-class ItemListSearch extends StatelessWidget {
+class ListItem {
+  ListItem({required this.label, required this.image});
+  String label;
+  String image;
+}
+
+class ItemListSearch<T> extends StatelessWidget {
   const ItemListSearch({
     Key? key,
     required this.text,
@@ -12,7 +18,7 @@ class ItemListSearch extends StatelessWidget {
     required this.animationController,
   }) : super(key: key);
 
-  final List items;
+  final List<T>? items;
   final String text;
   final AnimationController animationController;
   final Animation<double> animation;
