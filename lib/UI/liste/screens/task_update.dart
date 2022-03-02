@@ -99,10 +99,7 @@ class _TaskUpdateState extends State<TaskUpdate> {
                       primary: whiteColor,
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ListTasks()));
+                      Navigator.pop(context);
                     },
                     child: const Text(
                       "Enregistrer",

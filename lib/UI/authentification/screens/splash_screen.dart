@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/shared/constants.dart';
 

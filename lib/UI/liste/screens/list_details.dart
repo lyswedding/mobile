@@ -3,11 +3,13 @@ import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/UI/liste/screens/list_tasks.dart';
+import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:readmore/readmore.dart';
 
 class ListDetails extends StatefulWidget {
-  const ListDetails({Key? key}) : super(key: key);
+  final TaskList taskList;
+  ListDetails({required this.taskList});
 
   @override
   _ListDetailsState createState() => _ListDetailsState();
@@ -59,8 +61,8 @@ class _ListDetailsState extends State<ListDetails>
                   children: <Widget>[
                     AspectRatio(
                       aspectRatio: 1.7,
-                      child: Image.asset(
-                        'images/14.jpg',
+                      child: Image.network(
+                        widget.taskList.imageUrl,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -114,7 +116,7 @@ class _ListDetailsState extends State<ListDetails>
                 height: 10,
               ),
               Text(
-                'List Title',
+                widget.taskList.title,
                 style: titleTextStyle,
               ),
               _buildCategories(),
@@ -122,7 +124,7 @@ class _ListDetailsState extends State<ListDetails>
                 height: 10,
               ),
               ReadMoreText(
-                'Flutter is Google’s mobile UI open source framework to build high-quality native (super fast) interfaces for iOS and Android apps with the unified codebase.',
+                widget.taskList.description,
                 trimLines: 2,
                 style: regularTextStyle,
                 colorClickableText: Colors.pink,
@@ -143,8 +145,13 @@ class _ListDetailsState extends State<ListDetails>
                     style: titleTextStyle,
                   ),
                   GestureDetector(
-                    onTap:(){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ListTasks()));
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ListTasks(
+                                    listTasks: widget.taskList.tasks,
+                                  )));
                     },
                     child: Text(
                       'view more',
@@ -153,11 +160,20 @@ class _ListDetailsState extends State<ListDetails>
                   ),
                 ],
               ),
-              _buildListTasks(),
+              for (int i = 0; i < widget.taskList.tasks.length; i++)
+                _buildListTasks(i),
               Text(
                 'Relates lists',
                 style: titleTextStyle,
               ),
+              // Expanded(
+              //   child: Row(
+              //     children: [
+              //       for(int i=0;i<4;i++)
+              //         buildRelatedLists(),
+              //     ],
+              //   ),
+              // )
               _buildListFavoriteLists(),
             ],
           ),
@@ -171,7 +187,7 @@ class _ListDetailsState extends State<ListDetails>
         child: SizedBox(
       height: 40,
       child: ListView.builder(
-          itemCount: 3,
+          itemCount: widget.taskList.tags.length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -183,18 +199,49 @@ class _ListDetailsState extends State<ListDetails>
             );
             animationController.forward();
             return CategoryItemList(
-                'text', 'images/9.jpg', animationController, animation);
+                widget.taskList.tags[index], 'images/9.jpg', animationController, animation);
           }),
     ));
   }
 
-  Widget _buildListTasks() {
-    return SingleChildScrollView(
-        child: SizedBox(
+  _buildListTasks(int i) {
+    var animation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: const Interval((1 / 6) * 5, 1.0, curve: Curves.fastOutSlowIn),
+      ),
+    );
+    animationController.forward();
+    return TaskComponent(
+      task: widget.taskList.tasks[i],
+      animationController: animationController,
+      text: 'text',
+      animation: animation,
+    );
+  }
+
+  buildRelatedLists(){
+    var animation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: const Interval((1 / 6) * 5, 1.0,
+            curve: Curves.fastOutSlowIn),
+      ),
+    );
+    animationController.forward();
+    return ListComponent(
+        taskList: widget.taskList,
+        animationController: animationController,
+        animation: animation);
+  }
+
+  Widget _buildListFavoriteLists() {
+    return SizedBox(
       height: 400,
       child: ListView.builder(
-          itemCount: 3,
-          scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+          itemCount: 4,
+          scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
@@ -204,44 +251,11 @@ class _ListDetailsState extends State<ListDetails>
               ),
             );
             animationController.forward();
-            return TaskComponent(
-              animationController: animationController,
-              text: 'text',
-              animation: animation,
-            );
+            return ListComponent(
+                taskList: widget.taskList,
+                animationController: animationController,
+                animation: animation);
           }),
-    ));
-  }
-
-  Widget _buildListFavoriteLists() {
-    return SingleChildScrollView(
-        child: Column(
-      children: [
-        SizedBox(
-          height: 400,
-          child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  // crossAxisSpacing: 5,
-                  // mainAxisSpacing: 5,
-                  childAspectRatio: 0.6),
-              itemCount: 2,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                var animation = Tween(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: animationController,
-                    curve: const Interval((1 / 6) * 5, 1.0,
-                        curve: Curves.fastOutSlowIn),
-                  ),
-                );
-                animationController.forward();
-                return ListComponent(
-                    animationController: animationController,
-                    animation: animation);
-              }),
-        )
-      ],
-    ));
+    );
   }
 }

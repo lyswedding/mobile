@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/search/components/list_item_search.dart';
+import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/services/task_list_services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -15,6 +17,22 @@ class _FavoritePageState extends State<FavoritePage>
   String valuechoose = 'prestataire';
   late AnimationController animationController;
   late TabController _nestedTabController;
+  bool isInCall = false;
+  List<TaskList> taskLists = [];
+
+  callAllListes() {
+    setState(() {
+      isInCall = true;
+    });
+    ListCalls.getAdminLists().then((res) {
+      setState(() {
+        taskLists = res;
+      });
+    });
+    setState(() {
+      isInCall = false;
+    });
+  }
 
   var Listitems = [
     "prestataire",
@@ -39,7 +57,7 @@ class _FavoritePageState extends State<FavoritePage>
         duration: const Duration(milliseconds: 2000), vsync: this);
 
     _nestedTabController = new TabController(length: 2, vsync: this);
-
+callAllListes();
     super.initState();
   }
 
@@ -124,7 +142,7 @@ class _FavoritePageState extends State<FavoritePage>
                   // crossAxisSpacing: 5,
                   // mainAxisSpacing: 5,
                   childAspectRatio: 0.6),
-              itemCount: 10,
+              itemCount: taskLists.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -136,6 +154,7 @@ class _FavoritePageState extends State<FavoritePage>
                 );
                 animationController.forward();
                 return ListComponent(
+                  taskList: taskLists[index],
                     animationController: animationController,
                     animation: animation);
               }),

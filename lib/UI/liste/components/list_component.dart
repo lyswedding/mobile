@@ -1,17 +1,20 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/liste/screens/list_details.dart';
+import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 import 'common_card.dart';
 
 class ListComponent extends StatelessWidget {
+  final TaskList taskList;
   final AnimationController animationController;
   final Animation<double> animation;
 
   const ListComponent(
-      {Key? key, required this.animationController, required this.animation})
+      {Key? key, required this.animationController, required this.animation,required this.taskList})
       : super(key: key);
 
   @override
@@ -21,7 +24,7 @@ class ListComponent extends StatelessWidget {
       animationController: animationController,
       child: GestureDetector(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ListDetails()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ListDetails(taskList: taskList,)));
         },
         child: CommonCard(
           color: whiteColor,
@@ -32,31 +35,35 @@ class ListComponent extends StatelessWidget {
               children: <Widget>[
                 AspectRatio(
                   aspectRatio: 0.9,
-                  child: Image.asset(
-                    'images/9.jpg',
+                  child: Image.network(
+                    taskList.imageUrl,
                     fit: BoxFit.cover,
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Title',
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex:9,
+                            child: Text(
+                              taskList.title,
                               style: GoogleFonts.poppins(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor),
                             ),
-                            Row(
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Row(
                               children: [
-                                Icon(Icons.bookmark),
+                                const Icon(EvaIcons.bookmark,size: 14,color: primaryColor,),
                                 Text(
                                   '25',
                                   style: GoogleFonts.poppins(
@@ -65,32 +72,32 @@ class ListComponent extends StatelessWidget {
                                       color: primaryColor),
                                 ),
                               ],
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(Icons.tag_outlined),
-                            Text(
-                              'details',
-                              // Helper.getRoomText(hotelInfo.roomData!),
-                              style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: primaryColor),
                             ),
-                          ],
-                        ),
-                        Text(
-                          '16 taches',
-                          // Helper.getRoomText(hotelInfo.roomData!),
-                          style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: primaryColor),
-                        ),
-                      ],
-                    ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(EvaIcons.pricetags,size: 15,color: primaryColor,),
+                          Text(
+                            taskList.tags[0],
+                            // Helper.getRoomText(hotelInfo.roomData!),
+                            style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: primaryColor),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        taskList.tasks.length.toString()+'\ttaches',
+                        // Helper.getRoomText(hotelInfo.roomData!),
+                        style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor),
+                      ),
+                    ],
                   ),
                 )
               ],
