@@ -17,7 +17,7 @@ class _CustomButtonState extends State<CustomButton> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Container(
-            height: 70,
+            height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: primaryColor,

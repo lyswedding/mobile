@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
@@ -24,4 +25,25 @@ class ListCalls {
     }
     return tasksLists.toList();
   }
+
+  static Future<http.Response> addResponse(task) async {
+    var url;
+    var response;
+
+    url = Uri.parse('${URLS.BASE_URL}/taskslists');
+
+    var token = await getUserInfoSharedPref("token");
+    log(jsonEncode(task.toJson()));
+    response = await http.post(
+      url,
+      body: jsonEncode(response.toJson()),
+      headers: {
+        "Content-type": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    return response;
+  }
+
 }

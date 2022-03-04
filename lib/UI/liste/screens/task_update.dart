@@ -1,20 +1,42 @@
+import 'dart:math';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/authentification/components/button.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/liste/components/add-list-input.dart';
+import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'list_tasks.dart';
 import 'liste_page.dart';
 
 
 class TaskUpdate extends StatefulWidget {
-  const TaskUpdate({Key? key}) : super(key: key);
+  TaskUpdate({required this.task});
+  final Task task;
 
   @override
   _TaskUpdateState createState() => _TaskUpdateState();
+
 }
 
+
 class _TaskUpdateState extends State<TaskUpdate> {
+  TextEditingController titleController =TextEditingController();
+  TextEditingController descController =TextEditingController();
+  TextEditingController dueDateController =TextEditingController();
+  TextEditingController costController =TextEditingController();
+  TextEditingController tagsController =TextEditingController();
+  TextEditingController nbUseController =TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    titleController.text=widget.task.title;
+    descController.text=widget.task.description;
+    dueDateController.text=widget.task.dueDate;
+    costController.text=widget.task.cost.toString();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -43,70 +65,46 @@ class _TaskUpdateState extends State<TaskUpdate> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            const SizedBox(
-              height: 60,
-            ),
-            const AddListInput(
+             AddListInput(
               titre: "Titre",
               hint: "Nom de tache",
+              textEditingController: titleController,
             ),
-            const AddListInput(
+             AddListInput(
               titre: "Description",
               hint: "Description",
+               textEditingController: descController,
             ),
-            const AddListInput(
+             AddListInput(
               titre: "Cout",
               hint: "Cout",
+               textEditingController: costController,
             ),
-            const AddListInput(
+             AddListInput(
               titre: "Note",
               hint: "Note",
+               textEditingController:nbUseController,
             ),
-            const Padding(
+             Padding(
               padding: EdgeInsets.all(16.0),
-              child: CustomInput(
-                hint: '22 Fev 2022',
-                icon: Icon(EvaIcons.calendar),
-              ),
+              // child: CustomInput(
+              //   hint: '22 Fev 2022',
+              //   icon: Icon(EvaIcons.calendar),
+              //   controller: dueDateController,
+              // ),
             ),
-            const Padding(
+             Padding(
               padding: EdgeInsets.all(16.0),
-              child: CustomInput(
-                hint: 'tags',
-                icon: Icon(EvaIcons.pricetags),
-              ),
+              // child: CustomInput(
+              //   hint: 'tags',
+              //   icon: Icon(EvaIcons.pricetags),
+              //   controller: tagsController,
+              // ),
             ),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(left: 20, right: 20, top: 40),
-                  padding:
-                  const EdgeInsets.only(left: 20, right: 20, bottom: 5),
-                  height: 54,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: primaryColor,
-                    boxShadow: const [
-                      BoxShadow(
-                          offset: Offset(0, 10),
-                          blurRadius: 50,
-                          color: Color(0xffEEEEEE)),
-                    ],
-                  ),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: whiteColor,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      "Enregistrer",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  )),
-            ),
+            CustomButton(text: 'Enregistrer', onPressed: (){
+              Navigator.pop(context);
+
+            })
           ]),
         ));
   }

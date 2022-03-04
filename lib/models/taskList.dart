@@ -18,6 +18,17 @@ class TaskList {
   List tags;
   String imageUrl;
 
+
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'title': title,
+      'description': description,
+      'tags': tags,
+      'tasks':tasks
+    };
+  }
+
   factory TaskList.fromJson(Map<String, dynamic> json) {
     var lists = json['tasks'] as List;
 
@@ -46,6 +57,17 @@ class Task {
   String dueDate;
   String state;
   List tags;
+
+  // Map<String, dynamic> toJson() {
+  //   //Map author = this.author != null ? this.author.toJson() : null;
+  //   return <String, dynamic>{
+  //     'title': title,
+  //     'description': description,
+  //     'doctor': doctor,
+  //     'state': state,
+  //     'responses': responsesJSon,
+  //   };
+  // }
 
   factory Task.fromJson(Map<String, dynamic> json) {
     List listO = json['tags'];

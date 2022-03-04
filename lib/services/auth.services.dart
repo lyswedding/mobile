@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -17,11 +18,13 @@ class AuthCalls {
 
     debugPrint(response.body.toString());
     if (response.statusCode == 200) {
-      String token = json.decode(response.headers.toString())['token'];
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-      //debugPrint(decodedToken.toString());
-      String userid = decodedToken['subject']['_id'];
-      await saveAccessTokenSharedPref(token, userid);
+      log(response.headers['x-access-token'].toString());
+      String token = response.headers['x-access-token'].toString();
+      print(token);
+      // Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      // //debugPrint(decodedToken.toString());
+      // String userid = decodedToken['subject']['_id'];
+      await saveAccessTokenSharedPref(token);
     }
 
     return response;
@@ -52,34 +55,17 @@ class AuthCalls {
     var url;
     url = '${URLS.BASE_URL}/users/register';
 
-    Dio dio = Dio();
-    var formData = FormData();
-
-    List<MapEntry<String, String>> mapEntries = [
-      MapEntry("name", body['firstname']),
-      MapEntry("lastname", body['lastname']),
-      MapEntry("phone", body['phone']),
-      MapEntry("email", body['email']),
-      MapEntry("password", body['password']),
-    ];
-
-    formData.fields.addAll(mapEntries);
-
-    var awsResponse = await dio.post(
-      url,
-      options: Options(
-          contentType: 'multipart/form-data',
-          headers: {
-            "accept": "*/*",
-          },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! <= 500;
-          }),
-      data: formData,
-    );
-    print(awsResponse.statusCode);
-    debugPrint(awsResponse.data.toString());
-    return awsResponse.statusCode;
+    final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(body));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print(response.body);
+      throw Exception('exception occured!!!!!!');
+    }
   }
 }

@@ -28,7 +28,7 @@ class TaskComponent extends StatelessWidget {
         animationController: animationController,
         child: GestureDetector(
           onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskUpdate()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskUpdate(task: task ,)));
           },
           child: CommonCard(
             color: whiteColor,

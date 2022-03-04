@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 
-import 'UI/authentification/screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: SplashScreen(),
+      home: Signup(),
 
     );
   }

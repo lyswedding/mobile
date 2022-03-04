@@ -10,12 +10,12 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer(
-        const Duration(seconds: 5),
-            () =>
-            Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) =>  Home()))
-            );
+    // Timer(
+    //     const Duration(seconds: 5),
+    //         () =>
+    //         Navigator.push(context, MaterialPageRoute(
+    //             builder: (BuildContext context) =>  Signup()))
+    //         );
     return Scaffold(
       backgroundColor: splashscreenColor,
       body: Stack(
