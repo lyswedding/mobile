@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/profil/modele/model_profil.dart';
+import 'package:lys_wedding/models/List_search.dart';
+
+import '../../../../../../profil/service/profil_service.dart';
 
 class ProfilPageModif extends StatefulWidget {
-  const ProfilPageModif({Key? key}) : super(key: key);
-
+  const ProfilPageModif({Key? key, required this.user}) : super(key: key);
+  final User user;
   @override
   _ProfilPageModifState createState() => _ProfilPageModifState();
 }
 
 class _ProfilPageModifState extends State<ProfilPageModif> {
+  bool isLoaded = false;
+  //inal ServiceProfil service = ServiceProfil();
+  // fetchprofil() async {
+  //   item = await service.getUser();
+  //   setState(() {
+  //     isLoaded = true;
+  //   });
+  // }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // fetchprofil();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -36,9 +56,10 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
             children: [
               Stack(
                 children: [
-                  Image.asset(
-                    "images/adel.png",
-                    scale: 3,
+                  CircleAvatar(
+                    radius: 100,
+                    backgroundImage:
+                        NetworkImage(widget.user.imageUrl as String),
                   ),
                   Positioned(
                       bottom: 12,
@@ -84,8 +105,31 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                               Icons.save_outlined,
                               color: Colors.black,
                             ),
-                            border: OutlineInputBorder(),
-                            hintText: "username",
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            hintText: widget.user.firstName,
+                            hintStyle: TextStyle(
+                                fontFamily: "bold", color: Colors.black)),
+                      )),
+                  Container(
+                      // padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                      margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                      // decoration: const BoxDecoration(
+                      //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                      //     color: Colors.white),
+                      height: 50,
+                      width: 800,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.edit,
+                              color: Colors.black,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            hintText: widget.user.email,
                             hintStyle: TextStyle(
                                 fontFamily: "bold", color: Colors.black)),
                       )),
@@ -104,27 +148,9 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                               Icons.edit,
                               color: Colors.black,
                             ),
-                            border: OutlineInputBorder(),
-                            hintText: "Email",
-                            hintStyle: TextStyle(
-                                fontFamily: "bold", color: Colors.black)),
-                      )),
-                  Container(
-                      // padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                      margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.white),
-                      height: 50,
-                      width: 800,
-                      child: TextField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            suffixIcon: Icon(
-                              Icons.edit,
-                              color: Colors.black,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
                             ),
-                            border: OutlineInputBorder(),
                             hintText: "Password",
                             hintStyle: TextStyle(
                                 fontFamily: "bold", color: Colors.black)),
@@ -144,8 +170,10 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                               Icons.edit,
                               color: Colors.black,
                             ),
-                            border: OutlineInputBorder(),
-                            hintText: "Telephone",
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            hintText: widget.user.phone,
                             hintStyle: TextStyle(
                                 fontFamily: "bold", color: Colors.black)),
                       )),

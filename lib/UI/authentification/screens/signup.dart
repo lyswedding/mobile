@@ -1,7 +1,13 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/authentification/components/button.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
+import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
+import 'package:lys_wedding/services/auth.services.dart';
+import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -10,9 +16,12 @@ class Signup extends StatefulWidget {
   _SignupState createState() => _SignupState();
 }
 
-TextEditingController personController = TextEditingController();
+TextEditingController fnameController = TextEditingController();
+TextEditingController lnameController = TextEditingController();
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
+TextEditingController phoneController = TextEditingController();
+bool isInCall = false;
 
 class _SignupState extends State<Signup> {
   @override
@@ -22,161 +31,179 @@ class _SignupState extends State<Signup> {
 
   Widget signupwidget() {
     return Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: scaffoldBGColor,
         body: SingleChildScrollView(
-            child: Column(children: [
-          Padding(padding: EdgeInsets.only(top: 50)),
-          Container(height: 100, child: Image.asset("images/icon.png")),
-          // Container(
-          //     height: 300,
-          //     decoration: const BoxDecoration(
-          //         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(90)),
-          //         color: Colors.orange),
-          //     child: Center(
-          //         child: Column(
-          //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //             crossAxisAlignment: CrossAxisAlignment.center,
-          //             children: [
-          //           Container(height: 150, child: Image.asset("images/icon.png")),
-          //           Container(
-          //             padding: const EdgeInsets.only(right: 30),
-          //             alignment: Alignment.bottomRight,
-          //             child: const Text(
-          //               "Register",
-          //               style: TextStyle(fontSize: 40, color: Colors.white),
-          //             ),
-          //           )
-          //         ]))),
-          CustomInput(
-            icon: const Icon(
-              Icons.person_outline,
-              color: Color(0xff2D323D),
+            child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(children: [
+            const SizedBox(
+              height: 200,
+              width: 200,
             ),
-            hint: "Enter name",
-            controller: personController,
-          ),
-          CustomInput(
-            icon: const Icon(Icons.email_outlined, color: Color(0xff2D323D)),
-            hint: "Enter Email",
-            controller: emailController,
-          ),
-          CustomInput(
-            icon: const Icon(Icons.https_outlined, color: Color(0xff2D323D)),
-            hint: "Enter Password",
-            controller: passwordController,
-          ),
-          CustomInput(
-            icon: const Icon(Icons.https_outlined, color: Color(0xff2D323D)),
-            hint: "Confirm Password",
-            controller: passwordController,
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20),
-            child: Row(
+            CustomInput(
+              icon: const Icon(EvaIcons.person, color: secondaryColor),
+              hint: "Enter first name",
+              controller: fnameController,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            CustomInput(
+              icon: const Icon(EvaIcons.person, color: secondaryColor),
+              hint: "Enter last name",
+              controller: lnameController,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            CustomInput(
+              icon: const Icon(EvaIcons.email, color: secondaryColor),
+              hint: "Enter Email",
+              controller: emailController,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            CustomInput(
+              icon: const Icon(EvaIcons.lock, color: secondaryColor),
+              hint: "Enter Password",
+              controller: passwordController,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            CustomInput(
+              icon: const Icon(EvaIcons.phone, color: secondaryColor),
+              hint: "Enter phone number",
+              controller: phoneController,
+            ),
+            // Container(
+            //   margin: const EdgeInsets.only(left: 20),
+            //   child: Row(
+            //     children: const [
+            //       Icon(Icons.check_box_outline_blank),
+            //       Text(
+            //         "I agree to terms of service and privacy policy",
+            //       )
+            //     ],
+            //   ),
+            // ),
+            const SizedBox(height: 20,),
+            CustomButton(
+                text: "Register",
+                onPressed: () {
+                  setState(() {
+                    isInCall = true;
+                  });
+
+                  var body = {
+                    "firstname": fnameController.text,
+                    "lastname": lnameController.text,
+                    "email": emailController.text,
+                    "password": passwordController.text,
+                    "phone": passwordController.text,
+                  };
+                  print(body.toString());
+
+                  AuthCalls.signup(body).then((code) {
+                    setState(() {
+                      isInCall = false;
+                    });
+                    if (code == 200) {
+                      showToast(
+                          context: context,
+                          msg:
+                              "Utilisateur créé avec succès!\nUtilisez vos informations d'identification pour vous connecter");
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Home(),
+                        ),
+                      );
+                    } else {
+                      showToast(
+                          context: context,
+                          msg:
+                              "Une erreur s'est produite. Veuillez réessayer!");
+                    }
+                  });
+                }),
+            Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: Row(
+                  children: <Widget>[
+                    const Expanded(
+                      child: Divider(
+                        color: Colors.black,
+                        height: 8.0,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      'or continue with ',
+                      style: GoogleFonts.poppins(
+                          fontSize: 12, color: Colors.black),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    const Expanded(
+                      child: Divider(
+                        color: Colors.black,
+                        height: 8.0,
+                      ),
+                    )
+                  ],
+                )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.check_box_outline_blank),
-                Text(
-                  "I agree to terms of service and privacy policy",
-                )
+                Container(
+                    height: 70,
+                    margin: const EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white),
+                    child: Image.asset("images/21.png")),
+                const Padding(padding: EdgeInsets.all(20)),
+                Container(
+                    height: 70,
+                    margin: const EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white),
+                    child: Image.asset("images/22.png")),
               ],
             ),
-          ),
-
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                height: 54,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xFF2D323D),
-                  boxShadow: const [
-                    BoxShadow(
-                        offset: Offset(0, 10),
-                        blurRadius: 50,
-                        color: Color(0xffEEEEEE)),
-                  ],
-                ),
-                child: CustomButton(
-                    text: "Register",
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Login(),
-                          ));
-                    })),
-          ),
-          Container(
-              margin: EdgeInsets.only(top: 20),
-              child: Row(
-                children: const <Widget>[
-                  Expanded(
-                    child: Divider(
-                      color: Colors.black,
-                      height: 8.0,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Text(
-                    'or continue with ',
-                    style: TextStyle(color: Colors.black),
+              "I Have Already ",
+              style: GoogleFonts.poppins(fontSize: 12, color: Colors.black),
                   ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: Colors.black,
-                      height: 8.0,
-                    ),
-                  )
-                ],
-              )),
-          Container(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                  height: 70,
-                  margin: EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white),
-                  child: Image.asset("images/21.png")),
-              Padding(padding: EdgeInsets.all(20)),
-              Container(
-                  height: 70,
-                  margin: EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white),
-                  child: Image.asset("images/22.png")),
-            ],
-          )),
-          Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 20),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Text("I Have Already "),
-              GestureDetector(
-                child: const Text(
-                  "Login Now",
-                  style: TextStyle(color: Colors.orange),
+                  GestureDetector(
+              child: Text(
+                "Login Now",
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.pink,
+                  decoration: TextDecoration.underline,
                 ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Login(),
-                      ));
-                },
-              )
-            ]),
-          ),
-        ])));
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Login(),
+                    ));
+              },
+                  )
+                ]),
+            ),
+          ]),
+        )));
   }
 }

@@ -25,12 +25,6 @@ class CustomInputState extends State<CustomInput> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: whiteColor,
-          boxShadow: [
-            const BoxShadow(
-                offset: const Offset(0, 10),
-                blurRadius: 50,
-                color: const Color(0xffEEEEEE)),
-          ],
         ),
         child: TextField(
           controller: widget.controller,
@@ -38,6 +32,7 @@ class CustomInputState extends State<CustomInput> {
           decoration: InputDecoration(
             icon: widget.icon,
             hintText: widget.hint,
+            hintStyle: regularTextStyle,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
           ),

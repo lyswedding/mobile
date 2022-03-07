@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/item_list.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
+import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 class HomeDetails extends StatefulWidget {
@@ -135,7 +136,7 @@ class _HomeDetailsState extends State<HomeDetails>
                 height: 10,
               ),
 
-              _buildListFavoriteLists(),
+             // _buildListFavoriteLists(),
             ]),
           ),
         ));
@@ -166,31 +167,32 @@ class _HomeDetailsState extends State<HomeDetails>
     );
   }
 
-  Widget _buildListFavoriteLists() {
-    return SingleChildScrollView(
-        child: SizedBox(
-      height: 400,
-      child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              // crossAxisSpacing: 5,
-              // mainAxisSpacing: 5,
-              childAspectRatio: 0.6),
-          itemCount: 10,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            var animation = Tween(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                parent: animationController1,
-                curve: const Interval((1 / 6) * 5, 1.0,
-                    curve: Curves.fastOutSlowIn),
-              ),
-            );
-            animationController1.forward();
-            return ListComponent(
-                animationController: animationController1,
-                animation: animation);
-          }),
-    ));
-  }
+  // Widget _buildListFavoriteLists() {
+  //   return SingleChildScrollView(
+  //       child: SizedBox(
+  //     height: 400,
+  //     child: GridView.builder(
+  //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 2,
+  //             // crossAxisSpacing: 5,
+  //             // mainAxisSpacing: 5,
+  //             childAspectRatio: 0.6),
+  //         itemCount: 10,
+  //         scrollDirection: Axis.vertical,
+  //         itemBuilder: (context, index) {
+  //           var animation = Tween(begin: 0.0, end: 1.0).animate(
+  //             CurvedAnimation(
+  //               parent: animationController1,
+  //               curve: const Interval((1 / 6) * 5, 1.0,
+  //                   curve: Curves.fastOutSlowIn),
+  //             ),
+  //           );
+  //           animationController1.forward();
+  //           return ListComponent(
+  //             taskList: TaskList(id, title, description, tasks, tags, imageUrl),
+  //               animationController: animationController1,
+  //               animation: animation);
+  //         }),
+  //   ));
+  // }
 }

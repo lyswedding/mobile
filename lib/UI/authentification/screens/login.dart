@@ -1,7 +1,14 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lys_wedding/UI/authentification/components/button.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
+import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/UI/liste/screens/add-lists.dart';
+import 'package:lys_wedding/services/auth.services.dart';
+import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 
 class Login extends StatefulWidget {
@@ -22,165 +29,141 @@ class _LoginState extends State<Login> {
 
   Widget Loginwidget() {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: scaffoldBGColor,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(padding: EdgeInsets.only(top: 50, bottom: 10)),
-            Container(height: 100, child: Image.asset("images/icon.png")),
-            // Container(
-            //     height: 300,
-            //     decoration: const BoxDecoration(
-            //         borderRadius:
-            //             BorderRadius.only(bottomLeft: Radius.circular(90)),
-            //         color: Colors.orange),
-            //     child: Center(
-            //         child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //             crossAxisAlignment: CrossAxisAlignment.center,
-            //             children: [
-            //           Container(
-            //               height: 150, child: Image.asset("images/icon.png")),
-            //           Container(
-            //             padding: const EdgeInsets.only(right: 30),
-            //             alignment: Alignment.bottomRight,
-            //             child: const Text(
-            //               "Login",
-            //               style: TextStyle(fontSize: 40, color: Colors.white),
-            //             ),
-            //           )
-            //         ]))),
-            CustomInput(
-              icon: Icon(Icons.email_outlined, color: Colors.black),
-              hint: 'Enter your email',
-              controller: emailController,
-            ),
-            CustomInput(
-              icon: const Icon(Icons.lock_outline, color: Colors.black),
-              hint: "Enter password",
-              controller: passwordController,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 200,width: 200,),
+              CustomInput(
+                icon: const Icon(EvaIcons.email, color:secondaryColor),
+                hint: 'Enter your email',
+                controller: emailController,
+              ),
+              const SizedBox(height: 15,),
+              CustomInput(
+                icon: const Icon(EvaIcons.lock, color: secondaryColor),
+                hint: "Enter password",
+                controller: passwordController,
+              ),
+              const SizedBox(height: 20,),
+              CustomButton(
+                  text: "Login",
+                  onPressed: () {
+                    setState(() {
+                      isInCall = true;
+                    });
 
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(left: 20, right: 20, top: 40),
-                  padding:
-                      const EdgeInsets.only(left: 20, right: 20, bottom: 5),
-                  height: 54,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      (new Color(0xffF5591F)),
-                      new Color(0xffF2861E)
-                    ], begin: Alignment.centerLeft, end: Alignment.centerRight),
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey[200],
-                    boxShadow: const [
-                      BoxShadow(
-                          offset: Offset(0, 10),
-                          blurRadius: 50,
-                          color: Color(0xffEEEEEE)),
-                    ],
-                  ),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
+                    var body = {
+                      "email": emailController.text,
+                      "password": passwordController.text,
+                    };
+                    print(body.toString());
+
+                    AuthCalls.login(body).then((code) {
+                      setState(() {
+                        isInCall = false;
+                      });
+                      if (code == 200) {
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const AddList()));
-                    },
-                    child: Text(
-                      "Sign up",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  )),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () {},
-                child: const Text(
-                  "Forget Password?",
-                  style: TextStyle(fontSize: 12),
+                            builder: (context) => const Home(),
+                          ),
+                        );
+                      } else {
+                        showToast(
+                            context: context,
+                            msg:
+                            "Une erreur s'est produite. Veuillez réessayer!");
+                      }
+                    });
+                  }),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: const Text(
+                    "Forget Password?",
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
               ),
-            ),
-            Row(
-              children: const <Widget>[
-                Expanded(
-                  child: Divider(
-                    color: Colors.black,
-                    height: 8.0,
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  'or continue with ',
-                  style: TextStyle(color: Colors.black),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  child: Divider(
-                    color: Colors.black,
-                    height: 8.0,
-                  ),
-                )
-              ],
-            ),
-            Container(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                    height: 70,
-                    margin: EdgeInsets.only(top: 20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white),
-                    child: Image.asset("images/21.png")),
-                Padding(padding: EdgeInsets.all(20)),
-                Container(
-                    height: 70,
-                    margin: EdgeInsets.only(top: 20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white),
-                    child: Image.asset("images/22.png")),
-              ],
-            )),
-
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't Have Any Account?  "),
-                  GestureDetector(
-                    child: const Text(
-                      "Login Now",
-                      style: TextStyle(color: Colors.orange),
+              Row(
+                children: <Widget>[
+                  const Expanded(
+                    child: Divider(
+                      color: Colors.black,
+                      height: 8.0,
                     ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Signup(),
-                          ));
-                    },
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    'or continue with ',
+                    style: GoogleFonts.poppins(
+                        fontSize: 12, color: Colors.black),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const Expanded(
+                    child:  Divider(
+                      color: Colors.black,
+                      height: 8.0,
+                    ),
                   )
                 ],
               ),
-            )
-          ],
+              Container(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      height: 70,
+                      margin: const EdgeInsets.only(top: 20),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      child: Image.asset("images/21.png")),
+                  const Padding(padding: const EdgeInsets.all(20)),
+                  Container(
+                      height: 70,
+                      margin: const EdgeInsets.only(top: 20),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      child: Image.asset("images/22.png")),
+                ],
+              )),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                     Text("Don't Have Any Account?  ",style: GoogleFonts.poppins(
+                         fontSize: 12, color: Colors.black),),
+                    GestureDetector(
+                      child: Text(
+                        "Sign up",
+                        style: GoogleFonts.poppins(
+                            fontSize: 12, color: Colors.pink,decoration: TextDecoration.underline),                    ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Signup(),
+                            ));
+                      },
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

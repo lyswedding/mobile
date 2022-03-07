@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/screens/task_update.dart';
+import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
@@ -10,11 +11,13 @@ class TaskComponent extends StatelessWidget {
   final String text;
   final AnimationController animationController;
   final Animation<double> animation;
+  final Task task;
 
   const TaskComponent({
     required this.text,
     required this.animation,
     required this.animationController,
+    required this.task
   });
 
   @override
@@ -55,7 +58,7 @@ class TaskComponent extends StatelessWidget {
                                     Expanded(
                                       flex: 6,
                                       child: Text(
-                                        text,
+                                        task.title,
                                         textAlign: TextAlign.left,
                                         style: titleTextStyle,
                                       ),
@@ -70,7 +73,7 @@ class TaskComponent extends StatelessWidget {
                                           ),
                                           const SizedBox(width: 5,),
                                           Text(
-                                            "furniture",
+                                            task.tags[0],
                                             overflow: TextOverflow.ellipsis,
                                             style: subTitleTextStyle,
                                           ),
@@ -80,7 +83,7 @@ class TaskComponent extends StatelessWidget {
                                   ],
                                 ),
                                 Text(
-                                  'subTxt',
+                                  task.description,
                                   style: subTitleTextStyle,
                                 ),
                               ],
@@ -94,13 +97,14 @@ class TaskComponent extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                              'subTxt',
-                              style: subTitleTextStyle,
-                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                Text(
+                                  task.cost.toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: subTitleTextStyle,
+                                ),
                                 Row(
                                   children: [
                                     Icon(
@@ -111,7 +115,7 @@ class TaskComponent extends StatelessWidget {
                                       width: 10,
                                     ),
                                     Text(
-                                      "21 Fev 2022",
+                                      task.dueDate,
                                       overflow: TextOverflow.ellipsis,
                                       style: subTitleTextStyle,
                                     ),
@@ -127,7 +131,7 @@ class TaskComponent extends StatelessWidget {
                                       width: 10,
                                     ),
                                     Text(
-                                      "21",
+                                      task.nbUse.toString(),
                                       overflow: TextOverflow.ellipsis,
                                       style: subTitleTextStyle,
                                     ),

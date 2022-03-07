@@ -60,7 +60,7 @@ class CategoryItemList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const Icon(EvaIcons.pricetags,size: 16,color: whiteColor,),
-                Text('data',style: subTitleTextStyle.copyWith(color: whiteColor),),
+                Text(text,style: subTitleTextStyle.copyWith(color: whiteColor),),
               ],
             )),
           ),

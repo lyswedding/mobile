@@ -2,10 +2,14 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/components/task_component.dart';
+import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 
 class ListTasks extends StatefulWidget {
+
+  List<Task> listTasks;
+  ListTasks({required this.listTasks});
 
   @override
   _ListTasksState createState() => _ListTasksState();
@@ -50,7 +54,7 @@ class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin{
   }
   Widget _buildListTasks() {
     return ListView.builder(
-        itemCount: 10,
+        itemCount: widget.listTasks.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -81,6 +85,7 @@ class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin{
 
               },
             child: TaskComponent(
+              task: widget.listTasks[index],
               animationController: animationController,
               text: 'text',
               animation: animation,

@@ -6,29 +6,25 @@ import 'package:lys_wedding/UI/search/servises/service_list.dart';
 import 'package:lys_wedding/models/List_search.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
-import '../components/lys_items_list.dart';
-
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
-
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
-  ListSearch? search;
+  List<Provider> search = [];
   bool isLoaded = false;
-  final ServiceList _service = ServiceList();
+
+  final ServiceList service = ServiceList();
   late AnimationController animationController;
   late AnimationController animationController1;
 
   fetchsearch() async {
-    search = await _service.getPrestataire();
-    if (search != null) {
-      setState(() {
-        isLoaded = true;
-      });
-    }
+    search = await service.getPrestataire();
+
+    setState(() {
+      isLoaded = true;
+    });
   }
 
   @override
@@ -40,7 +36,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         duration: Duration(milliseconds: 2000), vsync: this);
     super.initState();
     fetchsearch();
-    print(search?.providers);
+    print(search);
   }
 
   @override
@@ -85,9 +81,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Widget _buildListFavoriteProviders() {
     return SingleChildScrollView(
         child: SizedBox(
-      height: 800,
+      height: 700,
       child: ListView.builder(
-          itemCount: search?.providers.length,
+          itemCount: search.length,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -98,16 +94,16 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               ),
             );
             animationController.forward();
-            if (search != null) {
-              return ItemListSearch(
-                  animation: animation,
-                  animationController: animationController,
-                  text: '',
-                  items: search!.providers
-                      .map((e) => ListItem(image: e.cover, label: e.name))
-                      .toList());
-            }
-            return LysItemsList(items: const []);
+
+            return ItemListSearch(
+              provider: search[index],
+              animation: animation,
+              animationController: animationController,
+              text: '', items: [],
+              // items: search!.providers
+              //     .map((e) => ListItem(image: e.cover, label: e.name))
+              //     .toList()
+            );
           }),
     ));
   }
