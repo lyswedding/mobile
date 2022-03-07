@@ -14,6 +14,7 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
+  TextEditingController searchController=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,17 +22,18 @@ class _SearchBarState extends State<SearchBar> {
       child:  Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 6,
-            child: Container(
-             // margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              //height: MediaQuery.of(context).size.height * .10,
-              child: const CustomInput(
-                icon: Icon(Icons.search),
-                hint: "",
-              ),
-            ),
-          ),
+          // Expanded(
+          //   flex: 6,
+          //   child: Container(
+          //    // margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+          //     //height: MediaQuery.of(context).size.height * .10,
+          //     child: CustomInput(
+          //       icon: Icon(Icons.search),
+          //       hint: "",
+          //       controller: searchController,
+          //     ),
+          //   ),
+          // ),
           GestureDetector(
             onTap: (){
               Navigator.push(context, MaterialPageRoute(builder: (context)=>FilterPage()));

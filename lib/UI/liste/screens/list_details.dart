@@ -174,7 +174,7 @@ class _ListDetailsState extends State<ListDetails>
               //     ],
               //   ),
               // )
-              _buildListFavoriteLists(),
+              //_buildListFavoriteLists(),
             ],
           ),
         ),
