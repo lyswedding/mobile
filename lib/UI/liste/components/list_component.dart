@@ -36,7 +36,7 @@ class ListComponent extends StatelessWidget {
                 AspectRatio(
                   aspectRatio: 0.9,
                   child: Image.network(
-                    taskList.imageUrl,
+                    taskList.imageUrl.toString(),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -52,7 +52,7 @@ class ListComponent extends StatelessWidget {
                           Expanded(
                             flex:9,
                             child: Text(
-                              taskList.title,
+                              taskList.title.toString(),
                               style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -80,7 +80,7 @@ class ListComponent extends StatelessWidget {
                         children: [
                           Icon(EvaIcons.pricetags,size: 15,color: primaryColor,),
                           Text(
-                            taskList.tags[0],
+                            taskList.tags![0],
                             // Helper.getRoomText(hotelInfo.roomData!),
                             style: GoogleFonts.poppins(
                                 fontSize: 12,
@@ -90,7 +90,7 @@ class ListComponent extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        taskList.tasks.length.toString()+'\ttaches',
+                        taskList.tasks!.length.toString()+'\ttaches',
                         // Helper.getRoomText(hotelInfo.roomData!),
                         style: GoogleFonts.poppins(
                             fontSize: 12,

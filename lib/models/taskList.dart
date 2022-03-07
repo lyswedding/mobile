@@ -11,16 +11,19 @@ class TaskList {
       this.imageUrl,
   );
 
-  String id;
-  String title;
-  String description;
-  List<Task> tasks;
-  List tags;
-  String imageUrl;
+  final String? id;
+  final String? title;
+  final String? description;
+  final List<Task>? tasks;
+  final List? tags;
+  final String? imageUrl;
 
 
 
   Map<String, dynamic> toJson() {
+
+    List<Map<String, dynamic>>? responsesJSon =
+    tasks != null ? tasks!.map((i) => i.toJson()).toList() : null;
     return <String, dynamic>{
       'title': title,
       'description': description,
@@ -58,16 +61,15 @@ class Task {
   String state;
   List tags;
 
-  // Map<String, dynamic> toJson() {
-  //   //Map author = this.author != null ? this.author.toJson() : null;
-  //   return <String, dynamic>{
-  //     'title': title,
-  //     'description': description,
-  //     'doctor': doctor,
-  //     'state': state,
-  //     'responses': responsesJSon,
-  //   };
-  // }
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      "title": title,
+      "description": description,
+      "cost": cost,
+      "realization_date": dueDate.toString(),
+      "tags": tags
+    };
+  }
 
   factory Task.fromJson(Map<String, dynamic> json) {
     List listO = json['tags'];

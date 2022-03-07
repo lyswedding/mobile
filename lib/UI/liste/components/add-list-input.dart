@@ -29,10 +29,10 @@ class _AddListInputState extends State<AddListInput> {
         children: [
           Text(widget.titre,style: titleTextStyle.copyWith(fontSize: 14),),
           SizedBox(height: 10,),
-          // CustomInput(
-          //   hint: widget.hint,
-          //   controller: widget.textEditingController,
-          // ),
+          CommonTextFieldView(
+            hintText: widget.hint,
+            controller: widget.textEditingController,
+          )
         ],
       ),
     );

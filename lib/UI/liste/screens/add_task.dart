@@ -12,23 +12,20 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'list_tasks.dart';
 import 'liste_page.dart';
 
-
 class AddTask extends StatefulWidget {
-final List<Task> taskList;
-AddTask({required this.taskList});
+  final List<Task> taskList;
+  AddTask({required this.taskList});
   @override
   _AddTaskState createState() => _AddTaskState();
-
 }
 
-
 class _AddTaskState extends State<AddTask> {
-  TextEditingController titleController =TextEditingController();
-  TextEditingController descController =TextEditingController();
-  TextEditingController dueDateController =TextEditingController();
-  TextEditingController costController =TextEditingController();
-  TextEditingController tagsController =TextEditingController();
-  TextEditingController nbUseController =TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+  TextEditingController dueDateController = TextEditingController();
+  TextEditingController costController = TextEditingController();
+  TextEditingController tagsController = TextEditingController();
+  TextEditingController nbUseController = TextEditingController();
   DateTime? datetime;
 
   String getText() {
@@ -44,6 +41,7 @@ class _AddTaskState extends State<AddTask> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -85,18 +83,22 @@ class _AddTaskState extends State<AddTask> {
               textEditingController: costController,
             ),
             AddListInput(
-              titre: "Note",
-              hint: "Note",
-              textEditingController:nbUseController,
+              titre: "NbUse",
+              hint: "NbUse",
+              textEditingController: nbUseController,
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Due date',style: titleTextStyle.copyWith(fontSize: 14),),
-                  const SizedBox(height: 10,),
+                  Text(
+                    'Due date',
+                    style: titleTextStyle.copyWith(fontSize: 14),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     alignment: Alignment.center,
                     // margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -109,8 +111,10 @@ class _AddTaskState extends State<AddTask> {
                     child: GestureDetector(
                       child: Row(
                         children: [
-                          Icon(EvaIcons.calendarOutline),
-                          SizedBox(width: 10,),
+                          const Icon(EvaIcons.calendarOutline),
+                          const SizedBox(
+                            width: 10,
+                          ),
                           Text(
                             getText(),
                             style: regularTextStyle,
@@ -121,7 +125,7 @@ class _AddTaskState extends State<AddTask> {
                         showDatePicker(
                           context: context,
                           initialDate:
-                          datetime == null ? DateTime.now() : datetime!,
+                              datetime == null ? DateTime.now() : datetime!,
                           initialDatePickerMode: DatePickerMode.day,
                           firstDate: DateTime(2021),
                           lastDate: DateTime(2040),
@@ -142,25 +146,31 @@ class _AddTaskState extends State<AddTask> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Tags',style: titleTextStyle.copyWith(fontSize: 14),),
-                  const SizedBox(height: 10,),
-                  // CustomInput(
-                  //   hint: 'tags',
-                  //   icon: const Icon(EvaIcons.pricetags),
-                  //   controller: tagsController,
-                  // ),
+                  Text(
+                    'Tags',
+                    style: titleTextStyle.copyWith(fontSize: 14),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             ),
-            CustomButton(text: 'Enregistrer', onPressed: (){
-              Task task=Task(titleController.text, descController.text, int.parse(costController.text), int.parse(nbUseController.text), getText(),'in progress', [tagsController.text]);
-               setState(() {
-                 widget.taskList.add(task);
-                 Navigator.pop(context);
-
-               });
-
-            })
+            CustomButton(
+                text: 'Enregistrer',
+                onPressed: () {
+                  setState(() {
+                    widget.taskList.add(Task(
+                        titleController.text,
+                        descController.text,
+                        int.parse(costController.text),
+                        int.parse(nbUseController.text),
+                        getText(),
+                        'in progress',
+                        [tagsController.text]));
+                  });
+                  Navigator.pop(context);
+                })
           ]),
         ));
   }

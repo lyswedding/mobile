@@ -26,7 +26,7 @@ class ListCalls {
     return tasksLists.toList();
   }
 
-  static Future<http.Response> addResponse(task) async {
+  static Future<http.Response> addTaskList(TaskList task) async {
     var url;
     var response;
 
@@ -36,7 +36,7 @@ class ListCalls {
     log(jsonEncode(task.toJson()));
     response = await http.post(
       url,
-      body: jsonEncode(response.toJson()),
+      body: jsonEncode(task.toJson()),
       headers: {
         "Content-type": "application/json",
         'Authorization': 'Bearer $token',
