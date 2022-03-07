@@ -200,6 +200,7 @@ class _ListDetailsState extends State<ListDetails>
             animationController.forward();
             return CategoryItemList(
                 widget.taskList.tags![index], 'images/9.jpg', animationController, animation);
+
           }),
     ));
   }
@@ -220,12 +221,11 @@ class _ListDetailsState extends State<ListDetails>
     );
   }
 
-  buildRelatedLists(){
+  buildRelatedLists() {
     var animation = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: animationController,
-        curve: const Interval((1 / 6) * 5, 1.0,
-            curve: Curves.fastOutSlowIn),
+        curve: const Interval((1 / 6) * 5, 1.0, curve: Curves.fastOutSlowIn),
       ),
     );
     animationController.forward();
@@ -239,7 +239,7 @@ class _ListDetailsState extends State<ListDetails>
     return SizedBox(
       height: 400,
       child: ListView.builder(
-        shrinkWrap: true,
+          shrinkWrap: true,
           itemCount: 4,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {

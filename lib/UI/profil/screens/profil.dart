@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/home/screens/profil/screens/modif_profil/screens/modif_profil.dart';
+import 'package:lys_wedding/UI/profil/service/profil_service.dart';
+
+import '../modele/model_profil.dart';
 
 class ProfilPage extends StatefulWidget {
   const ProfilPage({Key? key}) : super(key: key);
@@ -9,9 +12,29 @@ class ProfilPage extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<ProfilPage> {
+  UserApi item = UserApi();
+  bool isLoaded = false;
+  final ServiceProfil service = ServiceProfil();
+  fetchprofil() async {
+    item = await service.getUser();
+    print(item);
+    setState(() {
+      isLoaded = true;
+    });
+  }
+
+  @override
+  void initState() {
+    print('salaaaaaaaaaaaaaaaaaam');
+    fetchprofil();
+    print(item!.user);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
@@ -34,16 +57,16 @@ class _ProfilPageState extends State<ProfilPage> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            Image.asset(
-              "images/adel.png",
-              scale: 3,
+            CircleAvatar(
+              radius: 100,
+              backgroundImage: NetworkImage(item.user!.imageUrl ?? ""),
             ),
-            const Text(
-              "UserName",
+            Text(
+              item.user!.firstName ?? "foulan",
               style: TextStyle(fontSize: 25),
             ),
-            const Text(
-              "UserName@gmail.com",
+            Text(
+              item.user!.email ?? "",
               style: TextStyle(fontSize: 15),
             ),
             Column(
@@ -65,8 +88,9 @@ class _ProfilPageState extends State<ProfilPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ProfilPageModif()));
+                                    builder: (context) => ProfilPageModif(
+                                          user: item.user!,
+                                        )));
                           },
                           child: Row(children: const [
                             Icon(Icons.person),

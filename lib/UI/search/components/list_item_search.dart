@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/components/common_card.dart';
+import 'package:lys_wedding/UI/liste/screens/list_tasks.dart';
+import 'package:lys_wedding/UI/liste/screens/task_update.dart';
+import 'package:lys_wedding/UI/search/screens/detail_search/screens/detail_search.dart';
+import 'package:lys_wedding/models/List_search.dart';
+import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
-class ItemListSearch extends StatelessWidget {
+import '../../liste/screens/list_details.dart';
+
+class ItemListSearch<T> extends StatelessWidget {
   const ItemListSearch({
     Key? key,
+    required this.provider,
     required this.text,
     required this.items,
     required this.animation,
     required this.animationController,
   }) : super(key: key);
-
-  final List items;
+  final Provider provider;
+  final List<T>? items;
   final String text;
   final AnimationController animationController;
   final Animation<double> animation;
@@ -36,8 +44,8 @@ class ItemListSearch extends StatelessWidget {
                     //ProfilePicture(restaurantId: hotelData.id,),
                     AspectRatio(
                         aspectRatio: 2,
-                        child: Image.asset(
-                          'images/14.jpg',
+                        child: Image.network(
+                          provider.cover,
                           fit: BoxFit.cover,
                         )),
                     Column(
@@ -49,7 +57,7 @@ class ItemListSearch extends StatelessWidget {
                             Expanded(
                               flex: 6,
                               child: Text(
-                                text,
+                                provider.name,
                                 textAlign: TextAlign.left,
                                 style: titleTextStyle,
                               ),
@@ -64,7 +72,7 @@ class ItemListSearch extends StatelessWidget {
                                     color: Theme.of(context).primaryColor,
                                   ),
                                   Text(
-                                    "aaa",
+                                    provider.description,
                                     overflow: TextOverflow.ellipsis,
                                     style: subTitleTextStyle,
                                   ),
@@ -126,7 +134,14 @@ class ItemListSearch extends StatelessWidget {
                         borderRadius: const BorderRadius.all(
                           const Radius.circular(32.0),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailSearch(
+                                        provider: provider,
+                                      )));
+                        },
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: const Icon(

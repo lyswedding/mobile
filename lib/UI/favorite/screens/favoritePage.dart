@@ -5,6 +5,9 @@ import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/task_list_services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
+import '../../../models/List_search.dart';
+import '../../search/servises/service_list.dart';
+
 class FavoritePage extends StatefulWidget {
   const FavoritePage({Key? key}) : super(key: key);
 
@@ -18,6 +21,9 @@ class _FavoritePageState extends State<FavoritePage>
   late AnimationController animationController;
   late TabController _nestedTabController;
   bool isInCall = false;
+  bool isLoaded = false;
+  final ServiceList service = ServiceList();
+  List<Provider> search = [];
   List<TaskList> taskLists = [];
 
   callAllListes() {
@@ -31,6 +37,14 @@ class _FavoritePageState extends State<FavoritePage>
     });
     setState(() {
       isInCall = false;
+    });
+  }
+
+  fetchsearch() async {
+    search = await service.getPrestataire();
+
+    setState(() {
+      isLoaded = true;
     });
   }
 
@@ -57,8 +71,10 @@ class _FavoritePageState extends State<FavoritePage>
         duration: const Duration(milliseconds: 2000), vsync: this);
 
     _nestedTabController = new TabController(length: 2, vsync: this);
-callAllListes();
+    callAllListes();
     super.initState();
+    fetchsearch();
+    print(search);
   }
 
   @override
@@ -154,7 +170,7 @@ callAllListes();
                 );
                 animationController.forward();
                 return ListComponent(
-                  taskList: taskLists[index],
+                    taskList: taskLists[index],
                     animationController: animationController,
                     animation: animation);
               }),
@@ -168,7 +184,7 @@ callAllListes();
         child: SizedBox(
       height: 800,
       child: ListView.builder(
-          itemCount: 10,
+          itemCount: search.length,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -179,11 +195,15 @@ callAllListes();
               ),
             );
             animationController.forward();
+
             return ItemListSearch(
-              text: 'text',
-              items: items,
+              provider: search[index],
               animation: animation,
               animationController: animationController,
+              text: '', items: [],
+              // items: search!.providers
+              //     .map((e) => ListItem(image: e.cover, label: e.name))
+              //     .toList()
             );
           }),
     ));

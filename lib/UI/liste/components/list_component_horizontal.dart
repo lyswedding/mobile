@@ -35,8 +35,12 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
         padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
         child: GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ListDetails(taskList: widget.taskListData,)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ListDetails(
+                          taskList: widget.taskListData,
+                        )));
           },
           child: CommonCard(
             color: whiteColor,
@@ -113,7 +117,9 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                                               .toString() +
                                           '\ttaches',
                                       overflow: TextOverflow.ellipsis,
-                                      style: titleTextStyle.copyWith(fontWeight: FontWeight.w600,fontSize:12),
+                                      style: titleTextStyle.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12),
                                     ),
                                     //Helper.ratingStar(),
                                   ],
