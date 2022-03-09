@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:lys_wedding/UI/authentification/components/button.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
@@ -9,6 +10,7 @@ import 'package:lys_wedding/UI/liste/components/add-list-input.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:textfield_tags/textfield_tags.dart';
 import 'list_tasks.dart';
 import 'liste_page.dart';
 
@@ -27,6 +29,7 @@ class _AddTaskState extends State<AddTask> {
   TextEditingController tagsController = TextEditingController();
   TextEditingController nbUseController = TextEditingController();
   DateTime? datetime;
+  final List<String> tags=[];
 
   String getText() {
     if (datetime == null) {
@@ -71,21 +74,21 @@ class _AddTaskState extends State<AddTask> {
               titre: "Titre",
               hint: "Nom de tache",
               textEditingController: titleController,
+              isEnabled: true,
             ),
             AddListInput(
               titre: "Description",
               hint: "Description",
               textEditingController: descController,
+              isEnabled: true,
+
             ),
             AddListInput(
               titre: "Cout",
               hint: "Cout",
               textEditingController: costController,
-            ),
-            AddListInput(
-              titre: "NbUse",
-              hint: "NbUse",
-              textEditingController: nbUseController,
+              isEnabled: true,
+
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -111,7 +114,7 @@ class _AddTaskState extends State<AddTask> {
                     child: GestureDetector(
                       child: Row(
                         children: [
-                          const Icon(EvaIcons.calendarOutline),
+                          const Icon(EvaIcons.calendarOutline,color: Colors.pink,),
                           const SizedBox(
                             width: 10,
                           ),
@@ -141,33 +144,70 @@ class _AddTaskState extends State<AddTask> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Tags',
-                    style: titleTextStyle.copyWith(fontSize: 14),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Tags',
+                  style: titleTextStyle.copyWith(fontSize: 14),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: whiteColor,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextFieldTags(
+                          tagsStyler: TagsStyler(
+                              tagTextStyle: regularTextStyle.copyWith(color: primaryColor),
+                              tagDecoration: BoxDecoration(color: Colors.pink[300], borderRadius: BorderRadius.circular(5.0), ),
+                              tagCancelIcon: Icon(Icons.cancel, size: 18.0, color: Colors.pink[900]),
+                              tagPadding: const EdgeInsets.all(6.0)
+                          ),
+                          textFieldStyler: TextFieldStyler(
+                              textFieldBorder: InputBorder.none,
+                              hintText: 'enter tags',
+                              hintStyle: regularTextStyle.copyWith(fontSize: 15),
+                              helperText: ''
+                          ),
+                          onTag: (tag) {
+                            tags.add(tag);
+                          },
+                          onDelete: (tag) {
+                            tags.remove(tag);
+                          },
+                          validator: (tag){
+                            if(tag.length>15){
+                              return "hey that's too long";
+                            }
+                            return null;
+                          }
+                      ),
+                    ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
             CustomButton(
                 text: 'Enregistrer',
                 onPressed: () {
                   setState(() {
                     widget.taskList.add(Task(
+                        '0',
                         titleController.text,
                         descController.text,
                         int.parse(costController.text),
-                        int.parse(nbUseController.text),
-                        getText(),
+                        0,
+                        DateTime.now().toIso8601String(),
                         'in progress',
-                        [tagsController.text]));
+                        tags));
                   });
                   Navigator.pop(context);
                 })

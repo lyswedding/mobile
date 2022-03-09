@@ -6,12 +6,14 @@ class AddListInput extends StatefulWidget {
   final String titre;
   final String hint;
   final TextEditingController textEditingController;
+  final bool isEnabled;
 
    AddListInput({
     Key? key,
     required this.titre,
     required this.hint,
      required this.textEditingController,
+     this.isEnabled=false,
 
   }) : super(key: key);
 
@@ -28,10 +30,11 @@ class _AddListInputState extends State<AddListInput> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(widget.titre,style: titleTextStyle.copyWith(fontSize: 14),),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           CommonTextFieldView(
             hintText: widget.hint,
             controller: widget.textEditingController,
+            enabled: widget.isEnabled,
           )
         ],
       ),

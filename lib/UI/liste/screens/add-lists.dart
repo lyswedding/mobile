@@ -1,14 +1,18 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lys_wedding/UI/authentification/components/button.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/liste/components/add-list-input.dart';
 import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/UI/liste/screens/add_task.dart';
 import 'package:lys_wedding/models/taskList.dart';
-import 'package:lys_wedding/services/task_list_services.dart';
+import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:textfield_tags/textfield_tags.dart';
 import 'liste_page.dart';
 
 class AddList extends StatefulWidget {
@@ -23,6 +27,7 @@ TextEditingController descController = TextEditingController();
 TextEditingController tagsController = TextEditingController();
 bool isInCall = false;
 final List<Task> tasks=[];
+final List<String> tags=[];
 late AnimationController animationController;
 
 class _AddListState extends State<AddList> with TickerProviderStateMixin {
@@ -31,13 +36,31 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
       isInCall = false;
     });
 
-    TaskList taskList=TaskList('0',titleController.text, descController.text, tasks,[],'');
+    TaskList taskList=TaskList('0',titleController.text, descController.text, tasks,tags,'https://unsplash.com/photos/y16ku6si6xI',1000,0);
     // var body = {
     //   "title": titleController.text,
     //   "description": descController.text,
     //   "tags": tagsController.text
     // };
-    ListCalls.addTaskList(taskList).then((value) => print(value));
+    ListCalls.addTaskListMultipartRequest(taskList).then((value) {
+      print(value);
+      // if(value.==200){
+      //   showToast(
+      //       context: context,
+      //       msg:
+      //       "liste créé avec succès!");
+      //   tags.clear();
+      //   tasks.clear();
+      // titleController.clear();
+      // descController.clear();
+      //
+      // }else{
+      //   showToast(
+      //       context: context,
+      //       msg:
+      //       "une erreur s'est produite!");
+      // }
+    });
 
     setState(() {
       isInCall = true;
@@ -84,14 +107,67 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                     titre: "Titre",
                     hint: "Nom de liste",
                     textEditingController: titleController,
+                    isEnabled: true,
                   ),
                   AddListInput(
                     titre: "Description",
                     hint: "Description",
                     textEditingController: descController,
+                    isEnabled: true,
+
                   ),
 
-
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Tags',
+                        style: titleTextStyle.copyWith(fontSize: 14),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: whiteColor,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: TextFieldTags(
+                                tagsStyler: TagsStyler(
+                                    tagTextStyle: regularTextStyle.copyWith(color: primaryColor),
+                                    tagDecoration: BoxDecoration(color: Colors.pink[300], borderRadius: BorderRadius.circular(5.0), ),
+                                    tagCancelIcon: Icon(Icons.cancel, size: 18.0, color: Colors.pink[900]),
+                                    tagPadding: const EdgeInsets.all(6.0)
+                                ),
+                                textFieldStyler: TextFieldStyler(
+                                  textFieldBorder: InputBorder.none,
+                                  hintText: 'enter tags',
+                                  hintStyle: regularTextStyle.copyWith(fontSize: 15),
+                                  helperText: ''
+                                ),
+                                onTag: (tag) {
+                                  tags.add(tag);
+                                },
+                                onDelete: (tag) {
+                                  tags.remove(tag);
+                                },
+                                validator: (tag){
+                                  if(tag.length>15){
+                                    return "hey that's too long";
+                                  }
+                                  return null;
+                                }
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(

@@ -63,23 +63,27 @@ class Provider {
   dynamic deletedAt;
   int v;
 
-  factory Provider.fromJson(Map<String, dynamic> json) => Provider(
-        id: json["_id"],
-        name: json["name"],
-        cover: json["cover"],
-        description: json["description"],
-        phone: json["phone"],
-        email: json["email"],
-        facebookUrl: json["facebookUrl"],
-        instagramUrl: json["instagramUrl"],
-        services: List<dynamic>.from(json["services"].map((x) => x)),
-        locations: List<Location>.from(
-            json["locations"].map((x) => Location.fromJson(x))),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"],
-        deletedAt: json["deleted_at"],
-        v: json["__v"],
-      );
+  factory Provider.fromJson(Map<String, dynamic> json) {
+    var lists = json['locations'] as List;
+
+    List<Location> locations = lists.map((i) => Location.fromJson(i)).toList();
+    return Provider(
+      id: json["_id"],
+      name: json["name"],
+      cover: json["cover"],
+      description: json["description"],
+      phone: json["phone"],
+      email: json["email"],
+      facebookUrl: json["facebookUrl"],
+      instagramUrl: json["instagramUrl"],
+      services: List<dynamic>.from(json["services"].map((x) => x)),
+      locations:locations,
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: json["updated_at"],
+      deletedAt: json["deleted_at"],
+      v: json["__v"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "_id": id,

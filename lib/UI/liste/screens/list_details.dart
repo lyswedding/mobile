@@ -151,6 +151,7 @@ class _ListDetailsState extends State<ListDetails>
                           MaterialPageRoute(
                               builder: (context) => ListTasks(
                                     listTasks: widget.taskList.tasks!,
+                                idList: widget.taskList.id,
                                   )));
                     },
                     child: Text(
@@ -218,6 +219,7 @@ class _ListDetailsState extends State<ListDetails>
       animationController: animationController,
       text: 'text',
       animation: animation,
+      idList: widget.taskList.id,
     );
   }
 

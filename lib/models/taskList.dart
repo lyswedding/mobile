@@ -8,7 +8,9 @@ class TaskList {
     this.description,
     this.tasks,
     this.tags,
-      this.imageUrl,
+    this.imageUrl,
+    this.cost,
+    this.nbUse,
   );
 
   final String? id;
@@ -17,18 +19,21 @@ class TaskList {
   final List<Task>? tasks;
   final List? tags;
   final String? imageUrl;
-
-
+  final nbUse;
+  final cost;
 
   Map<String, dynamic> toJson() {
-
     List<Map<String, dynamic>>? responsesJSon =
-    tasks != null ? tasks!.map((i) => i.toJson()).toList() : null;
+        tasks != null ? tasks!.map((i) => i.toJson()).toList() : null;
     return <String, dynamic>{
       'title': title,
       'description': description,
       'tags': tags,
-      'tasks':tasks
+      'tasks': tasks,
+      'nbr_use': nbUse,
+      'realization_date': DateTime.now().toIso8601String(),
+      'cost': cost,
+      'image': ''
     };
   }
 
@@ -37,13 +42,21 @@ class TaskList {
 
     List<Task> tasksList = lists.map((i) => Task.fromJson(i)).toList();
 
-    return TaskList(json['_id'].toString(), json['title'].toString(),
-        json['description'].toString(), tasksList, json['tags'],json['imageUrl']);
+    return TaskList(
+        json['_id'].toString(),
+        json['title'].toString(),
+        json['description'].toString(),
+        tasksList,
+        json['tags'],
+        json['imageUrl'],
+        json['nbr_use'],
+        json['cost']);
   }
 }
 
 class Task {
   Task(
+    this.id,
     this.title,
     this.description,
     this.cost,
@@ -60,14 +73,17 @@ class Task {
   String dueDate;
   String state;
   List tags;
+  String id;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       "title": title,
       "description": description,
       "cost": cost,
-      "realization_date": dueDate.toString(),
-      "tags": tags
+      "realization_date": DateTime.now().toIso8601String(),
+      "tags": tags,
+      "nbr_use": 0,
+      "state": "IN PROGRESS"
     };
   }
 
@@ -77,6 +93,7 @@ class Task {
     String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
 
     return Task(
+      json['_id'].toString(),
       json['title'].toString(),
       json['description'].toString(),
       json['cost'],

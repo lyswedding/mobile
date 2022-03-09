@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/search_bar.dart';
 import 'package:lys_wedding/UI/search/components/list_item_search.dart';
-import 'package:lys_wedding/UI/search/servises/service_list.dart';
 import 'package:lys_wedding/models/List_search.dart';
+import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 class SearchPage extends StatefulWidget {
@@ -15,12 +15,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List<Provider> search = [];
   bool isLoaded = false;
 
-  final ServiceList service = ServiceList();
   late AnimationController animationController;
   late AnimationController animationController1;
 
   fetchsearch() async {
-    search = await service.getPrestataire();
+    search = await ServiceList.getPrestataire();
 
     setState(() {
       isLoaded = true;
@@ -48,11 +47,26 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           centerTitle: true,
-          title: const Text(
+          title:  Text(
             "Search",
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+            style: titleTextStyle.copyWith(fontSize: 20),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 18.0),
+              child: Container(
+                //  Transform.translate(
+                // offset: const Offset(10, 0),
+                padding: EdgeInsets.only(top: 10),
+                // margin: EdgeInsets.symmetric(vertical: 5),
+
+                child: Image.asset(
+                  "images/adel.png",
+                  height: 60,
+                ),
+              ),
+            ),
+          ],
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -63,25 +77,28 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               )),
         ),
         body: SingleChildScrollView(
-          child: Column(children: [
-            const SearchBar(),
-            //ItemList(text: "text", items: items, width: 150, height: 50),
-            _buildCategories(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [Text("Results"), Text("view more")]),
-            ),
-            _buildListFavoriteProviders(),
-          ]),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Column(children: [
+              const SearchBar(),
+              //ItemList(text: "text", items: items, width: 150, height: 50),
+              _buildCategories(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [Text("Results"), Text("view more")]),
+              ),
+              _buildListFavoriteProviders(),
+            ]),
+          ),
         ));
   }
 
   Widget _buildListFavoriteProviders() {
     return SingleChildScrollView(
         child: SizedBox(
-      height: 700,
+      height: MediaQuery.of(context).size.height*0.6,
       child: ListView.builder(
           itemCount: search.length,
           scrollDirection: Axis.vertical,
@@ -99,7 +116,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               provider: search[index],
               animation: animation,
               animationController: animationController,
-              text: '', items: [],
+              text: '',
               // items: search!.providers
               //     .map((e) => ListItem(image: e.cover, label: e.name))
               //     .toList()

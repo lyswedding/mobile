@@ -1,10 +1,19 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/item_list.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
+import 'package:lys_wedding/models/List_search.dart';
+import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/services/categorie.services.dart';
+import 'package:lys_wedding/services/service_list.dart';
+import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedPrefValues.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class HomeDetails extends StatefulWidget {
   const HomeDetails({Key? key}) : super(key: key);
@@ -15,20 +24,52 @@ class HomeDetails extends StatefulWidget {
 
 class _HomeDetailsState extends State<HomeDetails>
     with TickerProviderStateMixin {
-  List items = [
-    "images/10.jpg",
-    "images/3.jpg",
-    "images/2.jpg",
-    "images/4.jpg",
-    "images/5.jpg",
-    "images/6.jpg",
-  ];
 
+ bool isInCall=false;
+ List<Service> services=[];
+ List<Provider> popularProviders=[];
+ List<TaskList> lists=[];
   late AnimationController animationController;
   late AnimationController animationController1;
+
+  callGetServices()async{
+
+    services=await CategorieCalls.getAdminServices();
+
+    setState(() {
+
+      isInCall=false;
+    });
+
+  }
+
+ callGetProviders()async{
+
+   popularProviders=await ServiceList.getPrestataire();
+
+   setState(() {
+
+     isInCall=false;
+   });
+
+ }
+
+ callGetLists()async{
+
+   lists=await ListCalls.getAdminLists();
+
+   setState(() {
+
+     isInCall=false;
+   });
+
+ }
   @override
   void initState() {
     // TODO: implement initState
+    callGetServices();
+    callGetProviders();
+    callGetLists();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     animationController1 = AnimationController(
@@ -43,14 +84,14 @@ class _HomeDetailsState extends State<HomeDetails>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          title: const Text(
+          title:  Text(
             "Bonjour",
-            style: TextStyle(color: Colors.black),
+            style: titleTextStyle,
           ),
           leading: Container(
             //  Transform.translate(
             // offset: const Offset(10, 0),
-            padding: EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 10),
             // margin: EdgeInsets.symmetric(vertical: 5),
 
             child: Image.asset(
@@ -58,19 +99,26 @@ class _HomeDetailsState extends State<HomeDetails>
               height: 50,
             ),
           ),
-          actions: const <Widget>[
-            Icon(
-              Icons.search,
-              color: Colors.black,
-              size: 24,
-            ),
-            Padding(padding: EdgeInsets.all(10)),
-            Icon(
+          actions:  <Widget>[
+            IconButton(onPressed: (){
+              deleteToken();
+              Navigator.of(context)
+                  .popUntil(ModalRoute.withName('/homePage'));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Signup(
+                  ),
+                ),
+              );
+            }, icon: const Icon(EvaIcons.logOutOutline,color: primaryColor,)),
+            const Padding(padding: EdgeInsets.all(10)),
+            const Icon(
               Icons.notifications,
               color: Colors.black,
               size: 24,
             ),
-            Padding(padding: EdgeInsets.all(10)),
+            const Padding(padding: const EdgeInsets.all(10)),
           ],
         ),
         body: Padding(
@@ -115,13 +163,7 @@ class _HomeDetailsState extends State<HomeDetails>
               const SizedBox(
                 height: 16,
               ),
-              ItemList(
-                text:
-                    "Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii\n Coiffure ,maquillage  ",
-                items: items,
-                height: 150.0,
-                width: 250.0,
-              ),
+              _buildListPopular(),
               const SizedBox(
                 height: 16,
               ),
@@ -136,7 +178,7 @@ class _HomeDetailsState extends State<HomeDetails>
                 height: 10,
               ),
 
-             // _buildListFavoriteLists(),
+              _buildListFavorites(),
             ]),
           ),
         ));
@@ -149,7 +191,7 @@ class _HomeDetailsState extends State<HomeDetails>
           child: SizedBox(
         height: 80,
         child: ListView.builder(
-            itemCount: 10,
+            itemCount: services.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -161,7 +203,7 @@ class _HomeDetailsState extends State<HomeDetails>
               );
               animationController.forward();
               return CategoryItem(
-                  'text', 'images/9.jpg', animationController, animation);
+                  services[index].title, services[index].icon, animationController, animation);
             }),
       )),
     );
@@ -189,10 +231,42 @@ class _HomeDetailsState extends State<HomeDetails>
   //           );
   //           animationController1.forward();
   //           return ListComponent(
-  //             taskList: TaskList(id, title, description, tasks, tags, imageUrl),
+  //             taskList: ,
   //               animationController: animationController1,
   //               animation: animation);
   //         }),
   //   ));
   // }
+
+ _buildListPopular(){
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: popularProviders
+            .map((element) => ItemList(item: element, height: 150.0,
+          width: 250.0,))
+            .toList(),
+      ),
+    );
+ }
+
+ _buildListFavorites(){
+   return SingleChildScrollView(
+     scrollDirection: Axis.horizontal,
+     child: Container(
+       height: MediaQuery.of(context).size.height*0.35,
+       child: Row(
+         children: lists
+             .map((element) => ListComponent(taskList: element,animationController:animationController ,animation: Tween(begin: 0.0, end: 1.0).animate(
+           CurvedAnimation(
+             parent: animationController,
+             curve: const Interval((1 / 6) *10, 1.0,
+                 curve: Curves.fastOutSlowIn),
+           ),
+         ) ,))
+             .toList(),
+       ),
+     ),
+   );
+ }
 }
