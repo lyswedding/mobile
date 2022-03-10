@@ -20,7 +20,6 @@ class _UserListPageState extends State<UserListPage>
     with TickerProviderStateMixin {
   String valuechoose = 'prestataire';
   late AnimationController animationController;
-  late TabController _nestedTabController;
   bool isInCall = false;
   bool isLoaded = false;
   final ServiceList service = ServiceList();
@@ -31,7 +30,7 @@ class _UserListPageState extends State<UserListPage>
     setState(() {
       isInCall = true;
     });
-    FavoriteCalls.GetTaskListFavorite().then((res) {
+    ListCalls.getUserLists().then((res) {
       setState(() {
         taskLists = res;
       });
@@ -41,13 +40,6 @@ class _UserListPageState extends State<UserListPage>
     });
   }
 
-  fetchsearch() async {
-    search = await FavoriteCalls.GetProvidersFavorite();
-
-    setState(() {
-      isLoaded = true;
-    });
-  }
 
 
 
@@ -55,19 +47,11 @@ class _UserListPageState extends State<UserListPage>
   void initState() {
     // TODO: implement initState
     callAllListes();
-    fetchsearch();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
-
-    _nestedTabController = new TabController(length: 2, vsync: this);
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _nestedTabController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,35 +82,12 @@ class _UserListPageState extends State<UserListPage>
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(children: [
-                TabBar(
-                  controller: _nestedTabController,
-                  indicatorColor: Colors.teal,
-                  labelColor: Colors.teal,
-                  unselectedLabelColor: Colors.black54,
-                  isScrollable: true,
-                  tabs: const <Widget>[
-                    Tab(
-                      text: "Listes",
-                    ),
-                    Tab(
-                      text: "Prestataires",
-                    ),
-                  ],
-                ),
                 SizedBox(
                   height: screenHeight,
-                  child: TabBarView(
-                      controller: _nestedTabController,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _buildListFavoriteLists(),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _buildListFavoriteProviders(),
-                        ),
-                      ]),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: _buildListFavoriteLists(),
+                  ),
                 ),
               ]),
             )));

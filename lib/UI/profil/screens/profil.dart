@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
-import 'package:lys_wedding/UI/profil/screens/modif_profil.dart';
+import 'package:lys_wedding/UI/profil/screens/detail_profil/screens/modif_profil/screens/modif_profil.dart';
+import 'package:lys_wedding/UI/profil/screens/user_lists.dart';
 import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/services/profil_service.dart';
+import 'package:lys_wedding/shared/sharedPrefValues.dart';
 
 class ProfilPage extends StatefulWidget {
   const ProfilPage({Key? key}) : super(key: key);
@@ -136,16 +139,24 @@ class _ProfilPageState extends State<ProfilPage> {
                         color: Colors.white),
                     height: 50,
                     width: 800,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(children: const [
-                          Icon(Icons.list),
-                          Padding(padding: EdgeInsets.only(left: 20)),
-                          Text('Listes'),
-                        ]),
-                        const Icon(Icons.arrow_forward_ios_outlined),
-                      ],
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserListPage()));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(children: const [
+                            Icon(Icons.list),
+                            Padding(padding: EdgeInsets.only(left: 20)),
+                            Text('Listes'),
+                          ]),
+                          const Icon(Icons.arrow_forward_ios_outlined),
+                        ],
+                      ),
                     )),
                 Container(
                     padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
@@ -176,18 +187,27 @@ class _ProfilPageState extends State<ProfilPage> {
                         color: Colors.white),
                     height: 50,
                     width: 800,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: Row(children: const [
-                            Icon(Icons.logout),
-                            Padding(padding: EdgeInsets.only(left: 20)),
-                            Text('Deconnexion'),
-                          ]),
-                        ),
-                        const Icon(Icons.arrow_forward_ios_outlined),
-                      ],
+                    child: GestureDetector(
+                      onTap: (){
+                        deleteToken();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => Signup()));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            child: Row(children: const [
+                              Icon(Icons.logout),
+                              Padding(padding: EdgeInsets.only(left: 20)),
+                              Text('Deconnexion'),
+                            ]),
+                          ),
+                          const Icon(Icons.arrow_forward_ios_outlined),
+                        ],
+                      ),
                     )),
               ],
             )

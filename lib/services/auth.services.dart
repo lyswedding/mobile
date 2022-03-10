@@ -62,6 +62,12 @@ class AuthCalls {
         },
         body: jsonEncode(body));
     if (response.statusCode == 201) {
+      String token = response.headers['x-access-token'].toString();
+      print(token);
+      // Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      // //debugPrint(decodedToken.toString());
+      // String userid = decodedToken['subject']['_id'];
+      await saveAccessTokenSharedPref(token);
       return response.statusCode;
     } else {
       print(response.body);

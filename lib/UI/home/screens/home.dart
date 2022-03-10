@@ -13,7 +13,6 @@ import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class HomeDetails extends StatefulWidget {
   const HomeDetails({Key? key}) : super(key: key);
@@ -99,26 +98,14 @@ class _HomeDetailsState extends State<HomeDetails>
               height: 50,
             ),
           ),
-          actions:  <Widget>[
-            IconButton(onPressed: (){
-              deleteToken();
-              Navigator.of(context)
-                  .popUntil(ModalRoute.withName('/homePage'));
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Signup(
-                  ),
-                ),
-              );
-            }, icon: const Icon(EvaIcons.logOutOutline,color: primaryColor,)),
-            const Padding(padding: EdgeInsets.all(10)),
-            const Icon(
+          actions:  const <Widget>[
+             Padding(padding: EdgeInsets.all(10)),
+             Icon(
               Icons.notifications,
               color: Colors.black,
               size: 24,
             ),
-            const Padding(padding: const EdgeInsets.all(10)),
+            Padding(padding: EdgeInsets.all(10)),
           ],
         ),
         body: Padding(

@@ -75,12 +75,15 @@ class _AddTaskState extends State<AddTask> {
               hint: "Nom de tache",
               textEditingController: titleController,
               isEnabled: true,
+              textInputType: TextInputType.text,
+
             ),
             AddListInput(
               titre: "Description",
               hint: "Description",
               textEditingController: descController,
               isEnabled: true,
+              textInputType: TextInputType.text,
 
             ),
             AddListInput(

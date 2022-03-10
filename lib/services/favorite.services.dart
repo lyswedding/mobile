@@ -16,6 +16,7 @@ class FavoriteCalls {
     url = Uri.parse('${URLS.BASE_URL}/taskslists/favorite/$id');
 
     var token = await getUserInfoSharedPref("token");
+    print(token);
     response = await http.put(
       url,
       headers: {
@@ -34,6 +35,7 @@ class FavoriteCalls {
     url = Uri.parse('${URLS.BASE_URL}/providers/favorite/$id');
 
     var token = await getUserInfoSharedPref("token");
+    print(token);
     response = await http.put(
       url,
       headers: {

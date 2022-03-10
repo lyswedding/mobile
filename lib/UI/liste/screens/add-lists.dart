@@ -108,12 +108,14 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                     hint: "Nom de liste",
                     textEditingController: titleController,
                     isEnabled: true,
+                    textInputType: TextInputType.text,
                   ),
                   AddListInput(
                     titre: "Description",
                     hint: "Description",
                     textEditingController: descController,
                     isEnabled: true,
+                    textInputType: TextInputType.text,
 
                   ),
 

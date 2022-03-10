@@ -50,130 +50,123 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
     return ListCellAnimationView(
       animation: widget.animation,
       animationController: widget.animationController,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CommonCard(
-          color: whiteColor,
-          radius: 10,
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-            child: Stack(
-              children: <Widget>[
-                Column(
+      child: GestureDetector(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            height: 300,
+            width: 350,
+            child: CommonCard(
+              color: whiteColor,
+              radius: 10,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+                child: Stack(
                   children: <Widget>[
-                    //ProfilePicture(restaurantId: hotelData.id,),
-                    AspectRatio(
-                        aspectRatio: 2,
-                        child: Image.network(
-                          widget.provider.cover,
-                          fit: BoxFit.cover,
-                        )),
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 6,
-                              child: Text(
-                                widget.provider.name,
-                                textAlign: TextAlign.left,
-                                style: titleTextStyle,
-                              ),
-                            ),
-                              Text(
-                                'subTxt',
-                                style: subTitleTextStyle,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.pin_drop,
-                                    size: 12,
-                                    color: Theme.of(context).primaryColor,
+                        //ProfilePicture(restaurantId: hotelData.id,),
+                        AspectRatio(
+                            aspectRatio: 2,
+                            child: Image.network(
+                              widget.provider.cover,
+                              fit: BoxFit.cover,
+                            )),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 6,
+                                  child: Text(
+                                    widget.provider.name,
+                                    textAlign: TextAlign.left,
+                                    style: titleTextStyle,
                                   ),
-                                  Text(
-                                    widget.provider.description,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: subTitleTextStyle,
-                                  ),
+                                ),
+                                Text('250 visites',style: regularTextStyle,)
                                 ],
-                              )
+                              ),
+                            Text(
+                              widget.provider.services[0]['name'],
+                              style: subTitleTextStyle,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.pin_drop,
+                                  size: 12,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                Text(
+                                  widget.provider.locations[0].address!,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: subTitleTextStyle,
+                                ),
+                              ],
+                            )
                             ],
                           ),
-                        ],
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        left: 0,
+
+                ]
+
+                        ),
+
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.white.withOpacity(1),
+                        ),
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            highlightColor: Colors.transparent,
-                            splashColor:
-                                Theme.of(context).primaryColor.withOpacity(0.1),
                             borderRadius: const BorderRadius.all(
-                              Radius.circular(16.0),
+                              const Radius.circular(32.0),
+                            ),
+                            onTap: () {
+                             setState(() {
+                               isSelected=!isSelected;
+                               if(isSelected){
+                                 callAddToFavorite();
+                               }else{
+                                 deleteFromFavorite();
+                               }
+                             });
+                            },
+                            child:  Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child:  Icon(
+                                isSelected?EvaIcons.heart:EvaIcons.heartOutline,
+                                color: Color(0xffEB5890),
+                              ),
                             ),
                           ),
                         ),
                       ),
-            ]
+                    )
+                        ],
 
-                    ),
-
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.white.withOpacity(1),
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(32.0),
-                        ),
-                        onTap: () {
-                         setState(() {
-                           isSelected=!isSelected;
-                           if(isSelected){
-                             callAddToFavorite();
-                           }else{
-                             deleteFromFavorite();
-                           }
-                         });
-                        },
-                        child:  Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child:  Icon(
-                            isSelected?EvaIcons.heart:EvaIcons.heartOutline,
-                            color: Color(0xffEB5890),
-                          ),
-                        ),
                       ),
                     ),
                   ),
-                )
-                    ],
+          ),
 
-                  ),
                 ),
-              ),
-              // onTap: () {
-              //   Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //           builder: (context) => DetailSearch(
-              //                 provider: provider,
-              //               )));
-              // }
-              ),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailSearch(
+                        provider: widget.provider,
+                      )));
+        }
+      ),
+
         );
   }
 }

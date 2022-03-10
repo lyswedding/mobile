@@ -32,7 +32,7 @@ class _FavoritePageState extends State<FavoritePage>
     setState(() {
       isInCall = true;
     });
-     FavoriteCalls.GetTaskListFavorite().then((res) {
+    FavoriteCalls.GetTaskListFavorite().then((res) {
       setState(() {
         taskLists = res;
       });
@@ -43,17 +43,11 @@ class _FavoritePageState extends State<FavoritePage>
   }
 
   fetchsearch() async {
-
-
     search = await FavoriteCalls.GetProvidersFavorite();
-
-
     setState(() {
       isLoaded = true;
     });
   }
-
-
 
   @override
   void initState() {
@@ -141,7 +135,7 @@ class _FavoritePageState extends State<FavoritePage>
         child: Column(
       children: [
         SizedBox(
-          height: 800,
+          height: MediaQuery.of(context).size.height *0.8,
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,

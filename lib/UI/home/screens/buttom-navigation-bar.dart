@@ -5,6 +5,7 @@ import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
 import 'package:lys_wedding/UI/home/screens/home.dart';
 import 'package:lys_wedding/UI/liste/screens/liste_page.dart';
 import 'package:lys_wedding/UI/profil/screens/profil.dart';
+import 'package:lys_wedding/UI/profil/screens/user_lists.dart';
 import 'package:lys_wedding/UI/search/screens/search.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -19,9 +20,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   PageController pageController = PageController();
   int currentIndex = 0;
-  final PersistentTabController _controller =
+   PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
-
+  @override
+  void initState() {
+    super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
+  }
   final screens = [
     HomeDetails(),
     SearchPage(),
