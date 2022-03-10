@@ -66,21 +66,23 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                   Positioned(
                       bottom: 12,
                       right: 12,
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                width: 4,
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor),
-                            color: Colors.grey),
-                        child: Icon(
-                          Icons.camera_alt_rounded,
-                          color: Colors.black,
-                        ),
-                      ))
+                      child: InkWell(
+                          onTap: (() {}),
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 4,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor),
+                                color: Colors.grey),
+                            child: Icon(
+                              Icons.camera_alt_rounded,
+                              color: Colors.black,
+                            ),
+                          )))
                 ],
               ),
               Column(
