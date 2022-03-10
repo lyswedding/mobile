@@ -95,7 +95,6 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                                   ),
                                   Text(
                                     widget.provider.description,
-
                                     overflow: TextOverflow.ellipsis,
                                     style: subTitleTextStyle,
                                   ),
@@ -123,6 +122,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                         ),
                       ),
             ]
+
                     ),
 
                 Positioned(

@@ -43,7 +43,10 @@ class _FavoritePageState extends State<FavoritePage>
   }
 
   fetchsearch() async {
+
+
     search = await FavoriteCalls.GetProvidersFavorite();
+
 
     setState(() {
       isLoaded = true;
