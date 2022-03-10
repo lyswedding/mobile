@@ -88,7 +88,7 @@ class _AddTaskState extends State<AddTask> {
               hint: "Cout",
               textEditingController: costController,
               isEnabled: true,
-
+               textInputType: TextInputType.number,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
