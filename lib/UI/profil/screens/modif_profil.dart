@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/UI/profil/modele/model_profil.dart';
+import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/models/List_search.dart';
-
-import '../../../../../../profil/service/profil_service.dart';
 
 class ProfilPageModif extends StatefulWidget {
   const ProfilPageModif({Key? key, required this.user}) : super(key: key);
@@ -40,7 +38,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
           title: const Text(
             "Modifier Profile",
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           leading: IconButton(
               onPressed: () {

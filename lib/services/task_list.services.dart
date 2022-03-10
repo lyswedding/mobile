@@ -27,6 +27,27 @@ class ListCalls {
     return tasksLists.toList();
   }
 
+  static Future<List<TaskList>> getUserLists() async {
+    var url;
+    var response;
+    final tasksLists = <TaskList>[];
+    var token = getUserInfoSharedPref('token');
+    url = Uri.parse('${URLS.BASE_URL}/taskslists/my');
+    response = await http.get(url, headers: {
+      "Content-type": "application/json",
+      'Authorization': 'Bearer $token',
+    });
+    debugPrint(response.body.toString());
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print(data);
+      for (var item in data['tasksLists']) {
+        tasksLists.add(TaskList.fromJson(item));
+      }
+    }
+    return tasksLists.toList();
+  }
+
   static Future<http.Response> addTaskList(TaskList task) async {
     var url;
     var response;

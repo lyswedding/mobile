@@ -2,6 +2,7 @@
 //
 //     final userApi = userApiFromJson(jsonString);
 
+
 import 'dart:convert';
 
 UserApi userApiFromJson(String str) => UserApi.fromJson(json.decode(str));

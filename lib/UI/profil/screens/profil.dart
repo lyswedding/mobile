@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/UI/home/screens/profil/screens/modif_profil/screens/modif_profil.dart';
-import 'package:lys_wedding/UI/profil/service/profil_service.dart';
-
-import '../modele/model_profil.dart';
+import 'package:lys_wedding/UI/profil/screens/modif_profil.dart';
+import 'package:lys_wedding/models/model_profil.dart';
+import 'package:lys_wedding/services/profil_service.dart';
 
 class ProfilPage extends StatefulWidget {
   const ProfilPage({Key? key}) : super(key: key);
@@ -25,7 +24,6 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   void initState() {
-    print('salaaaaaaaaaaaaaaaaaam');
     fetchprofil();
     print(item!.user);
     super.initState();
@@ -44,7 +42,7 @@ class _ProfilPageState extends State<ProfilPage> {
           title: const Text(
             "Profile",
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           leading: IconButton(
               onPressed: () {
@@ -59,7 +57,7 @@ class _ProfilPageState extends State<ProfilPage> {
           child: Column(children: [
             CircleAvatar(
               radius: 100,
-              backgroundImage: NetworkImage(item.user!.imageUrl ?? ""),
+              backgroundImage: NetworkImage(item.user!.imageUrl??""),
             ),
             Text(
               item.user!.firstName ?? "foulan",
