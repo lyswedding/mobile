@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/UI/home/screens/profil/screens/modif_profil/screens/modif_profil.dart';
+import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
+import 'package:lys_wedding/UI/profil/screens/prestataire_favorite/prestataire_favorite.dart';
 import 'package:lys_wedding/UI/profil/service/profil_service.dart';
 
 import '../modele/model_profil.dart';
+import 'detail_profil/screens/modif_profil/screens/modif_profil.dart';
 
 class ProfilPage extends StatefulWidget {
   const ProfilPage({Key? key}) : super(key: key);
@@ -27,7 +29,7 @@ class _ProfilPageState extends State<ProfilPage> {
   void initState() {
     print('salaaaaaaaaaaaaaaaaaam');
     fetchprofil();
-    print(item!.user);
+    print(item.user);
     super.initState();
   }
 
@@ -96,30 +98,8 @@ class _ProfilPageState extends State<ProfilPage> {
                             Icon(Icons.person),
                             Padding(padding: EdgeInsets.only(left: 20)),
                             Text('Informations'),
-                            Padding(padding: EdgeInsets.only(right: 180)),
-                            const Icon(Icons.arrow_forward_ios_outlined),
                           ]),
                         )),
-                      ],
-                    )),
-                Container(
-                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.white),
-                    height: 50,
-                    width: 800,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: Row(children: const [
-                            Icon(Icons.favorite),
-                            Padding(padding: EdgeInsets.only(left: 20)),
-                            Text('prestataires'),
-                          ]),
-                        ),
                         const Icon(Icons.arrow_forward_ios_outlined),
                       ],
                     )),
@@ -135,12 +115,38 @@ class _ProfilPageState extends State<ProfilPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
+                            child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FavoritePage()));
+                          },
                           child: Row(children: const [
-                            Icon(Icons.list),
+                            Icon(Icons.person),
                             Padding(padding: EdgeInsets.only(left: 20)),
-                            Text('Listes'),
+                            Text('prestataires'),
                           ]),
-                        ),
+                        )),
+                        const Icon(Icons.arrow_forward_ios_outlined),
+                      ],
+                    )),
+                Container(
+                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white),
+                    height: 50,
+                    width: 800,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(children: const [
+                          Icon(Icons.list),
+                          Padding(padding: EdgeInsets.only(left: 20)),
+                          Text('Listes'),
+                        ]),
                         const Icon(Icons.arrow_forward_ios_outlined),
                       ],
                     )),

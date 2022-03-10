@@ -48,6 +48,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   @override
   Widget build(BuildContext context) {
     return ListCellAnimationView(
+
       animation: widget.animation,
       animationController: widget.animationController,
       child: Padding(
@@ -81,10 +82,11 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                                 textAlign: TextAlign.left,
                                 style: titleTextStyle,
                               ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Row(
+                              Text(
+                                'subTxt',
+                                style: subTitleTextStyle,
+                              ),
+                              Row(
                                 children: [
                                   Icon(
                                     Icons.pin_drop,
@@ -97,46 +99,30 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                                     style: subTitleTextStyle,
                                   ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          'subTxt',
-                          style: subTitleTextStyle,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.pin_drop,
-                              size: 12,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            Text(
-                              "aaa",
-                              overflow: TextOverflow.ellipsis,
-                              style: subTitleTextStyle,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      highlightColor: Colors.transparent,
-                      splashColor:
-                          Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(16.0),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            highlightColor: Colors.transparent,
+                            splashColor:
+                                Theme.of(context).primaryColor.withOpacity(0.1),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                          ),
+                        ),
+                      ),
+
+
                     ),
                   ),
                 ),
@@ -171,15 +157,19 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                             color: Color(0xffEB5890),
                           ),
                         ),
-                      ),
-                    ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DetailSearch(
+                              provider: provider,
+                            )));
+              }),
+        ));
   }
 }

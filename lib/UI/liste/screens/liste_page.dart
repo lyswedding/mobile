@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/UI/favorite/components/listsfav.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/search_bar.dart';
 import 'package:lys_wedding/UI/liste/components/list_component_horizontal.dart';
@@ -9,7 +8,6 @@ import 'package:lys_wedding/shared/constants.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'add-lists.dart';
-
 
 class ListePage extends StatefulWidget {
   const ListePage({Key? key}) : super(key: key);
@@ -36,6 +34,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       isInCall = false;
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -44,6 +43,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -74,12 +74,13 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
-              child: Column(children: [
+            child: Column(
+              children: [
                 const SearchBar(),
                 _buildCategories(),
                 _buildListAdmin(),
               ],
-              ),
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -87,7 +88,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  const AddList(),
+                  builder: (context) => const AddList(),
                 ));
           },
           backgroundColor: Colors.black,
@@ -97,60 +98,59 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCategories(){
+  Widget _buildCategories() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 50,
-              child: ListView.builder(
-                  itemCount: 10,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    var animation = Tween(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animationController,
-                        curve: const Interval((1 / 6) *5, 1.0,
-                            curve: Curves.fastOutSlowIn),
-                      ),
-                    );
-                    animationController.forward();
-                    return CategoryItemList('text','images/9.jpg',animationController,animation);
-                  }
-
-              ),
-            ),
-          )),
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          height: 50,
+          child: ListView.builder(
+              itemCount: 10,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                var animation = Tween(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: animationController,
+                    curve: const Interval((1 / 6) * 5, 1.0,
+                        curve: Curves.fastOutSlowIn),
+                  ),
+                );
+                animationController.forward();
+                return CategoryItemList(
+                    'text', 'images/9.jpg', animationController, animation);
+              }),
+        ),
+      )),
     );
   }
 
-
-  Widget _buildListAdmin(){
+  Widget _buildListAdmin() {
     return SingleChildScrollView(
         child: Column(
-          children: [
-            SizedBox(
-              height: 800,
-              child: ListView.builder(
-                  itemCount: taskLists.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    var animation = Tween(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animationController,
-                        curve: const Interval((1 / 6) *10, 1.0,
-                            curve: Curves.fastOutSlowIn),
-                      ),
-                    );
-                    animationController.forward();
-                    return ListItemHorizontal(taskListData:taskLists[index],animationController: animationController, animation: animation);
-                  }
-              ),
-            )
-          ],
-        ));
+      children: [
+        SizedBox(
+          height: 800,
+          child: ListView.builder(
+              itemCount: taskLists.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                var animation = Tween(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: animationController,
+                    curve: const Interval((1 / 6) * 10, 1.0,
+                        curve: Curves.fastOutSlowIn),
+                  ),
+                );
+                animationController.forward();
+                return ListItemHorizontal(
+                    taskListData: taskLists[index],
+                    animationController: animationController,
+                    animation: animation);
+              }),
+        )
+      ],
+    ));
   }
-
 }
