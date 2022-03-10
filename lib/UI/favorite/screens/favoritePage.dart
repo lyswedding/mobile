@@ -3,7 +3,9 @@ import 'package:lys_wedding/UI/favorite/service/favorite_service.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/search/components/list_item_search.dart';
 import 'package:lys_wedding/models/taskList.dart';
-import 'package:lys_wedding/services/task_list_services.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
+import 'package:lys_wedding/services/service_list.dart';
+import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 import '../../../models/List_search.dart';
@@ -30,7 +32,7 @@ class _FavoritePageState extends State<FavoritePage>
     setState(() {
       isInCall = true;
     });
-    ListCalls.getAdminLists().then((res) {
+     FavoriteCalls.GetTaskListFavorite().then((res) {
       setState(() {
         taskLists = res;
       });
@@ -41,40 +43,27 @@ class _FavoritePageState extends State<FavoritePage>
   }
 
   fetchsearch() async {
-    search = await service.getPrestFav();
+
+    search = await FavoriteCalls.GetProvidersFavorite();
+
 
     setState(() {
       isLoaded = true;
     });
   }
 
-  var Listitems = [
-    "prestataire",
-    "aaaa",
-    "bbbb",
-    "cccc",
-  ];
 
-  List items = [
-    "images/4.jpg",
-    "images/3.jpg",
-    "images/2.jpg",
-    "images/4.jpg",
-    "images/5.jpg",
-    "images/6.jpg",
-  ];
 
   @override
   void initState() {
     // TODO: implement initState
+    callAllListes();
+    fetchsearch();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
 
     _nestedTabController = new TabController(length: 2, vsync: this);
-    callAllListes();
     super.initState();
-    fetchsearch();
-    print(search);
   }
 
   @override
@@ -200,8 +189,7 @@ class _FavoritePageState extends State<FavoritePage>
               provider: search[index],
               animation: animation,
               animationController: animationController,
-              text: '', items: [],
-              // items: search!.providers
+              text: '',
               //     .map((e) => ListItem(image: e.cover, label: e.name))
               //     .toList()
             );

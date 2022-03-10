@@ -51,7 +51,7 @@ class AuthCalls {
     return response;
   }
 
-  static Future<int?> signup(body) async {
+  static Future<int> signup(body) async {
     var url;
     url = '${URLS.BASE_URL}/users/register';
 
@@ -61,8 +61,8 @@ class AuthCalls {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(body));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+    if (response.statusCode == 201) {
+      return response.statusCode;
     } else {
       print(response.body);
       throw Exception('exception occured!!!!!!');

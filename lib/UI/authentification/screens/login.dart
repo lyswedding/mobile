@@ -9,6 +9,7 @@ import 'package:lys_wedding/services/auth.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/remove_focuse.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:lys_wedding/shared/utils.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -46,7 +47,7 @@ class _LoginState extends State<Login> {
                   titleText: 'email',
                   hintText:
                   "enter your email",
-                  keyboardType: TextInputType.name,
+                  keyboardType: TextInputType.emailAddress,
                   onChanged: (String txt) {},
                   focusNode: emailFocusNode,
                 ),
@@ -60,8 +61,9 @@ class _LoginState extends State<Login> {
                   titleText: 'password',
                   hintText:
                   "enter your password",
-                  keyboardType: TextInputType.name,
+                  keyboardType: TextInputType.visiblePassword,
                   onChanged: (String txt) {},
+                  isObscureText: true,
                   focusNode: passFocusNode,
                 ),
                 const SizedBox(
@@ -73,31 +75,47 @@ class _LoginState extends State<Login> {
                       setState(() {
                         isInCall = true;
                       });
+                      if (emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
+                        showToast(
+                            context: context,
+                            msg: 'Merci de remplir tous les champs !');
+                      } else if (!isEmail(emailController.text)) {
+                        showToast(
+                            context: context,
+                            msg: 'Format d\'email invalide!');
+                      } else if (passwordController.text.length < 6) {
+                        showToast(
+                            context: context,
+                            msg:
+                            "Mot de passe doit être d'au moins 6 caractères");
+                      }else {
+                        var body = {
+                          "email": emailController.text,
+                          "password": passwordController.text,
+                        };
+                        print(body.toString());
 
-                      var body = {
-                        "email": emailController.text,
-                        "password": passwordController.text,
-                      };
-                      print(body.toString());
-
-                      AuthCalls.login(body).then((code) {
-                        setState(() {
-                          isInCall = false;
+                        AuthCalls.login(body).then((code) {
+                          setState(() {
+                            isInCall = false;
+                          });
+                          if (code.statusCode == 200) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Home(),
+                              ),
+                            );
+                          } else {
+                            showToast(
+                                context: context,
+                                msg:
+                                "Une erreur s'est produite. Veuillez réessayer!");
+                          }
                         });
-                        if (code.statusCode == 200) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Home(),
-                            ),
-                          );
-                        } else {
-                          showToast(
-                              context: context,
-                              msg:
-                                  "Une erreur s'est produite. Veuillez réessayer!");
-                        }
-                      });
+                      }
+
                     }),
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),

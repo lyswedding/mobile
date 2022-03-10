@@ -56,7 +56,7 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                         AspectRatio(
                             aspectRatio: 1,
                             child: Image.network(
-                              widget.taskListData.imageUrl,
+                              widget.taskListData.imageUrl.toString(),
                               fit: BoxFit.cover,
                             )),
                         Expanded(
@@ -75,7 +75,7 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      widget.taskListData.title,
+                                      widget.taskListData.title.toString(),
                                       maxLines: 2,
                                       textAlign: TextAlign.left,
                                       overflow: TextOverflow.ellipsis,
@@ -113,7 +113,7 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                                       ],
                                     ),
                                     Text(
-                                      widget.taskListData.tasks.length
+                                      widget.taskListData.tasks!.length
                                               .toString() +
                                           '\ttaches',
                                       overflow: TextOverflow.ellipsis,

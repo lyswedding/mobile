@@ -25,9 +25,8 @@ class CategoryItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Icon(Icons.category,size: 24,),
-                //Image.asset(image,),
-                Text('data',style: subTitleTextStyle,),
+                Image.network(image,height: 30,width: 30,),
+                Text(text,style: subTitleTextStyle,),
               ],
             ),
           ),

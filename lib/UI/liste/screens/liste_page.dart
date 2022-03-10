@@ -3,7 +3,7 @@ import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/search_bar.dart';
 import 'package:lys_wedding/UI/liste/components/list_component_horizontal.dart';
 import 'package:lys_wedding/models/taskList.dart';
-import 'package:lys_wedding/services/task_list_services.dart';
+import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 

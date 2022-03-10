@@ -8,7 +8,6 @@ import 'package:lys_wedding/shared/constants.dart';
 
 import '../../../../../models/List_search.dart';
 import '../../../../home/components/shared/item_list.dart';
-import '../../../servises/service_list.dart';
 
 class DetailSearch extends StatelessWidget {
   DetailSearch({Key? key, required this.provider}) : super(key: key);
@@ -28,7 +27,6 @@ class DetailSearch extends StatelessWidget {
     "images/8.jpg"
   ];
   bool isLoaded = false;
-  final ServiceList service = ServiceList();
 
   @override
   Widget build(BuildContext context) {
@@ -226,13 +224,13 @@ class DetailSearch extends StatelessWidget {
                 height: 10,
               ),
 
-              ItemList(
-                text:
-                    "Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii\n Coiffure ,maquillage  ",
-                items: images,
-                height: 150.0,
-                width: 250.0,
-              ),
+              // ItemList(
+              //   text:
+              //       "Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii\n Coiffure ,maquillage  ",
+              //   items: images,
+              //   height: 150.0,
+              //   width: 250.0,
+              // ),
               // _buildListFavoriteLists(),
             ]),
           ),

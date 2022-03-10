@@ -62,7 +62,7 @@ class _ListDetailsState extends State<ListDetails>
                     AspectRatio(
                       aspectRatio: 1.7,
                       child: Image.network(
-                        widget.taskList.imageUrl,
+                        widget.taskList.imageUrl.toString(),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -116,7 +116,7 @@ class _ListDetailsState extends State<ListDetails>
                 height: 10,
               ),
               Text(
-                widget.taskList.title,
+                widget.taskList.title.toString(),
                 style: titleTextStyle,
               ),
               _buildCategories(),
@@ -124,7 +124,7 @@ class _ListDetailsState extends State<ListDetails>
                 height: 10,
               ),
               ReadMoreText(
-                widget.taskList.description,
+                widget.taskList.description.toString(),
                 trimLines: 2,
                 style: regularTextStyle,
                 colorClickableText: Colors.pink,
@@ -150,7 +150,8 @@ class _ListDetailsState extends State<ListDetails>
                           context,
                           MaterialPageRoute(
                               builder: (context) => ListTasks(
-                                    listTasks: widget.taskList.tasks,
+                                    listTasks: widget.taskList.tasks!,
+                                idList: widget.taskList.id,
                                   )));
                     },
                     child: Text(
@@ -160,7 +161,7 @@ class _ListDetailsState extends State<ListDetails>
                   ),
                 ],
               ),
-              for (int i = 0; i < widget.taskList.tasks.length; i++)
+              for (int i = 0; i < widget.taskList.tasks!.length; i++)
                 _buildListTasks(i),
               Text(
                 'Relates lists',
@@ -187,7 +188,7 @@ class _ListDetailsState extends State<ListDetails>
         child: SizedBox(
       height: 40,
       child: ListView.builder(
-          itemCount: widget.taskList.tags.length,
+          itemCount: widget.taskList.tags!.length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -198,8 +199,9 @@ class _ListDetailsState extends State<ListDetails>
               ),
             );
             animationController.forward();
-            return CategoryItemList(widget.taskList.tags[index], 'images/9.jpg',
-                animationController, animation);
+            return CategoryItemList(
+                widget.taskList.tags![index], 'images/9.jpg', animationController, animation);
+
           }),
     ));
   }
@@ -213,10 +215,11 @@ class _ListDetailsState extends State<ListDetails>
     );
     animationController.forward();
     return TaskComponent(
-      task: widget.taskList.tasks[i],
+      task: widget.taskList.tasks![i],
       animationController: animationController,
       text: 'text',
       animation: animation,
+      idList: widget.taskList.id,
     );
   }
 

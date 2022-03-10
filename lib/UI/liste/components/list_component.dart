@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/liste/screens/list_details.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 import 'common_card.dart';
 
-class ListComponent extends StatelessWidget {
+class ListComponent extends StatefulWidget {
   final TaskList taskList;
   final AnimationController animationController;
   final Animation<double> animation;
@@ -18,50 +19,113 @@ class ListComponent extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<ListComponent> createState() => _ListComponentState();
+}
+
+class _ListComponentState extends State<ListComponent> {
+  bool isInCall=false;
+  bool isSelected=false;
+callAddToFavorite()async{
+  await FavoriteCalls.addListToFavorite(widget.taskList.id);
+  setState(() {
+    isInCall=true;
+  });
+}
+
+  deleteFromFavorites()async{
+    await FavoriteCalls.deletTaskListFromFavorite(widget.taskList.id);
+    setState(() {
+      isInCall=true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListCellAnimationView(
-      animation: animation,
-      animationController: animationController,
+      animation: widget.animation,
+      animationController: widget.animationController,
       child: GestureDetector(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ListDetails(taskList: taskList,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ListDetails(taskList: widget.taskList,)));
         },
-        child: CommonCard(
-          color: whiteColor,
-          radius: 10,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            child: Column(
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 0.9,
-                  child: Image.network(
-                    taskList.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex:9,
-                            child: Text(
-                              taskList.title,
-                              style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor),
+        child: Container(
+          height: MediaQuery.of(context).size.height*0.35,
+          width: MediaQuery.of(context).size.width*0.5,
+          child: CommonCard(
+            color: whiteColor,
+            radius: 10,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              child: Column(
+                children: <Widget>[
+                  Stack(
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 0.9,
+                        child: Image.network(
+                          widget.taskList.imageUrl.toString(),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.white.withOpacity(1),
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(32.0),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  isSelected=!isSelected;
+                                });
+                                if(isSelected){
+                                  callAddToFavorite();
+
+                                }else{
+                                  deleteFromFavorites();
+                                }
+                              },
+                              child:  Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  isSelected?EvaIcons.heart:EvaIcons.heartOutline,
+                                  color: Color(0xffEB5890),
+                                ),
+                              ),
                             ),
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: Row(
+                        ),
+                      )
+
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 9,
+                              child: Text(
+                                widget.taskList.title.toString(),
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor),
+                              ),
+                            ),
+                            Row(
                               children: [
                                 const Icon(EvaIcons.bookmark,size: 14,color: primaryColor,),
                                 Text(
@@ -72,35 +136,37 @@ class ListComponent extends StatelessWidget {
                                       color: primaryColor),
                                 ),
                               ],
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(EvaIcons.pricetags,size: 15,color: primaryColor,),
+                            Text(
+                              widget.taskList.tags![0],
+                              // Helper.getRoomText(hotelInfo.roomData!),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: primaryColor),
                             ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(EvaIcons.pricetags,size: 15,color: primaryColor,),
-                          Text(
-                            taskList.tags[0],
-                            // Helper.getRoomText(hotelInfo.roomData!),
-                            style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: primaryColor),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        taskList.tasks.length.toString()+'\ttaches',
-                        // Helper.getRoomText(hotelInfo.roomData!),
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor),
-                      ),
-                    ],
+                          ],
+                        ),
+                        Text(
+                          widget.taskList.tasks!.length.toString()+'\ttaches',
+                          // Helper.getRoomText(hotelInfo.roomData!),
+                          style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor),
+                        ),
+
+
+                      ],
+                    ),
                   ),
-                )
-              ],
+                ],
+              ),
             ),
           ),
         ),
