@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/favorite/service/favorite_service.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/search/components/list_item_search.dart';
 import 'package:lys_wedding/models/taskList.dart';
@@ -6,7 +7,6 @@ import 'package:lys_wedding/services/task_list_services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 import '../../../models/List_search.dart';
-import '../../search/servises/service_list.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _FavoritePageState extends State<FavoritePage>
   late TabController _nestedTabController;
   bool isInCall = false;
   bool isLoaded = false;
-  final ServiceList service = ServiceList();
+  final ServiceFavorite service = ServiceFavorite();
   List<Provider> search = [];
   List<TaskList> taskLists = [];
 
@@ -41,7 +41,7 @@ class _FavoritePageState extends State<FavoritePage>
   }
 
   fetchsearch() async {
-    search = await service.getPrestataire();
+    search = await service.getPrestFav();
 
     setState(() {
       isLoaded = true;

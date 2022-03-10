@@ -1,3 +1,4 @@
+import 'package:lys_wedding/UI/favorite/modele/model_favorite.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,6 +32,7 @@ class DetailSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(provider.phone);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
@@ -175,7 +177,7 @@ class DetailSearch extends StatelessWidget {
                     padding: EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
-                          final Url = provider.phone;
+                          final Url = "+216" + provider.phone;
                           if (await canLaunch(Url)) {
                             await launch(Url,
                                 forceWebView: true, enableJavaScript: true);
