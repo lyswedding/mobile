@@ -1,8 +1,10 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/UI/liste/screens/list_tasks.dart';
+import 'package:lys_wedding/UI/liste/screens/update_list.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:readmore/readmore.dart';
@@ -115,9 +117,19 @@ class _ListDetailsState extends State<ListDetails>
               const SizedBox(
                 height: 10,
               ),
-              Text(
-                widget.taskList.title.toString(),
-                style: titleTextStyle,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.taskList.title.toString(),
+                    style: titleTextStyle,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UpdateList(taskList: widget.taskList)));
+                    },
+                      child: const Icon(EvaIcons.edit,size: 24,color: primaryColor,)),
+                ],
               ),
               _buildCategories(),
               const SizedBox(

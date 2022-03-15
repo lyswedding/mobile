@@ -7,7 +7,7 @@ class AddListInput extends StatefulWidget {
   final String hint;
   final TextEditingController textEditingController;
   final bool isEnabled;
-  final TextInputType? textInputType;
+  final TextInputType textInputType;
 
    AddListInput({
     Key? key,
@@ -15,7 +15,7 @@ class AddListInput extends StatefulWidget {
     required this.hint,
      required this.textEditingController,
      this.isEnabled=false,
-     this.textInputType
+     this.textInputType=TextInputType.name
 
   }) : super(key: key);
 

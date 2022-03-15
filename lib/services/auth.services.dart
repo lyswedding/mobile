@@ -20,11 +20,13 @@ class AuthCalls {
     if (response.statusCode == 200) {
       log(response.headers['x-access-token'].toString());
       String token = response.headers['x-access-token'].toString();
+      String cookie = response.headers['set-cookie'].toString();
       print(token);
+      print(cookie);
       // Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       // //debugPrint(decodedToken.toString());
       // String userid = decodedToken['subject']['_id'];
-      await saveAccessTokenSharedPref(token);
+      await saveAccessTokenSharedPref(token,cookie);
     }
 
     return response;
@@ -63,11 +65,14 @@ class AuthCalls {
         body: jsonEncode(body));
     if (response.statusCode == 201) {
       String token = response.headers['x-access-token'].toString();
+      String cookie = response.headers['set-cookie'].toString();
       print(token);
+      print('**********cookie*********');
+      print(cookie);
       // Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       // //debugPrint(decodedToken.toString());
       // String userid = decodedToken['subject']['_id'];
-      await saveAccessTokenSharedPref(token);
+      await saveAccessTokenSharedPref(token,cookie);
       return response.statusCode;
     } else {
       print(response.body);

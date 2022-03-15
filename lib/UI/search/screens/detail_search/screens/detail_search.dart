@@ -104,7 +104,7 @@ class DetailSearch extends StatelessWidget {
                   Container(
                     height: 90,
                     width: 90,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
                           final Url = provider.facebookUrl;
@@ -115,18 +115,18 @@ class DetailSearch extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("images/17.png"),
                         )),
                   ),
                   Container(
                     height: 90,
                     width: 90,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
                           final Url = provider.instagramUrl;
@@ -137,18 +137,18 @@ class DetailSearch extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("images/18.png"),
                         )),
                   ),
                   Container(
                     height: 90,
                     width: 90,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
                           _makeSocialMediaRequest("http://pratikbutani.com");
@@ -161,33 +161,33 @@ class DetailSearch extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(15.0),
+                          shape:  RoundedRectangleBorder(
+                            borderRadius:  BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("images/19.png"),
                         )),
                   ),
                   Container(
                     height: 90,
                     width: 90,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
-                          final Url = "+216" + provider.phone;
-                          if (await canLaunch(Url)) {
-                            await launch(Url,
-                                forceWebView: true, enableJavaScript: true);
+                          if (await canLaunch('tel:${provider.phone}')) {
+                            await launch('tel:${provider.phone}');
+                          } else {
+                            throw 'call not possible';
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("images/20.png"),
                         )),
                   ),

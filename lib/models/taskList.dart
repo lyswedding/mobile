@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class TaskList {
   TaskList(
@@ -17,25 +20,29 @@ class TaskList {
   final String? title;
   final String? description;
   final List<Task>? tasks;
-  final List? tags;
-  final String? imageUrl;
-  final nbUse;
-  final cost;
+  final List tags;
+   String? imageUrl='';
+   int nbUse=0;
+ int  cost=1000;
 
   Map<String, dynamic> toJson() {
-    List<Map<String, dynamic>>? responsesJSon =
-        tasks != null ? tasks!.map((i) => i.toJson()).toList() : null;
+
+    var  responsesJSon =
+        (tasks != null ? tasks!.map((i) =>i.toJson()).toList() : null);
+    print(responsesJSon);
+
     return <String, dynamic>{
       'title': title,
       'description': description,
       'tags': tags,
-      'tasks': tasks,
+      'tasks': responsesJSon,
       'nbr_use': nbUse,
       'realization_date': DateTime.now().toIso8601String(),
       'cost': cost,
-      'image': ''
+      'image': imageUrl
     };
   }
+
 
   factory TaskList.fromJson(Map<String, dynamic> json) {
     var lists = json['tasks'] as List;
@@ -80,12 +87,13 @@ class Task {
       "title": title,
       "description": description,
       "cost": cost,
-      "realization_date": DateTime.now().toIso8601String(),
+      "realization_date": dueDate,
       "tags": tags,
       "nbr_use": 0,
       "state": "IN PROGRESS"
     };
   }
+
 
   factory Task.fromJson(Map<String, dynamic> json) {
     List listO = json['tags'];

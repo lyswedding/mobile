@@ -143,7 +143,7 @@ callAddToFavorite()async{
                           children: [
                             Icon(EvaIcons.pricetags,size: 15,color: primaryColor,),
                             Text(
-                              widget.taskList.tags![0],
+                              widget.taskList.tags![0].toString(),
                               // Helper.getRoomText(hotelInfo.roomData!),
                               style: GoogleFonts.poppins(
                                   fontSize: 12,

@@ -61,7 +61,7 @@ class _ProfilPageState extends State<ProfilPage> {
           child: Column(children: [
             CircleAvatar(
               radius: 100,
-              backgroundImage: NetworkImage(item.user!.imageUrl??""),
+             // backgroundImage: NetworkImage(item.user!.imageUrl??""),
             ),
             Text(
               item.user!.firstName ?? "foulan",
@@ -141,10 +141,7 @@ class _ProfilPageState extends State<ProfilPage> {
                     width: 800,
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserListPage()));
+
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

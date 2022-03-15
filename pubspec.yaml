@@ -51,10 +51,8 @@ dependencies:
   http_parser: ^4.0.0
   path_provider: ^2.0.1
   url_launcher: ^6.0.20
- 
   syncfusion_flutter_datepicker: ^19.4.54
   textfield_tags: ^1.4.3
-
 
 
 

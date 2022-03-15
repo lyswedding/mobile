@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lys_wedding/models/List_search.dart';
 import 'package:lys_wedding/models/taskList.dart';
@@ -7,132 +8,119 @@ import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/urls.dart';
 import 'package:http/http.dart' as http;
 
-class FavoriteCalls {
+import 'dio_service.dart';
 
+class FavoriteCalls {
   static Future<http.Response> addListToFavorite(id) async {
-    var url;
-    var response;
+    Uri url;
+    http.Response response;
+    var dio = DioUtil.getInstance();
 
     url = Uri.parse('${URLS.BASE_URL}/taskslists/favorite/$id');
 
     var token = await getUserInfoSharedPref("token");
-    print(token);
-    response = await http.put(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-    );
-    print(response.body);
-    return response.body;
+    dio.options.headers["Authorization"] = "Bearer " + token;
+    return  await dio.putUri(url).then((value){
+      print(value.data);
+      return value.data;
+
+    });
+
   }
 
   static Future<http.Response> addProviderToFavorite(id) async {
-    var url;
-    var response;
+    Uri url;
+    http.Response response;
+    var dio = DioUtil.getInstance();
 
     url = Uri.parse('${URLS.BASE_URL}/providers/favorite/$id');
 
     var token = await getUserInfoSharedPref("token");
-    print(token);
-    response = await http.put(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-    );
-    print(response.body);
-    return response.body;
+    dio.options.headers["Authorization"] = "Bearer " + token;
+    return  await dio.putUri(url).then((value){
+      print(value.data);
+      return value.data;
+
+    });
   }
+
   static Future<http.Response> deletTaskListFromFavorite(id) async {
-    var url;
-    var response;
+    Uri url;
+    http.Response response;
+    var dio = DioUtil.getInstance();
 
     url = Uri.parse('${URLS.BASE_URL}/taskslists/favorite/$id');
 
     var token = await getUserInfoSharedPref("token");
-    response = await http.delete(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-    );
-    print(response.body);
-    return response.body;
+    dio.options.headers["Authorization"] = "Bearer " + token;
+    return  await dio.deleteUri(url).then((value){
+      print(value.data);
+
+      return value.data;
+    });
+
   }
 
   static Future<http.Response> deletProviderFromFavorite(id) async {
-    var url;
-    var response;
+    Uri url;
+    http.Response response;
+    var dio = DioUtil.getInstance();
 
     url = Uri.parse('${URLS.BASE_URL}/providers/favorite/$id');
 
     var token = await getUserInfoSharedPref("token");
-    response = await http.delete(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-    );
-    print(response.body);
-    return response.body;
+    dio.options.headers["Authorization"] = "Bearer " + token;
+    return  await dio.deleteUri(url).then((value){
+      print(value.data);
+
+      return value.data;
+    });
+
   }
 
   static Future<List<Provider>> GetProvidersFavorite() async {
-    var url;
-    var response;
+    Uri url;
+    http.Response response;
     final favoriteProviders = <Provider>[];
+    var dio = DioUtil.getInstance();
 
     url = Uri.parse('${URLS.BASE_URL}/providers/favorites');
 
     var token = await getUserInfoSharedPref("token");
-    response = await http.get(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-    );
-    debugPrint(response.body.toString());
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print(response.body);
-      for (var item in data['providers']) {
+    dio.options.headers["Authorization"] = "Bearer " + token;
+//response will be assigned to response variable
+    return  await dio.get(URLS.BASE_URL+'/providers/favorites').then((value){
+      print(value.data);
+      final data = jsonDecode(value.toString());
+      print(data);
+      for (var item in value.data['providers']) {
         favoriteProviders.add(Provider.fromJson(item));
       }
-    }
-    return favoriteProviders.toList();
+      return favoriteProviders.toList();
+
+    });
+
   }
-  static Future<List<TaskList>> GetTaskListFavorite() async {
-    var url;
-    var response;
-    final tasksLists = <TaskList>[];
 
-    url = Uri.parse('${URLS.BASE_URL}/taskslists/favorites');
 
-    var token = await getUserInfoSharedPref("token");
-    response = await http.get(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-    );
-    debugPrint(response.body.toString());
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+  static getFavorite()async{
+    var dio = DioUtil.getInstance();
+    List<TaskList> tasksLists=[];
+
+    final String apiUrl = (URLS.BASE_URL + "/taskslists/favorites");
+    var accessToken = await getUserInfoSharedPref('token');
+    dio.options.headers["Authorization"] = "Bearer " + accessToken;
+//response will be assigned to response variable
+    return  await dio.get(apiUrl).then((value){
+      print(value.data);
+      final data = jsonDecode(value.toString());
       print(data);
-      for (var item in data['tasksLists']) {
-        if(item!=null)
-          print(item["tasks"]);
+      for (var item in value.data['tasksLists']) {
         tasksLists.add(TaskList.fromJson(item));
       }
-    }
-    return tasksLists.toList();
+      return tasksLists.toList();
+
+    });
   }
 
 }

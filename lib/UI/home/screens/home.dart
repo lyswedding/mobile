@@ -98,7 +98,29 @@ class _HomeDetailsState extends State<HomeDetails>
               height: 50,
             ),
           ),
-          actions:  const <Widget>[
+          actions:   <Widget>[
+            GestureDetector(
+              onTap: (){
+                deleteToken();
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Signup()));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Row(children: const [
+                      Icon(Icons.logout,color: Colors.red,),
+                      Padding(padding: EdgeInsets.only(left: 20)),
+                      Text('Deconnexion'),
+                    ]),
+                  ),
+                  const Icon(Icons.arrow_forward_ios_outlined),
+                ],
+              ),
+            ),
              Padding(padding: EdgeInsets.all(10)),
              Icon(
               Icons.notifications,

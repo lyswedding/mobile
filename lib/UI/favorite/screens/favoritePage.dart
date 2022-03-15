@@ -32,9 +32,10 @@ class _FavoritePageState extends State<FavoritePage>
     setState(() {
       isInCall = true;
     });
-    FavoriteCalls.GetTaskListFavorite().then((res) {
+    FavoriteCalls.getFavorite().then((res) {
       setState(() {
-        taskLists = res;
+        print(res);
+        taskLists=res;
       });
     });
     setState(() {

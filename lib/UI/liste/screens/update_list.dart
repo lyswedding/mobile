@@ -18,50 +18,55 @@ import 'package:lys_wedding/shared/utils.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 import 'liste_page.dart';
 
-class AddList extends StatefulWidget {
-  const AddList({Key? key}) : super(key: key);
+class UpdateList extends StatefulWidget {
+
+  final TaskList taskList;
+   UpdateList({required this.taskList});
 
   @override
-  _AddListState createState() => _AddListState();
+  _UpdateListState createState() => _UpdateListState();
 }
 
 TextEditingController titleController = TextEditingController();
 TextEditingController descController = TextEditingController();
 TextEditingController tagsController = TextEditingController();
 bool isInCall = false;
-final List<Task> tasks=[];
-final List<String> tags=[];
+ List<Task> tasks=[];
+ List<String> tags=[];
 late AnimationController animationController;
 
-class _AddListState extends State<AddList> with TickerProviderStateMixin {
-  _addList() async {
+class _UpdateListState extends State<UpdateList> with TickerProviderStateMixin {
+  _editList() async {
     setState(() {
       isInCall = false;
     });
 
-    TaskList taskList=TaskList('0',titleController.text, descController.text, tasks,tags,'',1000,0);
+    TaskList taskList=TaskList(widget.taskList.id,titleController.text, descController.text, tasks,widget.taskList.tags,'',1000,0);
     print(taskList.tasks![0].title);
-    ListCalls.addTaskList(taskList).then((value) {
+    print(taskList.tasks![0].description);
+    print(taskList.tags);
+    ListCalls.editList(taskList,widget.taskList.id).then((value) {
       print(value);
-      if(value.statusCode==200){
-        showToast(
-            context: context,
-            msg:
-            "liste créé avec succès!");
-        setState(() {
-          tags.clear();
-          tasks.clear();
-          titleController.clear();
-          descController.clear();
-        });
 
-
-      }else{
-        showToast(
-            context: context,
-            msg:
-            "une erreur s'est produite!");
-      }
+      // if(value.==200){
+      //   showToast(
+      //       context: context,
+      //       msg:
+      //       "liste créé avec succès!");
+      //   setState(() {
+      //     tags.clear();
+      //     tasks.clear();
+      //     titleController.clear();
+      //     descController.clear();
+      //   });
+      //
+      //
+      // }else{
+      //   showToast(
+      //       context: context,
+      //       msg:
+      //       "une erreur s'est produite!");
+      // }
     });
 
     setState(() {
@@ -71,6 +76,10 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
   @override
   void initState() {
     // TODO: implement initState
+    titleController.text=widget.taskList.title!;
+    descController.text=widget.taskList.description!;
+    //tags=widget.taskList.tags;
+    tasks=widget.taskList.tasks!;
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
@@ -142,6 +151,7 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: TextFieldTags(
+                              initialTags: [widget.taskList.tags[0]],
                                 tagsStyler: TagsStyler(
                                     tagTextStyle: regularTextStyle.copyWith(color: primaryColor),
                                     tagDecoration: BoxDecoration(color: Colors.pink[300], borderRadius: BorderRadius.circular(5.0), ),
@@ -149,10 +159,10 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                                     tagPadding: const EdgeInsets.all(6.0)
                                 ),
                                 textFieldStyler: TextFieldStyler(
-                                  textFieldBorder: InputBorder.none,
-                                  hintText: 'enter tags',
-                                  hintStyle: regularTextStyle.copyWith(fontSize: 15),
-                                  helperText: ''
+                                    textFieldBorder: InputBorder.none,
+                                    hintText: 'enter tags',
+                                    hintStyle: regularTextStyle.copyWith(fontSize: 15),
+                                    helperText: ''
                                 ),
                                 onTag: (tag) {
                                   tags.add(tag);
@@ -196,8 +206,8 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AddTask(
-                                          taskList: tasks,
-                                        )));
+                                      taskList: tasks,
+                                    )));
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -205,7 +215,7 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                                 alignment: Alignment.center,
                                 // margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                                 padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
+                                const EdgeInsets.only(left: 20, right: 20),
                                 height: 70,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -228,7 +238,7 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                     child: CustomButton(
                         text: 'Enregistrer',
                         onPressed: () {
-                          _addList();
+                          _editList();
                         }),
                   )
                 ]),
