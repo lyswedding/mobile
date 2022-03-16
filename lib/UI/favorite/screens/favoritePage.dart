@@ -157,7 +157,9 @@ class _FavoritePageState extends State<FavoritePage>
                 return ListComponent(
                     taskList: taskLists[index],
                     animationController: animationController,
-                    animation: animation);
+                    animation: animation,
+
+                );
               }),
         )
       ],

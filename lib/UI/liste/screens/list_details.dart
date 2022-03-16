@@ -6,7 +6,9 @@ import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/UI/liste/screens/list_tasks.dart';
 import 'package:lys_wedding/UI/liste/screens/update_list.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:readmore/readmore.dart';
 
 class ListDetails extends StatefulWidget {
@@ -28,6 +30,7 @@ class _ListDetailsState extends State<ListDetails>
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +249,8 @@ class _ListDetailsState extends State<ListDetails>
     return ListComponent(
         taskList: widget.taskList,
         animationController: animationController,
-        animation: animation);
+        animation: animation,
+);
   }
 
   Widget _buildListFavoriteLists() {
@@ -268,7 +272,7 @@ class _ListDetailsState extends State<ListDetails>
             return ListComponent(
                 taskList: widget.taskList,
                 animationController: animationController,
-                animation: animation);
+                animation: animation,);
           }),
     );
   }

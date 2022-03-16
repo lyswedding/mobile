@@ -34,7 +34,7 @@ class ListCalls {
   }
 
 
-  static Future addTaskList(TaskList task) async {
+  static Future<int> addTaskList(TaskList task) async {
     var url;
     var response;
     var dio = DioUtil.getInstance();
@@ -45,11 +45,11 @@ class ListCalls {
     var token = await getUserInfoSharedPref("token");
     dio.options.headers["Authorization"] = "Bearer " + token;
 
-    return  await dio.post('${URLS.BASE_URL}/taskslists',data:task.toJson()).then((value){
+    await dio.post('${URLS.BASE_URL}/taskslists',data:task.toJson()).then((value){
       print(value.data);
-      return value;
+      response= value.statusCode;
     });
-
+    return response;
   }
 
 
@@ -83,7 +83,7 @@ class ListCalls {
 
   }
 
-  static Future<TaskList> editList(TaskList task,idTaskList) async {
+  static Future<int> editList(TaskList task,idTaskList) async {
     var url;
     var response;
     var dio = DioUtil.getInstance();
@@ -94,7 +94,9 @@ class ListCalls {
       dio.options.headers["Authorization"] = "Bearer " + token;
       return  await dio.patch('${URLS.BASE_URL}/taskslists/$idTaskList',data:task.toJson()).then((value){
         print(value.data);
-        response= value;
+        print(value.statusCode);
+
+        response= value.statusCode;
 
       });
     });
@@ -142,6 +144,7 @@ class ListCalls {
 
     const String apiUrl = (URLS.BASE_URL + "/taskslists/my");
     var accessToken = await getUserInfoSharedPref('token');
+    print(accessToken);
     dio.options.headers["Authorization"] = "Bearer " + accessToken;
 //response will be assigned to response variable
     return  await dio.get(apiUrl).then((value){

@@ -9,10 +9,12 @@ import 'package:lys_wedding/models/List_search.dart';
 import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/categorie.services.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 class HomeDetails extends StatefulWidget {
   const HomeDetails({Key? key}) : super(key: key);
@@ -211,8 +213,13 @@ class _HomeDetailsState extends State<HomeDetails>
                 ),
               );
               animationController.forward();
-              return CategoryItem(
-                  services[index].title, services[index].icon, animationController, animation);
+              return GestureDetector(
+                onTap: (){
+                  _filterByServices(services[index].title);
+                },
+                child: CategoryItem(
+                    services[index].title, services[index].icon, animationController, animation,),
+              );
             }),
       )),
     );
@@ -272,10 +279,31 @@ class _HomeDetailsState extends State<HomeDetails>
              curve: const Interval((1 / 6) *10, 1.0,
                  curve: Curves.fastOutSlowIn),
            ),
-         ) ,))
+         ) ,
+
+         ),
+         )
              .toList(),
        ),
      ),
    );
+ }
+
+ _filterByServices(text) {
+    List<Provider> foundServices=[];
+   for (var element in popularProviders) {
+     element.services.forEach((service) {
+       print(service['name']);
+       if (service['name']==text) {
+         print(element.name);
+         setState(() {
+           foundServices.add(element);
+         });
+       }
+     });
+   }
+   popularProviders = foundServices;
+   print(foundServices);
+   // print(foundUserTaskLists);
  }
 }

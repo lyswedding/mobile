@@ -6,9 +6,12 @@ import 'package:lys_wedding/UI/liste/components/list_component_horizontal.dart';
 import 'package:lys_wedding/UI/profil/screens/user_lists.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/dio_service.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
+import 'package:lys_wedding/services/tags.services.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'add-lists.dart';
@@ -24,7 +27,10 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   late AnimationController animationController;
   bool isInCall = false;
   List<TaskList> taskLists = [];
+  final List<TaskList> foundTaskLists = [];
   List<TaskList> userTaskLists = [];
+  List<TaskList> foundUserTaskLists = [];
+  List<String> tags = [];
 
   callAllListes() {
     setState(() {
@@ -40,7 +46,6 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     });
   }
 
-
   callAllUserListes() {
     setState(() {
       isInCall = true;
@@ -49,7 +54,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       setState(() {
         print('*******************');
         print(res.toString());
-        userTaskLists=res;
+        userTaskLists = res;
       });
     });
     setState(() {
@@ -57,11 +62,30 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     });
   }
 
+  callTagsListes() {
+    setState(() {
+      isInCall = true;
+    });
+    TagsServices.getUniqueTags().then((res) {
+      setState(() {
+        print('*******************');
+        print(res.toString());
+        tags = res;
+      });
+    });
+    setState(() {
+      isInCall = false;
+    });
+  }
+
+
+
   @override
   void initState() {
     // TODO: implement initState
     callAllListes();
     callAllUserListes();
+    callTagsListes();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
@@ -99,7 +123,11 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SearchBar(),
+                SearchBar(
+                  onchanged: (enteredKeyword) {
+                    _runFilter(enteredKeyword);
+                  },
+                ),
                 _buildCategories(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,8 +142,8 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => UserListPage(
-                                 tasksLists: userTaskLists,
-                                )));
+                                      tasksLists: userTaskLists,
+                                    ))).then((value) => callAllUserListes());
                       },
                       child: Text(
                         'view more',
@@ -124,8 +152,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
-                for (int i = 0; i < 2; i++)
-                  _buildListUser(i),
+                for (int i = 0; i < 2; i++) _buildListUser(i),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -139,8 +166,8 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => UserListPage(
-                                  tasksLists: userTaskLists,
-                                )));
+                                      tasksLists: userTaskLists,
+                                    )));
                       },
                       child: Text(
                         'view more',
@@ -175,15 +202,65 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
 
   Widget _buildCategories() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: SingleChildScrollView(
           child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          height: 50,
-          child: ListView.builder(
-              itemCount: 10,
-              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 50,
+                child: ListView.builder(
+                    itemCount: tags.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      bool selected = false;
+                      var animation = Tween(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animationController,
+                          curve: const Interval((1 / 6) * 5, 1.0,
+                              curve: Curves.fastOutSlowIn),
+                        ),
+                      );
+                      animationController.forward();
+                      return FilterChipWidget(
+                        //backgroundColor: primaryColor,
+                        chipName: tags[index],
+                        onSelect: (bool value) {
+                          _filterByTags(tags[index].toString());
+                        },
+                      );
+                    }),
+              )),
+        ));
+  }
+
+  Widget _buildListUser(index) {
+    var animation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: const Interval((1 / 6) * 10, 1.0, curve: Curves.fastOutSlowIn),
+      ),
+    );
+    animationController.forward();
+    return ListItemHorizontal(
+        taskListData: userTaskLists[index],
+        animationController: animationController,
+        animation: animation);
+  }
+
+  Widget _buildListAdminLists() {
+    return SingleChildScrollView(
+        child: Column(
+      children: [
+        SizedBox(
+          height: 400,
+          child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  // crossAxisSpacing: 5,
+                  // mainAxisSpacing: 5,
+                  childAspectRatio: 0.6),
+              itemCount: taskLists.length,
+              scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 var animation = Tween(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(
@@ -193,60 +270,112 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                   ),
                 );
                 animationController.forward();
-                return CategoryItemList(
-                    'text', 'images/9.jpg', animationController, animation);
+                return ListComponent(
+                    taskList: taskLists[index],
+                    animationController: animationController,
+                    animation: animation,
+                );
               }),
+        )
+      ],
+    ));
+  }
+
+  _filterByTags(text) {
+    for (var element in taskLists) {
+      if (element.tags.contains(text)) {
+        print(element.title);
+        setState(() {
+          foundTaskLists.add(element);
+        });
+      }
+    }
+
+    taskLists = foundTaskLists;
+
+    userTaskLists.forEach((element) {
+      if (element.tags.contains(text)) {
+        setState(() {
+          foundUserTaskLists.add(element);
+        });
+      }
+    });
+    userTaskLists = foundUserTaskLists;
+    print(foundTaskLists);
+    // print(foundUserTaskLists);
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<TaskList> results = [];
+    List<TaskList> userResults = [];
+    // if (enteredKeyword.isEmpty) {
+    //   // if the search field is empty or only contains white-space, we'll display all users
+    //   setState(() {
+    //     results = taskLists;
+    //
+    //   });
+    // } else {
+    //   results = taskLists
+    //       .where((taskList) => taskList.title!.toLowerCase()
+    //       .contains(enteredKeyword.toLowerCase()))
+    //       .toList();
+    // }
+
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      userResults = userTaskLists;
+    } else {
+      userResults = userTaskLists
+          .where((userTaskList) => userTaskList.title!
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    setState(() {
+      // taskLists = results;
+      userTaskLists = userResults;
+    });
+  }
+
+}
+
+class FilterChipWidget extends StatefulWidget {
+  final String chipName;
+  final Function onSelect;
+  FilterChipWidget({Key? key, this.chipName = '', required this.onSelect})
+      : super(key: key);
+
+  @override
+  _FilterChipWidgetState createState() => _FilterChipWidgetState();
+}
+
+class _FilterChipWidgetState extends State<FilterChipWidget> {
+  var _isSelected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: FilterChip(
+        padding: const EdgeInsets.all(4.0),
+        label: Text(widget.chipName),
+        labelStyle:
+            regularTextStyle.copyWith(color: Colors.white, fontSize: 15),
+        selected: _isSelected,
+        checkmarkColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
         ),
-      )),
+        backgroundColor: secondaryColor,
+        onSelected: (isSelected) {
+          setState(() {
+            _isSelected = isSelected;
+            widget.onSelect(isSelected);
+          });
+        },
+        selectedColor: primaryColor,
+      ),
     );
   }
-
-  Widget _buildListUser(index) {
-          var animation = Tween(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-              parent: animationController,
-              curve: const Interval((1 / 6) * 10, 1.0,
-                  curve: Curves.fastOutSlowIn),
-            ),
-          );
-          animationController.forward();
-          return ListItemHorizontal(
-              taskListData: userTaskLists[index],
-              animationController: animationController,
-              animation: animation);
-  }
-
-  Widget _buildListAdminLists() {
-    return SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 400,
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      // crossAxisSpacing: 5,
-                      // mainAxisSpacing: 5,
-                      childAspectRatio: 0.6),
-                  itemCount: taskLists.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    var animation = Tween(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animationController,
-                        curve: const Interval((1 / 6) * 5, 1.0,
-                            curve: Curves.fastOutSlowIn),
-                      ),
-                    );
-                    animationController.forward();
-                    return ListComponent(
-                        taskList: taskLists[index],
-                        animationController: animationController,
-                        animation: animation);
-                  }),
-            )
-          ],
-        ));
-  }
-
 }

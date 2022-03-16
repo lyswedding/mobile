@@ -1,6 +1,8 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/urls.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +37,8 @@ class DioUtil {
           var accessToken = await getUserInfoSharedPref('token');
           final opts = new Options(method: requestOptions.method);
           dio.options.headers["Authorization"] = "Bearer " + accessToken;
-          dio.options.headers["set-cookie"]=getUserInfoSharedPref('cookie');
+          print(dio.options.headers);
+          //dio.options.headers["set-cookie"]=getUserInfoSharedPref('cookie');
           final response = await dio.request(requestOptions.path,
               options: opts,
               cancelToken: requestOptions.cancelToken,
@@ -64,21 +67,28 @@ class DioUtil {
     var dio = Dio();
     final Uri apiUrl = Uri.parse('${URLS.BASE_URL}/refresh_token');
     print(apiUrl);
-    // var refreshToken = await saveAccessTokenSharedPref('accessToken');
-    // dio.options.headers["Authorization"] = "Bearer " + refreshToken;
+     var refreshToken = await getUserInfoSharedPref('refresh_token');
+     print(refreshToken);
+    final options =  Options(
+      headers: dio.options.headers["x-refresh-token"]=refreshToken,
+    );
+    options.headers!["x-refresh-token"] = refreshToken;
+    print(options.headers);
 
-    Response response = await dio.postUri(apiUrl,);
-    //updateCookie(response);
+    Response response = await dio.post('${URLS.BASE_URL}/refresh_token',options:options );
+   // updateCookie(response);
     if (response.statusCode == 200) {
       print('**************Dio***********');
       print(response.data);
-      var refreshTokenResponse = jsonDecode(response.data);
-      String cookie = response.headers['Set-Cookie'].toString();
+      var refreshTokenResponse = response.data;
+      String cookie = response.headers['x-refresh-token'].toString();
       print('**************Dio***********');
-      print(refreshTokenResponse);
       await saveAccessTokenSharedPref(refreshTokenResponse['accessToken'],cookie);
+      print(refreshTokenResponse);
     } else {
       print('**************Dio***********');
+      deleteToken();
+      //Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup()));
       print(response.data); //TODO: logout
     }
   }
@@ -92,5 +102,16 @@ class DioUtil {
       (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
   }
+
+  // Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
+  //   final options = new Options(
+  //     method: requestOptions.method,
+  //     headers: requestOptions.headers,
+  //   );
+  //   return this.api.request<dynamic>(requestOptions.path,
+  //       data: requestOptions.data,
+  //       queryParameters: requestOptions.queryParameters,
+  //       options: options);
+  // }
 
 }

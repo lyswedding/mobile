@@ -7,7 +7,9 @@ import 'package:lys_wedding/shared/constants.dart';
 
 
 class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key}) : super(key: key);
+  final Function? onchanged;
+
+  const SearchBar({Key? key,this.onchanged}) : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -28,6 +30,9 @@ class _SearchBarState extends State<SearchBar> {
              // margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
               //height: MediaQuery.of(context).size.height * .10,
               child: CommonTextFieldView(
+                onChanged: (String text){
+                  widget.onchanged!(text);
+                },
                 hintText: 'search',
                 controller: searchController,
               ),

@@ -43,7 +43,7 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
     print(taskList.tasks![0].title);
     ListCalls.addTaskList(taskList).then((value) {
       print(value);
-      if(value.statusCode==200){
+      if(value==200){
         showToast(
             context: context,
             msg:

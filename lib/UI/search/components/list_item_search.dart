@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/components/common_card.dart';
@@ -9,6 +11,7 @@ import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 import '../../liste/screens/list_details.dart';
 
@@ -33,7 +36,20 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   bool isInCall=false;
   bool isSelected=false;
   callAddToFavorite()async{
-    await FavoriteCalls.addProviderToFavorite(widget.provider.id);
+    await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
+        if(value.statusCode==200){
+      showToast(
+          context: context,
+          msg:
+          value.body);
+
+    }else{
+    showToast(
+    context: context,
+    msg:
+    "une erreur s'est produite!");
+    }}
+    );
     setState(() {
       isInCall=true;
     });

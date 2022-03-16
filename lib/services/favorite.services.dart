@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'dio_service.dart';
 
 class FavoriteCalls {
-  static Future<http.Response> addListToFavorite(id) async {
+  static Future addListToFavorite(id) async {
     Uri url;
     http.Response response;
     var dio = DioUtil.getInstance();
@@ -21,8 +21,7 @@ class FavoriteCalls {
     var token = await getUserInfoSharedPref("token");
     dio.options.headers["Authorization"] = "Bearer " + token;
     return  await dio.putUri(url).then((value){
-      print(value.data);
-      return value.data;
+      return value;
 
     });
 
@@ -44,7 +43,7 @@ class FavoriteCalls {
     });
   }
 
-  static Future<http.Response> deletTaskListFromFavorite(id) async {
+  static Future deletTaskListFromFavorite(id) async {
     Uri url;
     http.Response response;
     var dio = DioUtil.getInstance();
@@ -56,7 +55,7 @@ class FavoriteCalls {
     return  await dio.deleteUri(url).then((value){
       print(value.data);
 
-      return value.data;
+      return value;
     });
 
   }

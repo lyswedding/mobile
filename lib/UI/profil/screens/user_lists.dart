@@ -8,12 +8,13 @@ import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 import '../../../models/List_search.dart';
 
 class UserListPage extends StatefulWidget {
   final List<TaskList> tasksLists;
-   UserListPage({required this.tasksLists});
+  UserListPage({required this.tasksLists});
 
   @override
   _UserListPageState createState() => _UserListPageState();
@@ -43,18 +44,14 @@ class _UserListPageState extends State<UserListPage>
   //   });
   // }
 
-
-
-
   @override
   void initState() {
     // TODO: implement initState
-   // callAllListes();
+    // callAllListes();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +92,8 @@ class _UserListPageState extends State<UserListPage>
           var animation = Tween(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
               parent: animationController,
-              curve: const Interval((1 / 6) * 5, 1.0,
-                  curve: Curves.fastOutSlowIn),
+              curve:
+                  const Interval((1 / 6) * 5, 1.0, curve: Curves.fastOutSlowIn),
             ),
           );
           animationController.forward();
@@ -120,25 +117,67 @@ class _UserListPageState extends State<UserListPage>
             key: UniqueKey(),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
-              _deleteTask(widget.tasksLists[index].id);
+              showAlertDialog(context, widget.tasksLists[index].id);
             },
             child: ListItemHorizontal(
                 taskListData: widget.tasksLists[index],
                 animationController: animationController,
                 animation: animation
-              //     .map((e) => ListItem(image: e.cover, label: e.name))
-              //     .toList()
-            ),
+                //     .map((e) => ListItem(image: e.cover, label: e.name))
+                //     .toList()
+                ),
           );
         });
   }
 
-  _deleteTask(idList)async {
+  _deleteTask(idList) async {
     print(idList);
-    await ListCalls.deleteTaskList(idList)
-        .then((value) => print(value.body));
+    await ListCalls.deleteTaskList(idList).then((value) {
+      if (value == 200) {
+        showToast(context: context, msg: "Liste des tâches supprimée");
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+
     setState(() {
       isInCall = true;
     });
+  }
+
+  showAlertDialog(BuildContext context, idList) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed: () {
+        _deleteTask(idList);
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      content: Text(
+          "Would you like to continue learning how to use Flutter alerts?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

@@ -47,26 +47,19 @@ class _UpdateListState extends State<UpdateList> with TickerProviderStateMixin {
     print(taskList.tags);
     ListCalls.editList(taskList,widget.taskList.id).then((value) {
       print(value);
+      if(value==200){
+        showToast(
+            context: context,
+            msg:
+            "liste modifié avec succès!");
 
-      // if(value.==200){
-      //   showToast(
-      //       context: context,
-      //       msg:
-      //       "liste créé avec succès!");
-      //   setState(() {
-      //     tags.clear();
-      //     tasks.clear();
-      //     titleController.clear();
-      //     descController.clear();
-      //   });
-      //
-      //
-      // }else{
-      //   showToast(
-      //       context: context,
-      //       msg:
-      //       "une erreur s'est produite!");
-      // }
+Navigator.pop(context);
+      }else{
+        showToast(
+            context: context,
+            msg:
+            "une erreur s'est produite!");
+      }
     });
 
     setState(() {
