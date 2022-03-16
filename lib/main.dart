@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/home/screens/buttom-navigation-bar.dart';
+import 'package:lys_wedding/UI/authentification/screens/signup.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: Home(),
+      home: Signup(),
+
     );
   }
 }
