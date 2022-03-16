@@ -51,8 +51,9 @@ dependencies:
   http_parser: ^4.0.0
   path_provider: ^2.0.1
   url_launcher: ^6.0.20
- 
   syncfusion_flutter_datepicker: ^19.4.54
+  google_sign_in: ^5.2.4
+  email_validator : ^2.0.1
 
 
 

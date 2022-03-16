@@ -6,6 +6,8 @@ import 'package:lys_wedding/UI/search/servises/service_list.dart';
 import 'package:lys_wedding/models/List_search.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
+import '../components/custom_input.dart';
+
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
