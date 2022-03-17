@@ -8,6 +8,8 @@ import 'package:lys_wedding/services/categorie.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
+import '../components/custom_input.dart';
+
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();

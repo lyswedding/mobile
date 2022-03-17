@@ -15,5 +15,5 @@ getUserInfoSharedPref(String key) async {
 
 deleteToken() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.remove('token');
+  await preferences.clear();
 }

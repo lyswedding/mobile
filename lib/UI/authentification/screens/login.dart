@@ -1,3 +1,6 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:path/path.dart' as path;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,8 +22,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  FocusNode emailFocusNode =FocusNode();
-  FocusNode passFocusNode =FocusNode();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passFocusNode = FocusNode();
   bool isInCall = false;
 
   @override
@@ -42,9 +45,10 @@ class _LoginState extends State<Login> {
                 ),
                 CommonTextFieldView(
                   controller: emailController,
-                  padding: const EdgeInsets.only(
-                      bottom: 16, left: 24, right: 24),
+                  padding:
+                      const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                   titleText: 'email',
+
                   hintText:
                   "enter your email",
                   keyboardType: TextInputType.emailAddress,
@@ -56,9 +60,10 @@ class _LoginState extends State<Login> {
                 ),
                 CommonTextFieldView(
                   controller: passwordController,
-                  padding: const EdgeInsets.only(
-                      bottom: 16, left: 24, right: 24),
+                  padding:
+                      const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                   titleText: 'password',
+
                   hintText:
                   "enter your password",
                   keyboardType: TextInputType.visiblePassword,
@@ -80,6 +85,7 @@ class _LoginState extends State<Login> {
                         showToast(
                             context: context,
                             msg: 'Merci de remplir tous les champs !');
+
                       } else if (!isEmail(emailController.text)) {
                         showToast(
                             context: context,
@@ -88,6 +94,7 @@ class _LoginState extends State<Login> {
                         showToast(
                             context: context,
                             msg:
+
                             "Mot de passe doit être d'au moins 6 caractères");
                       }else {
                         var body = {
@@ -111,6 +118,7 @@ class _LoginState extends State<Login> {
                             showToast(
                                 context: context,
                                 msg:
+
                                 "Une erreur s'est produite. Veuillez réessayer!");
                           }
                         });
@@ -141,8 +149,8 @@ class _LoginState extends State<Login> {
                     ),
                     Text(
                       'or continue with ',
-                      style:
-                          GoogleFonts.poppins(fontSize: 12, color: Colors.black),
+                      style: GoogleFonts.poppins(
+                          fontSize: 12, color: Colors.black),
                     ),
                     const SizedBox(
                       width: 20,
@@ -159,13 +167,16 @@ class _LoginState extends State<Login> {
                     child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                        height: 70,
-                        margin: const EdgeInsets.only(top: 20),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white),
-                        child: Image.asset("images/21.png")),
+                    InkWell(
+                      child: Container(
+                          height: 70,
+                          margin: const EdgeInsets.only(top: 20),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white),
+                          child: Image.asset("images/21.png")),
+                      onTap: SignIn,
+                    ),
                     const Padding(padding: const EdgeInsets.all(20)),
                     Container(
                         height: 70,
@@ -212,4 +223,21 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
+  Future SignIn() async {
+    final user = await GoogleSingnInApi.login();
+    print(user);
+    if (user == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Sign in failed")));
+    } else {
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+    }
+  }
+}
+
+class GoogleSingnInApi {
+  static final _googleSignIn = GoogleSignIn();
+  static Future<GoogleSignInAccount?> login() => _googleSignIn.signIn();
 }

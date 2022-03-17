@@ -16,10 +16,7 @@ class Signup extends StatefulWidget {
   _SignupState createState() => _SignupState();
 }
 
-
-
 class _SignupState extends State<Signup> {
-
   TextEditingController fnameController = TextEditingController();
   TextEditingController lnameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -27,9 +24,9 @@ class _SignupState extends State<Signup> {
   TextEditingController phoneController = TextEditingController();
   bool isInCall = false;
 
-
   @override
   Widget build(BuildContext context) {
+
       return Scaffold(
           backgroundColor: scaffoldBGColor,
           body: RemoveFocuse(
@@ -230,19 +227,97 @@ class _SignupState extends State<Signup> {
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Login(),
-                                ));
-                          },
-                        )
-                      ]),
+                        );
+                      } else {
+                        showToast(
+                            context: context,
+                            msg:
+                                "Une erreur s'est produite. Veuillez réessayer!");
+                      }
+                    });
+                  }),
+              Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Row(
+                    children: <Widget>[
+                      const Expanded(
+                        child: Divider(
+                          color: Colors.black,
+                          height: 8.0,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        'or continue with ',
+                        style: GoogleFonts.poppins(
+                            fontSize: 12, color: Colors.black),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      const Expanded(
+                        child: Divider(
+                          color: Colors.black,
+                          height: 8.0,
+                        ),
+                      )
+                    ],
+                  )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    child: Container(
+                        height: 70,
+                        margin: const EdgeInsets.only(top: 20),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white),
+                        child: Image.asset("images/21.png")),
+                    onTap: () {},
+                  ),
+                  const Padding(padding: EdgeInsets.all(20)),
+                  Container(
+                      height: 70,
+                      margin: const EdgeInsets.only(top: 20),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      child: Image.asset("images/22.png")),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text(
+                    "I Have Already ",
+                    style:
+                        GoogleFonts.poppins(fontSize: 12, color: Colors.black),
+                  ),
+                  GestureDetector(
+                    child: Text(
+                      "Login Now",
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: Colors.pink,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
-                  ]),
-                )),
-          ));
-    }
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Login(),
+                          ));
+                    },
+                  )
+                ]),
+              ),
+            ]),
+          )),
+        ));
   }
-
+}
