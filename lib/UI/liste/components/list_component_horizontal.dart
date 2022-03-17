@@ -55,8 +55,8 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                         //ProfileCarousel(restaurantId: widget.hotelData.id,),
                         AspectRatio(
                             aspectRatio: 1,
-                            child: Image.network(
-                              widget.taskListData.imageUrl.toString(),
+                            child: Image.asset(
+                              'images/11.jpg',
                               fit: BoxFit.cover,
                             )),
                         Expanded(

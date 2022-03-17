@@ -33,16 +33,14 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   List<String> tags = [];
 
   callAllListes() {
-    setState(() {
-      isInCall = true;
-    });
+
     ListCalls.getAdminLists().then((res) {
       setState(() {
         taskLists = res;
       });
     });
     setState(() {
-      isInCall = false;
+      isInCall = true;
     });
   }
 
@@ -77,8 +75,6 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       isInCall = false;
     });
   }
-
-
 
   @override
   void initState() {
@@ -122,66 +118,65 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
             child: Column(
-              children: [
-                SearchBar(
-                  onchanged: (enteredKeyword) {
-                    _runFilter(enteredKeyword);
-                  },
-                ),
-                _buildCategories(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'My lists',
-                      style: titleTextStyle,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserListPage(
-                                      tasksLists: userTaskLists,
-                                    ))).then((value) => callAllUserListes());
+              children:[
+                    SearchBar(
+                      onchanged: (enteredKeyword) {
+                        _runFilter(enteredKeyword);
                       },
-                      child: Text(
-                        'view more',
-                        style: regularTextStyle,
-                      ),
                     ),
-                  ],
-                ),
-                for (int i = 0; i < 2; i++) _buildListUser(i),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Suggested lists',
-                      style: titleTextStyle,
+                   _buildCategories(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'My lists',
+                          style: titleTextStyle,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UserListPage(
+                                              tasksLists: userTaskLists,
+                                            )))
+                                .then((value) => callAllUserListes());
+                          },
+                          child: Text(
+                            'view more',
+                            style: regularTextStyle,
+                          ),
+                        ),
+                      ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserListPage(
-                                      tasksLists: userTaskLists,
-                                    )));
-                      },
-                      child: Text(
-                        'view more',
-                        style: regularTextStyle,
-                      ),
+                     for (int i = 0; i < userTaskLists.length; i++) _buildListUser(i),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Suggested lists',
+                          style: titleTextStyle,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserListPage(
+                                          tasksLists: userTaskLists,
+                                        )));
+                          },
+                          child: Text(
+                            'view more',
+                            style: regularTextStyle,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _buildListAdminLists(),
-                ),
-                // _buildListUser(),
-              ],
+                    // _buildListUser(),
+                  ] +
+                getPList(),
+
             ),
           ),
         ),
@@ -271,9 +266,9 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                 );
                 animationController.forward();
                 return ListComponent(
-                    taskList: taskLists[index],
-                    animationController: animationController,
-                    animation: animation,
+                  taskList: taskLists[index],
+                  animationController: animationController,
+                  animation: animation,
                 );
               }),
         )
@@ -338,6 +333,42 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     });
   }
 
+  List<Widget> getPList() {
+    List<Widget> noList = [];
+    var cout = 0;
+    final columCount = 2;
+    for (var i = 0; i < taskLists.length / columCount; i++) {
+      List<Widget> listUI = [];
+      for (var i = 0; i < columCount; i++) {
+        try {
+          final date = taskLists[cout];
+          var animation = Tween(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animationController,
+              curve: Interval((1 / taskLists.length) * cout, 1.0,
+                  curve: Curves.fastOutSlowIn),
+            ),
+          );
+          animationController.forward();
+          listUI.add(Expanded(
+            child: ListComponent(
+              taskList: date,
+              animation: animation,
+              animationController: animationController,
+            ),
+          ));
+          cout += 1;
+        } catch (e) {}
+      }
+      noList.add(
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: listUI,
+              ),
+            );
+    }
+    return noList;
+  }
 }
 
 class FilterChipWidget extends StatefulWidget {

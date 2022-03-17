@@ -81,118 +81,88 @@ class _HomeDetailsState extends State<HomeDetails>
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title:  Text(
-            "Bonjour",
-            style: titleTextStyle,
-          ),
-          leading: Container(
-            //  Transform.translate(
-            // offset: const Offset(10, 0),
-            padding: const EdgeInsets.only(top: 10),
-            // margin: EdgeInsets.symmetric(vertical: 5),
-
-            child: Image.asset(
-              "images/adel.png",
-              height: 50,
+    return SafeArea(
+      top: true,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            title:  Text(
+              "Bonjour",
+              style: titleTextStyle.copyWith(fontSize: 24),
             ),
-          ),
-          actions:   <Widget>[
-            GestureDetector(
-              onTap: (){
-                deleteToken();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Signup()));
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Row(children: const [
-                      Icon(Icons.logout,color: Colors.red,),
-                      Padding(padding: EdgeInsets.only(left: 20)),
-                      Text('Deconnexion'),
-                    ]),
-                  ),
-                  const Icon(Icons.arrow_forward_ios_outlined),
-                ],
-              ),
-            ),
-             Padding(padding: EdgeInsets.all(10)),
-             Icon(
-              Icons.notifications,
-              color: Colors.black,
-              size: 24,
-            ),
-            Padding(padding: EdgeInsets.all(10)),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(children: [
-              // TItleForPage(),
-              Container(
-                height: 150,
-                padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                // margin: const EdgeInsets.fromLTRB(30, 30, 10, 0),
-                child: Center(
-                  child: Text(
-                    "We are here to help you planning your wedding",
-                    style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
+            actions:   <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Image.asset(
+                  "images/adel.png",
+                  height: 50,
                 ),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                        image: AssetImage("images/11.jpg"), fit: BoxFit.fill)),
               ),
-              const SizedBox(
-                height: 16,
-              ),
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    "Categorie",
-                    style: titleTextStyle,
-                  )),
-              _buildCategories(),
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    "Bon plan",
-                    style: titleTextStyle,
-                  )),
-              const SizedBox(
-                height: 16,
-              ),
-              _buildListPopular(),
-              const SizedBox(
-                height: 16,
-              ),
-
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    "Listes populaires",
-                    style: titleTextStyle,
-                  )),
-              const SizedBox(
-                height: 10,
-              ),
-
-              _buildListFavorites(),
-            ]),
+            ],
           ),
-        ));
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                // TItleForPage(),
+                Container(
+                  height: 150,
+                  padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                  // margin: const EdgeInsets.fromLTRB(30, 30, 10, 0),
+                  child: Center(
+                    child: Text(
+                      "We are here to help you planning your wedding",
+                      style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      image: DecorationImage(
+                          image: AssetImage("images/11.jpg"), fit: BoxFit.fill)),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Categorie",
+                      style: titleTextStyle,
+                    )),
+                _buildCategories(),
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Bon plan",
+                      style: titleTextStyle,
+                    )),
+                const SizedBox(
+                  height: 16,
+                ),
+                _buildListPopular(),
+                const SizedBox(
+                  height: 16,
+                ),
+
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Listes populaires",
+                      style: titleTextStyle,
+                    )),
+                const SizedBox(
+                  height: 10,
+                ),
+
+                _buildListFavorites(),
+              ]),
+            ),
+          )),
+    );
   }
 
   Widget _buildCategories() {

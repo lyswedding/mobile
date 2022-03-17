@@ -22,6 +22,8 @@ class ListDetails extends StatefulWidget {
 class _ListDetailsState extends State<ListDetails>
     with TickerProviderStateMixin {
   late AnimationController animationController;
+  bool isSelected = false;
+
 
   @override
   void initState() {
@@ -30,7 +32,36 @@ class _ListDetailsState extends State<ListDetails>
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
+  callAddToFavorite(id) async {
+    await FavoriteCalls.addListToFavorite(id).then((value) {
+      print(value);
+      print(value.statusCode);
+      if (value.statusCode == 201) {
+        showToast(
+            context: context, msg:'Liste des tâches mise en favoris');
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
+  }
 
+  deleteFromFavorites(id) async {
+    await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
+      print(value.statusCode);
+      if (value.statusCode == 200) {
+        showToast(
+            context: context, msg:'Liste des tâches retiré de favoris');
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +97,8 @@ class _ListDetailsState extends State<ListDetails>
                   children: <Widget>[
                     AspectRatio(
                       aspectRatio: 1.7,
-                      child: Image.network(
-                        widget.taskList.imageUrl.toString(),
+                      child: Image.asset(
+                        'images/12.jpg',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -102,7 +133,16 @@ class _ListDetailsState extends State<ListDetails>
                             borderRadius: const BorderRadius.all(
                               Radius.circular(32.0),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              setState(() {
+                                isSelected = !isSelected;
+                              });
+                              if (isSelected) {
+                                callAddToFavorite(widget.taskList.id);
+                              } else {
+                                deleteFromFavorites(widget.taskList.id);
+                              }
+                            },
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Icon(
@@ -190,7 +230,7 @@ class _ListDetailsState extends State<ListDetails>
               //     ],
               //   ),
               // )
-              //_buildListFavoriteLists(),
+              _buildListFavoriteLists(),
             ],
           ),
         ),
@@ -255,7 +295,7 @@ class _ListDetailsState extends State<ListDetails>
 
   Widget _buildListFavoriteLists() {
     return SizedBox(
-      height: 400,
+      height: MediaQuery.of(context).size.height*0.35,
       child: ListView.builder(
           shrinkWrap: true,
           itemCount: 4,

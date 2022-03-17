@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/liste/screens/list_details.dart';
@@ -77,7 +78,7 @@ class _ListComponentState extends State<ListComponent> {
                       )));
         },
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.35,
+          //height: MediaQuery.of(context).size.height * 0.35,
           width: MediaQuery.of(context).size.width * 0.5,
           child: CommonCard(
             color: whiteColor,
@@ -89,9 +90,9 @@ class _ListComponentState extends State<ListComponent> {
                   Stack(
                     children: [
                       AspectRatio(
-                        aspectRatio: 0.9,
-                        child: Image.network(
-                          widget.taskList.imageUrl.toString(),
+                        aspectRatio: 1,
+                        child: Image.asset(
+                          'images/12.jpg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -140,18 +141,42 @@ class _ListComponentState extends State<ListComponent> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Text(
+                          widget.taskList.title.toString(),
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              EvaIcons.pricetags,
+                              size: 15,
+                              color: primaryColor,
+                            ),
+                            Text(
+                              widget.taskList.tags!.toString(),
+                              // Helper.getRoomText(hotelInfo.roomData!),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: primaryColor),
+                            ),
+
+
+                          ],
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              flex: 9,
-                              child: Text(
-                                widget.taskList.title.toString(),
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: primaryColor),
-                              ),
+                            Text(
+                              widget.taskList.tasks!.length.toString() + '\ttaches',
+                              // Helper.getRoomText(hotelInfo.roomData!),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor),
                             ),
                             Row(
                               children: [
@@ -170,31 +195,6 @@ class _ListComponentState extends State<ListComponent> {
                               ],
                             )
                           ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              EvaIcons.pricetags,
-                              size: 15,
-                              color: primaryColor,
-                            ),
-                            Text(
-                              widget.taskList.tags![0].toString(),
-                              // Helper.getRoomText(hotelInfo.roomData!),
-                              style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: primaryColor),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          widget.taskList.tasks!.length.toString() + '\ttaches',
-                          // Helper.getRoomText(hotelInfo.roomData!),
-                          style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: primaryColor),
                         ),
                       ],
                     ),

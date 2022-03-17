@@ -37,18 +37,20 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   bool isSelected=false;
   callAddToFavorite()async{
     await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
-        if(value.statusCode==200){
+      print(value.data);
+        if(value.statusCode==201){
       showToast(
           context: context,
           msg:
-          value.body);
+          value.data['message'].toString());
 
     }else{
     showToast(
     context: context,
     msg:
     "une erreur s'est produite!");
-    }}
+    }
+    }
     );
     setState(() {
       isInCall=true;
@@ -56,7 +58,21 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   }
 
   deleteFromFavorite()async{
-    await FavoriteCalls.deletProviderFromFavorite(widget.provider.id);
+    await FavoriteCalls.deletProviderFromFavorite(widget.provider.id).then((value) {
+      print(value.data);
+      if(value.statusCode==200){
+        showToast(
+            context: context,
+            msg:
+            value.data['message'].toString());
+
+      }else{
+        showToast(
+            context: context,
+            msg:
+            "une erreur s'est produite!");
+      }
+    });
     setState(() {
       isInCall=true;
     });

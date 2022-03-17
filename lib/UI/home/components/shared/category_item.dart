@@ -27,18 +27,25 @@ class _CategoryItemState extends State<CategoryItem> {
         child: ClipRRect(
           borderRadius: const BorderRadius.all(const Radius.circular(5)),
           child: AspectRatio(
-            aspectRatio: 1,
+            aspectRatio: 1.2,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.network(
                   widget.image,
                   height: 30,
                   width: 30,
                 ),
-                Text(
-                  widget.text,
-                  style:subTitleTextStyle,
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.text,
+                      style:subTitleTextStyle.copyWith(fontSize: 10),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
               ],
             ),

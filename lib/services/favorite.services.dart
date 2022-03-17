@@ -27,7 +27,7 @@ class FavoriteCalls {
 
   }
 
-  static Future<http.Response> addProviderToFavorite(id) async {
+  static Future addProviderToFavorite(id) async {
     Uri url;
     http.Response response;
     var dio = DioUtil.getInstance();
@@ -38,7 +38,7 @@ class FavoriteCalls {
     dio.options.headers["Authorization"] = "Bearer " + token;
     return  await dio.putUri(url).then((value){
       print(value.data);
-      return value.data;
+      return value;
 
     });
   }
@@ -60,7 +60,7 @@ class FavoriteCalls {
 
   }
 
-  static Future<http.Response> deletProviderFromFavorite(id) async {
+  static Future deletProviderFromFavorite(id) async {
     Uri url;
     http.Response response;
     var dio = DioUtil.getInstance();
@@ -72,7 +72,7 @@ class FavoriteCalls {
     return  await dio.deleteUri(url).then((value){
       print(value.data);
 
-      return value.data;
+      return value;
     });
 
   }
