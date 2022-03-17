@@ -17,7 +17,7 @@ class ServiceProfil {
     var token = await getUserInfoSharedPref("token");
 
     dio.options.headers["Authorization"] = "Bearer " + token;
-    return  await dio.get(URLS.BASE_URL+'/providers/favorites').then((value){
+    return  await dio.get(URLS.BASE_URL+'/users/me').then((value){
       print(value.data);
       final data = jsonDecode(value.toString());
       print(data);

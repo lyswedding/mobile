@@ -28,11 +28,11 @@ class _HomeState extends State<Home> {
     _controller = PersistentTabController(initialIndex: 0);
   }
   final screens = [
-    HomeDetails(),
+    const HomeDetails(),
     SearchPage(),
-    ListePage(),
-    FavoritePage(),
-    ProfilPage()
+    const ListePage(),
+    const FavoritePage(),
+    const ProfilPage()
   ];
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -91,12 +91,12 @@ class _HomeState extends State<Home> {
       ),
       popAllScreensOnTapOfSelectedTab: true,
       popActionScreens: PopActionScreensType.all,
-      itemAnimationProperties: ItemAnimationProperties(
+      itemAnimationProperties: const ItemAnimationProperties(
         // Navigation Bar's items animation properties.
         duration: Duration(milliseconds: 200),
         curve: Curves.ease,
       ),
-      screenTransitionAnimation: ScreenTransitionAnimation(
+      screenTransitionAnimation: const ScreenTransitionAnimation(
         // Screen transition animation on change of selected tab.
         animateTabTransition: true,
         curve: Curves.ease,

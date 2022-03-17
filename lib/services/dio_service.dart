@@ -69,13 +69,13 @@ class DioUtil {
     print(apiUrl);
      var refreshToken = await getUserInfoSharedPref('refresh_token');
      print(refreshToken);
-    final options =  Options(
-      headers: dio.options.headers["x-refresh-token"]=refreshToken,
-    );
-    options.headers!["x-refresh-token"] = refreshToken;
-    print(options.headers);
+    // final options =  Options(
+    //   headers: dio.options.headers["x-refresh-token"]=refreshToken,
+    // );
+    dio.options.headers!["x-refresh-token"] = refreshToken;
+    print(dio.options.headers);
 
-    Response response = await dio.post('${URLS.BASE_URL}/refresh_token',options:options );
+    Response response = await dio.postUri(apiUrl);
    // updateCookie(response);
     if (response.statusCode == 200) {
       print('**************Dio***********');
