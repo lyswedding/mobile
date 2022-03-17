@@ -12,6 +12,7 @@ import 'package:lys_wedding/services/auth.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/remove_focuse.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:lys_wedding/shared/utils.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -47,7 +48,9 @@ class _LoginState extends State<Login> {
                   padding:
                       const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                   titleText: 'email',
-                  hintText: "enter your email",
+
+                  hintText:
+                  "enter your email",
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (String txt) {},
                   focusNode: emailFocusNode,
@@ -60,7 +63,9 @@ class _LoginState extends State<Login> {
                   padding:
                       const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                   titleText: 'password',
-                  hintText: "enter your password",
+
+                  hintText:
+                  "enter your password",
                   keyboardType: TextInputType.visiblePassword,
                   onChanged: (String txt) {},
                   isObscureText: true,
@@ -80,16 +85,18 @@ class _LoginState extends State<Login> {
                         showToast(
                             context: context,
                             msg: 'Merci de remplir tous les champs !');
-                      } else if (!EmailValidator.validate(
-                          emailController.text)) {
+
+                      } else if (!isEmail(emailController.text)) {
                         showToast(
-                            context: context, msg: 'Format d\'email invalide!');
+                            context: context,
+                            msg: 'Format d\'email invalide!');
                       } else if (passwordController.text.length < 6) {
                         showToast(
                             context: context,
                             msg:
-                                "Mot de passe doit être d'au moins 6 caractères");
-                      } else {
+
+                            "Mot de passe doit être d'au moins 6 caractères");
+                      }else {
                         var body = {
                           "email": emailController.text,
                           "password": passwordController.text,
@@ -111,10 +118,12 @@ class _LoginState extends State<Login> {
                             showToast(
                                 context: context,
                                 msg:
-                                    "Une erreur s'est produite. Veuillez réessayer!");
+
+                                "Une erreur s'est produite. Veuillez réessayer!");
                           }
                         });
                       }
+
                     }),
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),

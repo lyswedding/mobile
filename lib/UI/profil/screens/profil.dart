@@ -8,6 +8,7 @@ import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import '../modele/model_profil.dart';
 import 'detail_profil/screens/modif_profil/screens/modif_profil.dart';
 
+
 class ProfilPage extends StatefulWidget {
   const ProfilPage({Key? key}) : super(key: key);
 
@@ -29,7 +30,6 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   void initState() {
-    print('salaaaaaaaaaaaaaaaaaam');
     fetchprofil();
     print(item.user);
     super.initState();
@@ -48,7 +48,7 @@ class _ProfilPageState extends State<ProfilPage> {
           title: const Text(
             "Profile",
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           leading: IconButton(
               onPressed: () {
@@ -63,7 +63,7 @@ class _ProfilPageState extends State<ProfilPage> {
           child: Column(children: [
             CircleAvatar(
               radius: 100,
-              backgroundImage: NetworkImage(item.user!.imageUrl ?? ""),
+             // backgroundImage: NetworkImage(item.user!.imageUrl??""),
             ),
             Text(
               item.user!.firstName ?? "foulan",
@@ -141,16 +141,21 @@ class _ProfilPageState extends State<ProfilPage> {
                         color: Colors.white),
                     height: 50,
                     width: 800,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(children: const [
-                          Icon(Icons.list),
-                          Padding(padding: EdgeInsets.only(left: 20)),
-                          Text('Listes'),
-                        ]),
-                        const Icon(Icons.arrow_forward_ios_outlined),
-                      ],
+                    child: InkWell(
+                      onTap: () {
+
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(children: const [
+                            Icon(Icons.list),
+                            Padding(padding: EdgeInsets.only(left: 20)),
+                            Text('Listes'),
+                          ]),
+                          const Icon(Icons.arrow_forward_ios_outlined),
+                        ],
+                      ),
                     )),
                 Container(
                     padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
@@ -200,6 +205,7 @@ class _ProfilPageState extends State<ProfilPage> {
                             const Icon(Icons.arrow_forward_ios_outlined),
                           ],
                         ))),
+
               ],
             )
           ]),

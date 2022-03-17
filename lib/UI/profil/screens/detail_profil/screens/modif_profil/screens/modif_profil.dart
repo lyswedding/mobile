@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/UI/profil/modele/model_profil.dart';
 import 'package:lys_wedding/UI/profil/screens/detail_profil/service/service_modif.dart';
 import 'package:lys_wedding/models/List_search.dart';
+import 'package:lys_wedding/models/model_profil.dart';
 
-import '../../../../../../profil/service/profil_service.dart';
 
 class ProfilPageModif extends StatefulWidget {
   const ProfilPageModif({Key? key, required this.user}) : super(key: key);
@@ -66,21 +65,23 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                   Positioned(
                       bottom: 12,
                       right: 12,
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                width: 4,
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor),
-                            color: Colors.grey),
-                        child: Icon(
-                          Icons.camera_alt_rounded,
-                          color: Colors.black,
-                        ),
-                      ))
+                      child: InkWell(
+                          onTap: (() {}),
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 4,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor),
+                                color: Colors.grey),
+                            child: Icon(
+                              Icons.camera_alt_rounded,
+                              color: Colors.black,
+                            ),
+                          )))
                 ],
               ),
               Column(

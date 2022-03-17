@@ -12,12 +12,14 @@ class TaskComponent extends StatelessWidget {
   final AnimationController animationController;
   final Animation<double> animation;
   final Task task;
+  final idList;
 
   const TaskComponent({
     required this.text,
     required this.animation,
     required this.animationController,
-    required this.task
+    required this.task,
+    this.idList,
   });
 
   @override
@@ -28,7 +30,7 @@ class TaskComponent extends StatelessWidget {
         animationController: animationController,
         child: GestureDetector(
           onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskUpdate(task: task ,)));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskUpdate(task: task,idList: idList,)));
           },
           child: CommonCard(
             color: whiteColor,
@@ -60,7 +62,7 @@ class TaskComponent extends StatelessWidget {
                                       child: Text(
                                         task.title,
                                         textAlign: TextAlign.left,
-                                        style: titleTextStyle,
+                                        style: titleTextStyle.copyWith(fontSize: 15),
                                       ),
                                     ),
                                     Expanded(

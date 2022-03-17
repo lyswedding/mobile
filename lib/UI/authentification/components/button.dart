@@ -25,7 +25,7 @@ class _CustomButtonState extends State<CustomButton> {
             child: Center(
               child: Text(
                 widget.text,
-                style: titleTextStyle.copyWith(color: whiteColor,fontWeight: FontWeight.w400),
+                style: btnTextStyle.copyWith(color: whiteColor,),
               ),
             ),
           ),

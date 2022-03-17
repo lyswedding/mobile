@@ -13,6 +13,7 @@ class CommonTextFieldView extends StatefulWidget {
   final TextInputType keyboardType;
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final bool enabled;
 
   const CommonTextFieldView({
     Key? key,
@@ -26,6 +27,7 @@ class CommonTextFieldView extends StatefulWidget {
     this.titleText = '',
     this.controller,
     this.focusNode,
+    this.enabled=true,
   }) : super(key: key);
   @override
   State<CommonTextFieldView> createState() => _CommonTextFieldViewState();
@@ -47,6 +49,7 @@ class _CommonTextFieldViewState extends State<CommonTextFieldView> {
           color: whiteColor,
         ),
         child: TextField(
+          enabled: widget.enabled,
         controller: widget.controller,
         maxLines: 1,
         onChanged: widget.onChanged,
