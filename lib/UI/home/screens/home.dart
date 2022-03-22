@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/item_list.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/constants.dart';
+
+import '../../../shared/sharedPrefValues.dart';
 
 class HomeDetails extends StatefulWidget {
   const HomeDetails({Key? key}) : super(key: key);
@@ -58,18 +61,26 @@ class _HomeDetailsState extends State<HomeDetails>
               height: 50,
             ),
           ),
-          actions: const <Widget>[
+          actions: <Widget>[
             Icon(
               Icons.search,
               color: Colors.black,
               size: 24,
             ),
             Padding(padding: EdgeInsets.all(10)),
-            Icon(
-              Icons.notifications,
-              color: Colors.black,
-              size: 24,
-            ),
+            InkWell(
+                child: Icon(
+                  Icons.notifications,
+                  color: Colors.black,
+                  size: 24,
+                ),
+                onTap: () {
+                  GoogleSingnOutApi.logout().then((value) {
+                    deleteToken();
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => Login()));
+                  });
+                }),
             Padding(padding: EdgeInsets.all(10)),
           ],
         ),
@@ -136,7 +147,7 @@ class _HomeDetailsState extends State<HomeDetails>
                 height: 10,
               ),
 
-             // _buildListFavoriteLists(),
+              // _buildListFavoriteLists(),
             ]),
           ),
         ));
@@ -195,4 +206,7 @@ class _HomeDetailsState extends State<HomeDetails>
   //         }),
   //   ));
   // }
+  googleSignOut() {
+    GoogleSingnOutApi.logout();
+  }
 }

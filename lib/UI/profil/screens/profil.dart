@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
 import 'package:lys_wedding/UI/profil/screens/prestataire_favorite/prestataire_favorite.dart';
@@ -35,6 +36,8 @@ class _ProfilPageState extends State<ProfilPage> {
     super.initState();
   }
 
+  AccessToken? _accessToken;
+  UserFbModel? _currentUser;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -183,6 +186,7 @@ class _ProfilPageState extends State<ProfilPage> {
                     width: 800,
                     child: InkWell(
                         onTap: () {
+                          googleSignOut();
                           deleteToken();
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) => Login()));
@@ -204,5 +208,16 @@ class _ProfilPageState extends State<ProfilPage> {
             )
           ]),
         ));
+  }
+
+  Future<void> SignOut() async {
+    await FacebookAuth.i.logOut();
+    _currentUser = null;
+    _accessToken = null;
+    setState(() {});
+  }
+
+  googleSignOut() {
+    GoogleSingnOutApi.logout();
   }
 }

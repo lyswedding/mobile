@@ -1,5 +1,7 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lys_wedding/UI/authentification/screens/login_with_facebook.dart';
 import 'package:path/path.dart' as path;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,9 @@ import 'package:lys_wedding/services/auth.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/remove_focuse.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:provider/provider.dart';
+
+import 'facebook_controller.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -24,9 +29,13 @@ class _LoginState extends State<Login> {
   FocusNode emailFocusNode = FocusNode();
   FocusNode passFocusNode = FocusNode();
   bool isInCall = false;
-
+  Map _userobj = {};
+  bool _isloggedin = false;
+  AccessToken? _accessToken;
+  UserFbModel? _currentUser;
   @override
   Widget build(BuildContext context) {
+    UserFbModel? user = _currentUser;
     return Scaffold(
       backgroundColor: scaffoldBGColor,
       body: RemoveFocuse(
@@ -169,13 +178,49 @@ class _LoginState extends State<Login> {
                       onTap: SignIn,
                     ),
                     const Padding(padding: const EdgeInsets.all(20)),
-                    Container(
-                        height: 70,
-                        margin: const EdgeInsets.only(top: 20),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white),
-                        child: Image.asset("images/22.png")),
+                    InkWell(
+                        child: Container(
+                            height: 70,
+                            margin: const EdgeInsets.only(top: 20),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white),
+                            child: Image.asset("images/22.png")),
+                        onTap: () {
+                          if (Provider.of<FacebookSignInController>(context,
+                                      listen: false)
+                                  .login() ==
+                              true) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Home(),
+                                ));
+                          }
+                        }
+                        //  () {
+                        // FacebookAuth.instance.login(permissions: [
+                        //   "public_profil",
+                        //   "email"
+                        // ]).then((value) {
+                        //   FacebookAuth.instance
+                        //       .getUserData()
+                        //       .then((userdata) {
+                        //     setState(() {
+                        //       _isloggedin = true;
+                        //       _userobj = userdata;
+                        //     });
+                        //   });
+                        // });
+                        // if (_isloggedin = true) {
+                        //   Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => const Home(),
+                        //       ));
+                        // }
+
+                        )
                   ],
                 )),
                 Padding(
@@ -226,9 +271,106 @@ class _LoginState extends State<Login> {
           .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
     }
   }
+
+  Future SignInFb() async {
+    FacebookAuth.instance
+        .login(permissions: ["public_profile", "email"]).then((value) {
+      print(value);
+      FacebookAuth.instance.getUserData().then((userdata) {
+        setState(() {
+          _isloggedin = false;
+          _userobj = userdata;
+        });
+      });
+    });
+    // print(result.accessToken);
+    // print(result.status);
+    // if (result.status == LoginStatus.success) {
+    //   _accessToken = result.accessToken;
+    //   final data = await FacebookAuth.i.getUserData();
+    //   UserFbModel model = UserFbModel.fromJson(data);
+    //   _currentUser = model;
+    //   setState(() {});
+    // }
+  }
+
+  test() async {
+    print("aaaaaaaaaaaaaa");
+  }
+
+  loginUI() {
+    return Consumer<FacebookSignInController>(builder: (context, model, child) {
+      if (model.userdata != null) {
+        return Center(
+          child: loggedInUI(model),
+        );
+      } else {
+        return loginControls(context);
+      }
+    });
+  }
+
+  loggedInUI(FacebookSignInController model) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // CircleAvatar(
+        //   backgroundImage: Image.network(model.userdata.),
+        // )
+        Text(model.userdata!["name"] ?? ''),
+        Text(model.userdata!["email"] ?? '')
+      ],
+    );
+  }
+
+  loginControls(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          GestureDetector(
+            child: Image.asset("images/22.png"),
+            onTap: () {
+              Provider.of<FacebookSignInController>(context, listen: false)
+                  .login();
+            },
+          )
+        ],
+      ),
+    );
+  }
 }
 
 class GoogleSingnInApi {
   static final _googleSignIn = GoogleSignIn();
   static Future<GoogleSignInAccount?> login() => _googleSignIn.signIn();
+}
+
+class GoogleSingnOutApi {
+  static final _googleSignIn = GoogleSignIn();
+  static Future<GoogleSignInAccount?> login() => _googleSignIn.signIn();
+  static Future<GoogleSignInAccount?> logout() => _googleSignIn.signOut();
+}
+
+class UserFbModel {
+  final String? email;
+  final String? id;
+  final String? name;
+  final PictureModel? pictureModel;
+  const UserFbModel({this.email, this.id, this.name, this.pictureModel});
+  factory UserFbModel.fromJson(Map<String, dynamic> json) => UserFbModel(
+      email: json['email'],
+      id: json['id'] as String?,
+      name: json['name'],
+      pictureModel: PictureModel.fromJson(json['picture']['data']));
+}
+
+class PictureModel {
+  final String? Url;
+  final int? width;
+  final int? height;
+  const PictureModel({this.Url, this.height, this.width});
+
+  factory PictureModel.fromJson(Map<String, dynamic> json) => PictureModel(
+      Url: json['Url'], height: json['height'], width: json['width']);
 }
