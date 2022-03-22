@@ -3,6 +3,7 @@ import 'package:lys_wedding/UI/authentification/screens/facebook_controller.dart
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/authentification/screens/login_with_facebook.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
+import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) => FacebookSignInController(),
             child: Login(),
-          )
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
