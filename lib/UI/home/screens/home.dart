@@ -1,7 +1,6 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lys_wedding/UI/authentification/screens/signup.dart';
+import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/item_list.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
@@ -9,12 +8,9 @@ import 'package:lys_wedding/models/List_search.dart';
 import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/categorie.services.dart';
-import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
-import 'package:lys_wedding/shared/sharedPrefValues.dart';
-import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 class HomeDetails extends StatefulWidget {
   const HomeDetails({Key? key}) : super(key: key);
@@ -25,46 +21,37 @@ class HomeDetails extends StatefulWidget {
 
 class _HomeDetailsState extends State<HomeDetails>
     with TickerProviderStateMixin {
-
- bool isInCall=false;
- List<Service> services=[];
- List<Provider> popularProviders=[];
- List<TaskList> lists=[];
+  bool isInCall = false;
+  List<Service> services = [];
+  List<Provider> popularProviders = [];
+  List<TaskList> lists = [];
   late AnimationController animationController;
   late AnimationController animationController1;
 
-  callGetServices()async{
-
-    services=await CategorieCalls.getAdminServices();
+  callGetServices() async {
+    services = await CategorieCalls.getAdminServices();
 
     setState(() {
-
-      isInCall=false;
+      isInCall = false;
     });
-
   }
 
- callGetProviders()async{
+  callGetProviders() async {
+    popularProviders = await ServiceList.getPrestataire();
 
-   popularProviders=await ServiceList.getPrestataire();
+    setState(() {
+      isInCall = false;
+    });
+  }
 
-   setState(() {
+  callGetLists() async {
+    lists = await ListCalls.getAdminLists();
 
-     isInCall=false;
-   });
+    setState(() {
+      isInCall = false;
+    });
+  }
 
- }
-
- callGetLists()async{
-
-   lists=await ListCalls.getAdminLists();
-
-   setState(() {
-
-     isInCall=false;
-   });
-
- }
   @override
   void initState() {
     // TODO: implement initState
@@ -87,11 +74,11 @@ class _HomeDetailsState extends State<HomeDetails>
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            title:  Text(
+            title: Text(
               "Bonjour",
               style: titleTextStyle.copyWith(fontSize: 24),
             ),
-            actions:   <Widget>[
+            actions: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(right: 10.0),
                 child: Image.asset(
@@ -99,6 +86,24 @@ class _HomeDetailsState extends State<HomeDetails>
                   height: 50,
                 ),
               ),
+              Icon(
+                Icons.search,
+                color: Colors.black,
+                size: 24,
+              ),
+              InkWell(
+                  child: Icon(
+                    Icons.notifications,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                  onTap: () {
+                    // GoogleSingnOutApi.logout().then((value) {
+                    //   deleteToken();
+                    //   Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(builder: (context) => Login()));
+                    // });
+                  }),
             ],
           ),
           body: Padding(
@@ -122,7 +127,8 @@ class _HomeDetailsState extends State<HomeDetails>
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
-                          image: AssetImage("images/11.jpg"), fit: BoxFit.fill)),
+                          image: AssetImage("images/11.jpg"),
+                          fit: BoxFit.fill)),
                 ),
                 const SizedBox(
                   height: 16,
@@ -184,11 +190,15 @@ class _HomeDetailsState extends State<HomeDetails>
               );
               animationController.forward();
               return GestureDetector(
-                onTap: (){
+                onTap: () {
                   _filterByServices(services[index].title);
                 },
                 child: CategoryItem(
-                    services[index].title, services[index].icon, animationController, animation,),
+                  services[index].title,
+                  services[index].icon,
+                  animationController,
+                  animation,
+                ),
               );
             }),
       )),
@@ -223,57 +233,62 @@ class _HomeDetailsState extends State<HomeDetails>
   //         }),
   //   ));
   // }
+  googleSignOut() {
+    GoogleSingnOutApi.logout();
+  }
 
- _buildListPopular(){
+  _buildListPopular() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: popularProviders
-            .map((element) => ItemList(item: element, height: 150.0,
-          width: 250.0,))
-            .toList(),
+          children: popularProviders
+              .map(
+                  (element) => ItemList(item: element, width: 250, height: 150))
+              .toList()),
+    );
+  }
+
+  _buildListFavorites() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.35,
+        child: Row(
+          children: lists
+              .map(
+                (element) => ListComponent(
+                  taskList: element,
+                  animationController: animationController,
+                  animation: Tween(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animationController,
+                      curve: const Interval((1 / 6) * 10, 1.0,
+                          curve: Curves.fastOutSlowIn),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
- }
+  }
 
- _buildListFavorites(){
-   return SingleChildScrollView(
-     scrollDirection: Axis.horizontal,
-     child: Container(
-       height: MediaQuery.of(context).size.height*0.35,
-       child: Row(
-         children: lists
-             .map((element) => ListComponent(taskList: element,animationController:animationController ,animation: Tween(begin: 0.0, end: 1.0).animate(
-           CurvedAnimation(
-             parent: animationController,
-             curve: const Interval((1 / 6) *10, 1.0,
-                 curve: Curves.fastOutSlowIn),
-           ),
-         ) ,
-
-         ),
-         )
-             .toList(),
-       ),
-     ),
-   );
- }
-
- _filterByServices(text) {
-    List<Provider> foundServices=[];
-   for (var element in popularProviders) {
-     element.services.forEach((service) {
-       print(service['name']);
-       if (service['name']==text) {
-         print(element.name);
-         setState(() {
-           foundServices.add(element);
-         });
-       }
-     });
-   }
-   popularProviders = foundServices;
-   print(foundServices);
-   // print(foundUserTaskLists);
- }
+  _filterByServices(text) {
+    List<Provider> foundServices = [];
+    for (var element in popularProviders) {
+      element.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(element.name);
+          setState(() {
+            foundServices.add(element);
+          });
+        }
+      });
+    }
+    popularProviders = foundServices;
+    print(foundServices);
+    // print(foundUserTaskLists);
+  }
 }

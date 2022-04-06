@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
-import 'package:lys_wedding/UI/profil/screens/prestataire_favorite/prestataire_favorite.dart';
-import 'package:lys_wedding/UI/profil/service/profil_service.dart';
+import 'package:lys_wedding/models/model_profil.dart';
+import 'package:lys_wedding/services/profil_service.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
 
-import '../modele/model_profil.dart';
 import 'detail_profil/screens/modif_profil/screens/modif_profil.dart';
-
 
 class ProfilPage extends StatefulWidget {
   const ProfilPage({Key? key}) : super(key: key);
@@ -35,6 +34,8 @@ class _ProfilPageState extends State<ProfilPage> {
     super.initState();
   }
 
+  AccessToken? _accessToken;
+  UserFbModel? _currentUser;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -63,7 +64,7 @@ class _ProfilPageState extends State<ProfilPage> {
           child: Column(children: [
             CircleAvatar(
               radius: 100,
-             // backgroundImage: NetworkImage(item.user!.imageUrl??""),
+              // backgroundImage: NetworkImage(item.user!.imageUrl??""),
             ),
             Text(
               item.user!.firstName ?? "foulan",
@@ -142,9 +143,7 @@ class _ProfilPageState extends State<ProfilPage> {
                     height: 50,
                     width: 800,
                     child: InkWell(
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -188,6 +187,7 @@ class _ProfilPageState extends State<ProfilPage> {
                     width: 800,
                     child: InkWell(
                         onTap: () {
+                          googleSignOut();
                           deleteToken();
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) => Login()));
@@ -205,10 +205,20 @@ class _ProfilPageState extends State<ProfilPage> {
                             const Icon(Icons.arrow_forward_ios_outlined),
                           ],
                         ))),
-
               ],
             )
           ]),
         ));
+  }
+
+  Future<void> SignOut() async {
+    await FacebookAuth.i.logOut();
+    _currentUser = null;
+    _accessToken = null;
+    setState(() {});
+  }
+
+  googleSignOut() {
+    GoogleSingnOutApi.logout();
   }
 }
