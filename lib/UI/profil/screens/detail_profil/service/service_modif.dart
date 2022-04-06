@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:lys_wedding/models/model_profil.dart';
 
 import '../../../../../shared/sharedPrefValues.dart';
 import '../../../../../shared/urls.dart';
-import '../../../modele/model_profil.dart';
 
 class ServiceProfilModif {
   ServiceProfilModif() {}

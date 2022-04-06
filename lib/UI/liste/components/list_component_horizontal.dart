@@ -55,8 +55,8 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                         //ProfileCarousel(restaurantId: widget.hotelData.id,),
                         AspectRatio(
                             aspectRatio: 1,
-                            child: Image.network(
-                              widget.taskListData.imageUrl,
+                            child: Image.asset(
+                              'images/11.jpg',
                               fit: BoxFit.cover,
                             )),
                         Expanded(
@@ -75,7 +75,7 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      widget.taskListData.title,
+                                      widget.taskListData.title.toString(),
                                       maxLines: 2,
                                       textAlign: TextAlign.left,
                                       overflow: TextOverflow.ellipsis,
@@ -113,7 +113,7 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                                       ],
                                     ),
                                     Text(
-                                      widget.taskListData.tasks.length
+                                      widget.taskListData.tasks!.length
                                               .toString() +
                                           '\ttaches',
                                       overflow: TextOverflow.ellipsis,

@@ -1,22 +1,20 @@
-import 'package:email_validator/email_validator.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:lys_wedding/UI/authentification/screens/login_with_facebook.dart';
-import 'package:path/path.dart' as path;
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lys_wedding/UI/authentification/components/button.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
+import 'package:lys_wedding/UI/authentification/screens/facebook_controller.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
+import 'package:lys_wedding/models/auth_sm_model.dart';
 import 'package:lys_wedding/services/auth.services.dart';
+import 'package:lys_wedding/services/auth_sm_service.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/remove_focuse.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:lys_wedding/shared/utils.dart';
 import 'package:provider/provider.dart';
-
-import 'facebook_controller.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -28,6 +26,8 @@ class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   FocusNode emailFocusNode = FocusNode();
   FocusNode passFocusNode = FocusNode();
+  AuthSm? _user;
+  AuthSmService authSmService = AuthSmService();
   bool isInCall = false;
   Map _userobj = {};
   bool _isloggedin = false;
@@ -89,8 +89,7 @@ class _LoginState extends State<Login> {
                         showToast(
                             context: context,
                             msg: 'Merci de remplir tous les champs !');
-                      } else if (!EmailValidator.validate(
-                          emailController.text)) {
+                      } else if (!isEmail(emailController.text)) {
                         showToast(
                             context: context, msg: 'Format d\'email invalide!');
                       } else if (passwordController.text.length < 6) {
@@ -198,6 +197,7 @@ class _LoginState extends State<Login> {
                                 ));
                           }
                         }
+
                         //  () {
                         // FacebookAuth.instance.login(permissions: [
                         //   "public_profil",
@@ -262,20 +262,27 @@ class _LoginState extends State<Login> {
 
   Future SignIn() async {
     final user = await GoogleSingnInApi.login();
+
     print(user);
+    final y = await authSmService.authGoogles(
+        user!.email, user.displayName!, user.photoUrl!, user.serverAuthCode);
+
     if (user == null) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Sign in failed")));
-    } else {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
     }
+    // else {
+    //   Navigator.of(context)
+    //       .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+    // }
   }
 
   Future SignInFb() async {
     FacebookAuth.instance
         .login(permissions: ["public_profile", "email"]).then((value) {
-      print(value);
+      print(value.message);
+      print(value.accessToken);
+      print(value.status);
       FacebookAuth.instance.getUserData().then((userdata) {
         setState(() {
           _isloggedin = false;
@@ -283,6 +290,7 @@ class _LoginState extends State<Login> {
         });
       });
     });
+
     // print(result.accessToken);
     // print(result.status);
     // if (result.status == LoginStatus.success) {

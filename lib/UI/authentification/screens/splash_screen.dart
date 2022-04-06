@@ -1,12 +1,46 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedPrefValues.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    checkIfTokenExists();
+     Future.delayed(
+        const Duration(seconds: 3),
+            () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+        ));
+    super.initState();
+  }
+
+  checkIfTokenExists() async {
+    await getUserInfoSharedPref("token").then((token) async {
+      if (token != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Home(),
+              settings: RouteSettings(name: "/homePage"),
+            ),
+          );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

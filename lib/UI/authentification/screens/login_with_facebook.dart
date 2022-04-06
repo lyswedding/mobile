@@ -39,9 +39,9 @@ class _FacebookLoginState extends State<FacebookLogin> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // CircleAvatar(
-        //   backgroundImage: Image.network(model.userdata.),
-        // )
+        CircleAvatar(
+          backgroundImage: NetworkImage(model.userdata!["picture"]['url']),
+        ),
         Text(model.userdata!["name"] ?? ''),
         Text(model.userdata!["email"] ?? '')
       ],

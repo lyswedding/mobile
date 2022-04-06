@@ -1,10 +1,14 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/UI/liste/screens/list_tasks.dart';
+import 'package:lys_wedding/UI/liste/screens/update_list.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:readmore/readmore.dart';
 
 class ListDetails extends StatefulWidget {
@@ -18,6 +22,8 @@ class ListDetails extends StatefulWidget {
 class _ListDetailsState extends State<ListDetails>
     with TickerProviderStateMixin {
   late AnimationController animationController;
+  bool isSelected = false;
+
 
   @override
   void initState() {
@@ -25,6 +31,36 @@ class _ListDetailsState extends State<ListDetails>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
+  }
+  callAddToFavorite(id) async {
+    await FavoriteCalls.addListToFavorite(id).then((value) {
+      print(value);
+      print(value.statusCode);
+      if (value.statusCode == 201) {
+        showToast(
+            context: context, msg:'Liste des tâches mise en favoris');
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
+  }
+
+  deleteFromFavorites(id) async {
+    await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
+      print(value.statusCode);
+      if (value.statusCode == 200) {
+        showToast(
+            context: context, msg:'Liste des tâches retiré de favoris');
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
   }
 
   @override
@@ -61,8 +97,8 @@ class _ListDetailsState extends State<ListDetails>
                   children: <Widget>[
                     AspectRatio(
                       aspectRatio: 1.7,
-                      child: Image.network(
-                        widget.taskList.imageUrl,
+                      child: Image.asset(
+                        'images/12.jpg',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -97,7 +133,16 @@ class _ListDetailsState extends State<ListDetails>
                             borderRadius: const BorderRadius.all(
                               Radius.circular(32.0),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              setState(() {
+                                isSelected = !isSelected;
+                              });
+                              if (isSelected) {
+                                callAddToFavorite(widget.taskList.id);
+                              } else {
+                                deleteFromFavorites(widget.taskList.id);
+                              }
+                            },
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Icon(
@@ -115,16 +160,26 @@ class _ListDetailsState extends State<ListDetails>
               const SizedBox(
                 height: 10,
               ),
-              Text(
-                widget.taskList.title,
-                style: titleTextStyle,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.taskList.title.toString(),
+                    style: titleTextStyle,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UpdateList(taskList: widget.taskList)));
+                    },
+                      child: const Icon(EvaIcons.edit,size: 24,color: primaryColor,)),
+                ],
               ),
               _buildCategories(),
               const SizedBox(
                 height: 10,
               ),
               ReadMoreText(
-                widget.taskList.description,
+                widget.taskList.description.toString(),
                 trimLines: 2,
                 style: regularTextStyle,
                 colorClickableText: Colors.pink,
@@ -150,7 +205,8 @@ class _ListDetailsState extends State<ListDetails>
                           context,
                           MaterialPageRoute(
                               builder: (context) => ListTasks(
-                                    listTasks: widget.taskList.tasks,
+                                    listTasks: widget.taskList.tasks!,
+                                idList: widget.taskList.id,
                                   )));
                     },
                     child: Text(
@@ -160,7 +216,7 @@ class _ListDetailsState extends State<ListDetails>
                   ),
                 ],
               ),
-              for (int i = 0; i < widget.taskList.tasks.length; i++)
+              for (int i = 0; i < widget.taskList.tasks!.length; i++)
                 _buildListTasks(i),
               Text(
                 'Relates lists',
@@ -174,7 +230,7 @@ class _ListDetailsState extends State<ListDetails>
               //     ],
               //   ),
               // )
-              //_buildListFavoriteLists(),
+              _buildListFavoriteLists(),
             ],
           ),
         ),
@@ -187,7 +243,7 @@ class _ListDetailsState extends State<ListDetails>
         child: SizedBox(
       height: 40,
       child: ListView.builder(
-          itemCount: widget.taskList.tags.length,
+          itemCount: widget.taskList.tags!.length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -198,8 +254,9 @@ class _ListDetailsState extends State<ListDetails>
               ),
             );
             animationController.forward();
-            return CategoryItemList(widget.taskList.tags[index], 'images/9.jpg',
-                animationController, animation);
+            return CategoryItemList(
+                widget.taskList.tags![index], 'images/9.jpg', animationController, animation);
+
           }),
     ));
   }
@@ -213,10 +270,11 @@ class _ListDetailsState extends State<ListDetails>
     );
     animationController.forward();
     return TaskComponent(
-      task: widget.taskList.tasks[i],
+      task: widget.taskList.tasks![i],
       animationController: animationController,
       text: 'text',
       animation: animation,
+      idList: widget.taskList.id,
     );
   }
 
@@ -231,12 +289,13 @@ class _ListDetailsState extends State<ListDetails>
     return ListComponent(
         taskList: widget.taskList,
         animationController: animationController,
-        animation: animation);
+        animation: animation,
+);
   }
 
   Widget _buildListFavoriteLists() {
     return SizedBox(
-      height: 400,
+      height: MediaQuery.of(context).size.height*0.35,
       child: ListView.builder(
           shrinkWrap: true,
           itemCount: 4,
@@ -253,7 +312,7 @@ class _ListDetailsState extends State<ListDetails>
             return ListComponent(
                 taskList: widget.taskList,
                 animationController: animationController,
-                animation: animation);
+                animation: animation,);
           }),
     );
   }

@@ -3,19 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
-
 class ListTasks extends StatefulWidget {
-
   List<Task> listTasks;
-  ListTasks({required this.listTasks});
+  String? idList;
+  ListTasks({required this.listTasks, this.idList});
 
   @override
   _ListTasksState createState() => _ListTasksState();
 }
 
-class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin{
+class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin {
   late AnimationController animationController;
 
   @override
@@ -25,7 +25,10 @@ class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin{
         duration: Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
+
   @override
+  bool isInCall = false;
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -52,6 +55,7 @@ class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin{
       ),
     );
   }
+
   Widget _buildListTasks() {
     return ListView.builder(
         itemCount: widget.listTasks.length,
@@ -60,38 +64,51 @@ class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin{
           var animation = Tween(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
               parent: animationController,
-              curve: const Interval((1 / 6) * 5, 1.0,
-                  curve: Curves.fastOutSlowIn),
+              curve:
+                  const Interval((1 / 6) * 5, 1.0, curve: Curves.fastOutSlowIn),
             ),
           );
           animationController.forward();
           var item = index.toString();
           return Dismissible(
             background: Container(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 28.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(EvaIcons.trash,color: primaryColor,),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 28.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        EvaIcons.trash,
+                        color: primaryColor,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
                 color: const Color(0xffD8E2DC)),
-            key: Key(item),
-              direction: DismissDirection.endToStart,
-              onDismissed: (direction) {
-
-              },
+            key: UniqueKey(),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction) {
+              _deleteTask(widget.listTasks[index].id);
+            },
             child: TaskComponent(
               task: widget.listTasks[index],
               animationController: animationController,
               text: 'text',
               animation: animation,
+              idList: widget.idList,
             ),
           );
         });
   }
 
+  _deleteTask(idTask)async {
+    print(widget.idList);
+    print(idTask);
+    await ListCalls.deletTaskListFromTaskList(widget.idList, idTask)
+        .then((value) => print(value.body));
+    setState(() {
+      isInCall = true;
+    });
+  }
 }

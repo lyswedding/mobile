@@ -4,10 +4,13 @@ import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/item_list.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
+import 'package:lys_wedding/models/List_search.dart';
+import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/services/categorie.services.dart';
+import 'package:lys_wedding/services/service_list.dart';
+import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
-
-import '../../../shared/sharedPrefValues.dart';
 
 class HomeDetails extends StatefulWidget {
   const HomeDetails({Key? key}) : super(key: key);
@@ -18,20 +21,43 @@ class HomeDetails extends StatefulWidget {
 
 class _HomeDetailsState extends State<HomeDetails>
     with TickerProviderStateMixin {
-  List items = [
-    "images/10.jpg",
-    "images/3.jpg",
-    "images/2.jpg",
-    "images/4.jpg",
-    "images/5.jpg",
-    "images/6.jpg",
-  ];
-
+  bool isInCall = false;
+  List<Service> services = [];
+  List<Provider> popularProviders = [];
+  List<TaskList> lists = [];
   late AnimationController animationController;
   late AnimationController animationController1;
+
+  callGetServices() async {
+    services = await CategorieCalls.getAdminServices();
+
+    setState(() {
+      isInCall = false;
+    });
+  }
+
+  callGetProviders() async {
+    popularProviders = await ServiceList.getPrestataire();
+
+    setState(() {
+      isInCall = false;
+    });
+  }
+
+  callGetLists() async {
+    lists = await ListCalls.getAdminLists();
+
+    setState(() {
+      isInCall = false;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+    callGetServices();
+    callGetProviders();
+    callGetLists();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     animationController1 = AnimationController(
@@ -42,115 +68,107 @@ class _HomeDetailsState extends State<HomeDetails>
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: const Text(
-            "Bonjour",
-            style: TextStyle(color: Colors.black),
-          ),
-          leading: Container(
-            //  Transform.translate(
-            // offset: const Offset(10, 0),
-            padding: EdgeInsets.only(top: 10),
-            // margin: EdgeInsets.symmetric(vertical: 5),
-
-            child: Image.asset(
-              "images/adel.png",
-              height: 50,
+    return SafeArea(
+      top: true,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            title: Text(
+              "Bonjour",
+              style: titleTextStyle.copyWith(fontSize: 24),
             ),
-          ),
-          actions: <Widget>[
-            Icon(
-              Icons.search,
-              color: Colors.black,
-              size: 24,
-            ),
-            Padding(padding: EdgeInsets.all(10)),
-            InkWell(
-                child: Icon(
-                  Icons.notifications,
-                  color: Colors.black,
-                  size: 24,
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Image.asset(
+                  "images/adel.png",
+                  height: 50,
                 ),
-                onTap: () {
-                  GoogleSingnOutApi.logout().then((value) {
-                    deleteToken();
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => Login()));
-                  });
-                }),
-            Padding(padding: EdgeInsets.all(10)),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(children: [
-              // TItleForPage(),
-              Container(
-                height: 150,
-                padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                // margin: const EdgeInsets.fromLTRB(30, 30, 10, 0),
-                child: Center(
-                  child: Text(
-                    "We are here to help you planning your wedding",
-                    style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+              ),
+              Icon(
+                Icons.search,
+                color: Colors.black,
+                size: 24,
+              ),
+              InkWell(
+                  child: Icon(
+                    Icons.notifications,
+                    color: Colors.black,
+                    size: 24,
                   ),
-                ),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                        image: AssetImage("images/11.jpg"), fit: BoxFit.fill)),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    "Categorie",
-                    style: titleTextStyle,
-                  )),
-              _buildCategories(),
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    "Bon plan",
-                    style: titleTextStyle,
-                  )),
-              const SizedBox(
-                height: 16,
-              ),
-              ItemList(
-                text:
-                    "Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii\n Coiffure ,maquillage  ",
-                items: items,
-                height: 150.0,
-                width: 250.0,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    "Listes populaires",
-                    style: titleTextStyle,
-                  )),
-              const SizedBox(
-                height: 10,
-              ),
-
-              // _buildListFavoriteLists(),
-            ]),
+                  onTap: () {
+                    // GoogleSingnOutApi.logout().then((value) {
+                    //   deleteToken();
+                    //   Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(builder: (context) => Login()));
+                    // });
+                  }),
+            ],
           ),
-        ));
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                // TItleForPage(),
+                Container(
+                  height: 150,
+                  padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                  // margin: const EdgeInsets.fromLTRB(30, 30, 10, 0),
+                  child: Center(
+                    child: Text(
+                      "We are here to help you planning your wedding",
+                      style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      image: DecorationImage(
+                          image: AssetImage("images/11.jpg"),
+                          fit: BoxFit.fill)),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Categorie",
+                      style: titleTextStyle,
+                    )),
+                _buildCategories(),
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Bon plan",
+                      style: titleTextStyle,
+                    )),
+                const SizedBox(
+                  height: 16,
+                ),
+                _buildListPopular(),
+                const SizedBox(
+                  height: 16,
+                ),
+
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Listes populaires",
+                      style: titleTextStyle,
+                    )),
+                const SizedBox(
+                  height: 10,
+                ),
+
+                _buildListFavorites(),
+              ]),
+            ),
+          )),
+    );
   }
 
   Widget _buildCategories() {
@@ -160,7 +178,7 @@ class _HomeDetailsState extends State<HomeDetails>
           child: SizedBox(
         height: 80,
         child: ListView.builder(
-            itemCount: 10,
+            itemCount: services.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -171,8 +189,17 @@ class _HomeDetailsState extends State<HomeDetails>
                 ),
               );
               animationController.forward();
-              return CategoryItem(
-                  'text', 'images/9.jpg', animationController, animation);
+              return GestureDetector(
+                onTap: () {
+                  _filterByServices(services[index].title);
+                },
+                child: CategoryItem(
+                  services[index].title,
+                  services[index].icon,
+                  animationController,
+                  animation,
+                ),
+              );
             }),
       )),
     );
@@ -200,7 +227,7 @@ class _HomeDetailsState extends State<HomeDetails>
   //           );
   //           animationController1.forward();
   //           return ListComponent(
-  //             taskList: TaskList(id, title, description, tasks, tags, imageUrl),
+  //             taskList: ,
   //               animationController: animationController1,
   //               animation: animation);
   //         }),
@@ -208,5 +235,60 @@ class _HomeDetailsState extends State<HomeDetails>
   // }
   googleSignOut() {
     GoogleSingnOutApi.logout();
+  }
+
+  _buildListPopular() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+          children: popularProviders
+              .map(
+                  (element) => ItemList(item: element, width: 250, height: 150))
+              .toList()),
+    );
+  }
+
+  _buildListFavorites() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.35,
+        child: Row(
+          children: lists
+              .map(
+                (element) => ListComponent(
+                  taskList: element,
+                  animationController: animationController,
+                  animation: Tween(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animationController,
+                      curve: const Interval((1 / 6) * 10, 1.0,
+                          curve: Curves.fastOutSlowIn),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  _filterByServices(text) {
+    List<Provider> foundServices = [];
+    for (var element in popularProviders) {
+      element.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(element.name);
+          setState(() {
+            foundServices.add(element);
+          });
+        }
+      });
+    }
+    popularProviders = foundServices;
+    print(foundServices);
+    // print(foundUserTaskLists);
   }
 }

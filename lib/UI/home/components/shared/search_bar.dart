@@ -7,7 +7,9 @@ import 'package:lys_wedding/shared/constants.dart';
 
 
 class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key}) : super(key: key);
+  final Function? onchanged;
+
+  const SearchBar({Key? key,this.onchanged}) : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -22,34 +24,37 @@ class _SearchBarState extends State<SearchBar> {
       child:  Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Expanded(
-          //   flex: 6,
-          //   child: Container(
-          //    // margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-          //     //height: MediaQuery.of(context).size.height * .10,
-          //     child: CustomInput(
-          //       icon: Icon(Icons.search),
-          //       hint: "",
-          //       controller: searchController,
-          //     ),
-          //   ),
-          // ),
+          Expanded(
+            flex: 6,
+            child: Container(
+             // margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+              //height: MediaQuery.of(context).size.height * .10,
+              child: CommonTextFieldView(
+                onChanged: (String text){
+                  widget.onchanged!(text);
+                },
+                hintText: 'search',
+                controller: searchController,
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: (){
               Navigator.push(context, MaterialPageRoute(builder: (context)=>FilterPage()));
             },
             child: Expanded(
               child: Container(
-                height: 50,
-                //width: 70,
+                height: 60,
+                width: 60,
                 decoration: BoxDecoration(
-                    color: whiteColor,
+                    color: primaryColor,
                     borderRadius: BorderRadius.circular(10)),
                 child: const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(10.0),
                   child: Icon(
                     Icons.tune,
                     size: 24,
+                    color: Colors.white,
                   ),
                 ),
               ),

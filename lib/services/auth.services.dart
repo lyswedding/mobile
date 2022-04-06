@@ -20,11 +20,13 @@ class AuthCalls {
     if (response.statusCode == 200) {
       log(response.headers['x-access-token'].toString());
       String token = response.headers['x-access-token'].toString();
+      String refreshToken = response.headers['x-refresh-token'].toString();
       print(token);
+      print(refreshToken);
       // Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       // //debugPrint(decodedToken.toString());
       // String userid = decodedToken['subject']['_id'];
-      await saveAccessTokenSharedPref(token);
+      await saveAccessTokenSharedPref(token,refreshToken);
     }
 
     return response;
@@ -51,7 +53,7 @@ class AuthCalls {
     return response;
   }
 
-  static Future<int?> signup(body) async {
+  static Future<int> signup(body) async {
     var url;
     url = '${URLS.BASE_URL}/users/register';
 
@@ -61,8 +63,17 @@ class AuthCalls {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(body));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+    if (response.statusCode == 201) {
+      String token = response.headers['x-access-token'].toString();
+      String refreshToken = response.headers['x-refresh-token'].toString();
+      print(token);
+      print('**********cookie*********');
+      print(refreshToken);
+      // Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      // //debugPrint(decodedToken.toString());
+      // String userid = decodedToken['subject']['_id'];
+      await saveAccessTokenSharedPref(token,refreshToken);
+      return response.statusCode;
     } else {
       print(response.body);
       throw Exception('exception occured!!!!!!');

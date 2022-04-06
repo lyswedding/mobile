@@ -8,7 +8,6 @@ import 'package:lys_wedding/shared/constants.dart';
 
 import '../../../../../models/List_search.dart';
 import '../../../../home/components/shared/item_list.dart';
-import '../../../servises/service_list.dart';
 
 class DetailSearch extends StatelessWidget {
   DetailSearch({Key? key, required this.provider}) : super(key: key);
@@ -28,7 +27,6 @@ class DetailSearch extends StatelessWidget {
     "images/8.jpg"
   ];
   bool isLoaded = false;
-  final ServiceList service = ServiceList();
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +104,7 @@ class DetailSearch extends StatelessWidget {
                   Container(
                     height: 90,
                     width: 90,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
                           final Url = provider.facebookUrl;
@@ -117,18 +115,18 @@ class DetailSearch extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("images/17.png"),
                         )),
                   ),
                   Container(
                     height: 90,
                     width: 90,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
                           final Url = provider.instagramUrl;
@@ -139,18 +137,18 @@ class DetailSearch extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("images/18.png"),
                         )),
                   ),
                   Container(
                     height: 90,
                     width: 90,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
                           _makeSocialMediaRequest("http://pratikbutani.com");
@@ -163,33 +161,33 @@ class DetailSearch extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(15.0),
+                          shape:  RoundedRectangleBorder(
+                            borderRadius:  BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("images/19.png"),
                         )),
                   ),
                   Container(
                     height: 90,
                     width: 90,
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () async {
-                          final Url = "+216" + provider.phone;
-                          if (await canLaunch(Url)) {
-                            await launch(Url,
-                                forceWebView: true, enableJavaScript: true);
+                          if (await canLaunch('tel:${provider.phone}')) {
+                            await launch('tel:${provider.phone}');
+                          } else {
+                            throw 'call not possible';
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("images/20.png"),
                         )),
                   ),
@@ -226,13 +224,13 @@ class DetailSearch extends StatelessWidget {
                 height: 10,
               ),
 
-              ItemList(
-                text:
-                    "Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii\n Coiffure ,maquillage  ",
-                items: images,
-                height: 150.0,
-                width: 250.0,
-              ),
+              // ItemList(
+              //   text:
+              //       "Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii\n Coiffure ,maquillage  ",
+              //   items: images,
+              //   height: 150.0,
+              //   width: 250.0,
+              // ),
               // _buildListFavoriteLists(),
             ]),
           ),
