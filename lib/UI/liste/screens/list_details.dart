@@ -9,11 +9,13 @@ import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:lys_wedding/shared/utils.dart';
 import 'package:readmore/readmore.dart';
 
 class ListDetails extends StatefulWidget {
   final TaskList taskList;
-  ListDetails({required this.taskList});
+  final bool isAdmin;
+  ListDetails({required this.taskList, this.isAdmin = true});
 
   @override
   _ListDetailsState createState() => _ListDetailsState();
@@ -24,7 +26,6 @@ class _ListDetailsState extends State<ListDetails>
   late AnimationController animationController;
   bool isSelected = false;
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -32,13 +33,13 @@ class _ListDetailsState extends State<ListDetails>
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
+
   callAddToFavorite(id) async {
     await FavoriteCalls.addListToFavorite(id).then((value) {
       print(value);
       print(value.statusCode);
       if (value.statusCode == 201) {
-        showToast(
-            context: context, msg:'Liste des tâches mise en favoris');
+        showToast(context: context, msg: 'Liste des tâches mise en favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -52,8 +53,7 @@ class _ListDetailsState extends State<ListDetails>
     await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
       print(value.statusCode);
       if (value.statusCode == 200) {
-        showToast(
-            context: context, msg:'Liste des tâches retiré de favoris');
+        showToast(context: context, msg: 'Liste des tâches retiré de favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -138,7 +138,9 @@ class _ListDetailsState extends State<ListDetails>
                                 isSelected = !isSelected;
                               });
                               if (isSelected) {
-                                callAddToFavorite(widget.taskList.id);
+                                checkIfTokenExists(() {
+                                  callAddToFavorite(widget.taskList.id);
+                                }, context);
                               } else {
                                 deleteFromFavorites(widget.taskList.id);
                               }
@@ -167,11 +169,21 @@ class _ListDetailsState extends State<ListDetails>
                     widget.taskList.title.toString(),
                     style: titleTextStyle,
                   ),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UpdateList(taskList: widget.taskList)));
-                    },
-                      child: const Icon(EvaIcons.edit,size: 24,color: primaryColor,)),
+                  widget.isAdmin
+                      ? Container()
+                      : GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        UpdateList(taskList: widget.taskList)));
+                          },
+                          child: const Icon(
+                            EvaIcons.edit,
+                            size: 24,
+                            color: primaryColor,
+                          )),
                 ],
               ),
               _buildCategories(),
@@ -206,7 +218,7 @@ class _ListDetailsState extends State<ListDetails>
                           MaterialPageRoute(
                               builder: (context) => ListTasks(
                                     listTasks: widget.taskList.tasks!,
-                                idList: widget.taskList.id,
+                                    idList: widget.taskList.id,
                                   )));
                     },
                     child: Text(
@@ -254,9 +266,8 @@ class _ListDetailsState extends State<ListDetails>
               ),
             );
             animationController.forward();
-            return CategoryItemList(
-                widget.taskList.tags![index], 'images/9.jpg', animationController, animation);
-
+            return CategoryItemList(widget.taskList.tags![index],
+                'images/9.jpg', animationController, animation);
           }),
     ));
   }
@@ -287,15 +298,15 @@ class _ListDetailsState extends State<ListDetails>
     );
     animationController.forward();
     return ListComponent(
-        taskList: widget.taskList,
-        animationController: animationController,
-        animation: animation,
-);
+      taskList: widget.taskList,
+      animationController: animationController,
+      animation: animation,
+    );
   }
 
   Widget _buildListFavoriteLists() {
     return SizedBox(
-      height: MediaQuery.of(context).size.height*0.35,
+      height: MediaQuery.of(context).size.height * 0.35,
       child: ListView.builder(
           shrinkWrap: true,
           itemCount: 4,
@@ -310,9 +321,10 @@ class _ListDetailsState extends State<ListDetails>
             );
             animationController.forward();
             return ListComponent(
-                taskList: widget.taskList,
-                animationController: animationController,
-                animation: animation,);
+              taskList: widget.taskList,
+              animationController: animationController,
+              animation: animation,
+            );
           }),
     );
   }

@@ -5,11 +5,13 @@ import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/utils.dart';
 
 class ListTasks extends StatefulWidget {
   List<Task> listTasks;
   String? idList;
-  ListTasks({required this.listTasks, this.idList});
+  bool isAdmin;
+  ListTasks({required this.listTasks, this.idList,this.isAdmin=true});
 
   @override
   _ListTasksState createState() => _ListTasksState();
@@ -70,7 +72,13 @@ class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin {
           );
           animationController.forward();
           var item = index.toString();
-          return Dismissible(
+          return widget.isAdmin?TaskComponent(
+            task: widget.listTasks[index],
+            animationController: animationController,
+            text: 'text',
+            animation: animation,
+            idList: widget.idList,
+          ):Dismissible(
             background: Container(
                 child: Padding(
                   padding: const EdgeInsets.only(right: 28.0),
@@ -89,7 +97,9 @@ class _ListTasksState extends State<ListTasks> with TickerProviderStateMixin {
             key: UniqueKey(),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
-              _deleteTask(widget.listTasks[index].id);
+              checkIfTokenExists((){
+                _deleteTask(widget.listTasks[index].id);
+              }, context);
             },
             child: TaskComponent(
               task: widget.listTasks[index],

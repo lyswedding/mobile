@@ -1,5 +1,7 @@
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/authentification/screens/signup.dart';
+import 'package:lys_wedding/shared/constants.dart';
 
 void showToast({
   required BuildContext context,
@@ -7,10 +9,10 @@ void showToast({
 }) {
   showFlash(
     context: context,
-    duration: Duration(seconds: 5),
+    duration: const Duration(seconds: 5),
     builder: (_, controller) {
       return Flash(
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 100),
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 100),
         controller: controller,
         backgroundColor: Colors.black87,
         borderRadius: BorderRadius.circular(8.0),
@@ -23,7 +25,7 @@ void showToast({
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: DefaultTextStyle(
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
             child: Text(
               msg,
               textAlign: TextAlign.center,
@@ -42,7 +44,7 @@ void showToast({
 void _showMessage(String message, BuildContext context) {
   showFlash(
       context: context,
-      duration: Duration(seconds: 3),
+      duration: const Duration(seconds: 3),
       builder: (_, controller) {
         return Flash(
           controller: controller,
@@ -93,7 +95,7 @@ Future<void> showMyDialog(BuildContext context, String title, String message,
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('Continuez'),
+            child: const Text('Continuez'),
             onPressed: onPressed(),
           ),
         ],
@@ -121,8 +123,45 @@ Future<void> showMyDialogJusrify(BuildContext context, String title,
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('Continuez'),
+            child: const Text('Continuez'),
             onPressed: onPressed(),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+Future<void> createAccountDialog(BuildContext context) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Create an account'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              TextButton(
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup()));
+                  },
+                  child: Text(
+                    'Go to sign up page',
+                    style: subTitleTextStyle,
+                  )),
+                Text(
+                  'Would like continue using Lys !! ',style: regularTextStyle,),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
         ],
       );

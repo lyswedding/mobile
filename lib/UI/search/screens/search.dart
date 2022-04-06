@@ -7,8 +7,7 @@ import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/services/categorie.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/shared/constants.dart';
-
-import '../components/custom_input.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -18,21 +17,28 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List<Provider> search = [];
   List<Service> services = [];
-  final List<Provider> foundServices = [];
+   List<Provider> foundServices = [];
+   List<Provider> foundProviders= [];
   bool isLoaded = false;
 
-  late AnimationController animationController;
-  late AnimationController animationController1;
+  var animationController;
+  var animationController1;
 
   fetchsearch() async {
-    search = await ServiceList.getPrestataire();
-
     setState(() {
       isLoaded = true;
+    });
+    search = await ServiceList.getPrestataire();
+    foundProviders=search;
+    setState(() {
+      isLoaded = false;
     });
   }
 
   callGetServices() async {
+    setState(() {
+      isLoaded = true;
+    });
     services = await CategorieCalls.getAdminServices();
 
     setState(() {
@@ -55,7 +61,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: scaffoldBGColor,
         appBar: AppBar(
@@ -96,7 +101,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             padding: const EdgeInsets.only(top: 20.0),
             child: Column(children: [
               SearchBar(
-                onchanged: (text){
+                onchanged: (text) {
                   _runFilter(text);
                 },
               ),
@@ -119,7 +124,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         child: SizedBox(
       height: MediaQuery.of(context).size.height * 0.6,
       child: ListView.builder(
-          itemCount: search.length,
+          itemCount: foundProviders.length,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -164,13 +169,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   ),
                 );
                 animationController1.forward();
-                return GestureDetector(
-                  onTap: (){
-                    _filterByServices(services[index].title);
-                  },
-                  child: CategoryItem(services[index].title, services[index].icon,
-                      animationController1, animation,),
-                );
+                return CategoryItem(services[index].title, services[index].icon,
+                    animationController1, animation, () {
+                  _filterByServices(services[index].title);
+                }, () {
+                  _removeFromSearchResult(services[index].title);
+                });
               }),
         ),
       )),
@@ -181,38 +185,56 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     for (var element in search) {
       element.services.forEach((service) {
         print(service['name']);
-        if (service['name']==text) {
+        if (service['name'] == text) {
           print(element.name);
           setState(() {
-            foundServices.add(element);
+            if (foundServices.contains(element) == false)
+              foundServices.add(element);
           });
         }
       });
+
+      foundProviders = foundServices;
+      print(foundServices);
+      // print(foundUserTaskLists);
     }
-    search = foundServices;
-    print(foundServices);
-    // print(foundUserTaskLists);
   }
+
+    _removeFromSearchResult(text) {
+      // List<Provider> foundServices = [];
+      search.forEach((provider) {
+        provider.services.forEach((service) {
+          print(service['name']);
+          if (service['name'] == text) {
+            print(provider.name);
+            setState(() {
+              foundProviders.remove(provider);
+            });
+          }
+        });
+      });
+      if (foundProviders.isEmpty) {
+        fetchsearch();
+      }
+    }
 
   void _runFilter(String enteredKeyword) {
     List<Provider> results = [];
 
-
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
-      results = search;
+      fetchsearch();
     } else {
       results = search
           .where((provider) => provider.name!
-          .toLowerCase()
-          .contains(enteredKeyword.toLowerCase()))
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
           .toList();
     }
 
     setState(() {
       // taskLists = results;
-      search = results;
+      foundProviders = results;
     });
   }
-
 }

@@ -7,6 +7,7 @@ import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 import '../../../models/List_search.dart';
 
@@ -82,7 +83,7 @@ class _FavoritePageState extends State<FavoritePage>
           title: const Text(
             "Favorite",
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           leading: IconButton(
               onPressed: () {
@@ -94,41 +95,32 @@ class _FavoritePageState extends State<FavoritePage>
               )),
         ),
         body: SingleChildScrollView(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(children: [
-            TabBar(
-              controller: _nestedTabController,
-              indicatorColor: Colors.teal,
-              labelColor: Colors.teal,
-              unselectedLabelColor: Colors.black54,
-              isScrollable: true,
-              tabs: const <Widget>[
-                Tab(
-                  text: "Listes",
-                ),
-                Tab(
-                  text: "Prestataires",
-                ),
-              ],
-            ),
-            SizedBox(
-              height: screenHeight,
-              child: TabBarView(
-                  controller: _nestedTabController,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _buildListFavoriteLists(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _buildListFavoriteProviders(),
-                    ),
-                  ]),
-            ),
-          ]),
-        )));
+            child: Column(children: [
+              TabBar(
+                controller: _nestedTabController,
+                indicatorColor: Colors.teal,
+                labelColor: Colors.teal,
+                unselectedLabelColor: Colors.black54,
+                isScrollable: true,
+                tabs: const <Widget>[
+                  Tab(
+                    text: "Listes",
+                  ),
+                  Tab(
+                    text: "Prestataires",
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: screenHeight,
+                child: TabBarView(
+                    controller: _nestedTabController,
+                    children: <Widget>[
+                      _buildListFavoriteLists(),
+                      _buildListFavoriteProviders(),
+                    ]),
+              ),
+            ])));
   }
 
   Widget _buildListFavoriteLists() {

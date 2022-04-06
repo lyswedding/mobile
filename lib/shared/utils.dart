@@ -1,7 +1,11 @@
 
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedPrefValues.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 bool isEmail(String string) {
@@ -28,3 +32,15 @@ Future<File> getImageFileFromAssets(String path) async {
 
   return file;
 }
+
+
+Future checkIfTokenExists(Function function,BuildContext context) async {
+  await getUserInfoSharedPref("token").then((token) async {
+    if(token!=null) {
+     function();
+    }else{
+      createAccountDialog(context);
+    }
+  });
+}
+

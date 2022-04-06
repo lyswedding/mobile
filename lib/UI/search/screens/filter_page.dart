@@ -1,110 +1,152 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/search/components/common_appbar_view.dart';
 import 'package:lys_wedding/UI/search/components/slider_view.dart';
+import 'package:lys_wedding/UI/search/screens/result_page.dart';
+import 'package:lys_wedding/models/List_search.dart';
+import 'package:lys_wedding/models/service.dart';
+import 'package:lys_wedding/services/categorie.services.dart';
+import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
-
 class FilterPage extends StatefulWidget {
-  const FilterPage({Key? key}) : super(key: key);
+  FilterPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _FilterPageState createState() => _FilterPageState();
 }
 
-List<String> popularFilterListData=[
-  'service 1',
-  'service 1',
-  'service 1',
-  'service 1',
-  'service 1',
-  'service 1',
-  'service 1',
-  'service 1',
-];
+List<Service> services = [];
+List<Provider> search = [];
+List<Provider> foundProviders = [];
+List<Provider> foundServices = [];
+bool isLoaded = false;
 
-List<String> GovernoratFilterListData=[
-  'tunis',
-  'nabeul',
-  'bizerte',
-  'kef',
-  'zaghouen',
-  'manouba',
-  'ariana'
+List<String> GovernoratFilterListData = [
+  'Tunis',
+  'Nabeul',
+  'Bizerte',
+  'Kef',
+  'Zaghouen',
+  'Manouba',
+  'Ariana',
+  'Ben Arous',
+  'Touzer',
+  'Tataouine',
+  'Sfax',
+  'Sousse',
+  'Kaoirouen',
+  'Gafsa'
 ];
 double distValue = 50.0;
-bool isSelected = false;
 
 class _FilterPageState extends State<FilterPage> {
+  callGetServices() async {
+    setState(() {
+      isLoaded = true;
+    });
+    services = await CategorieCalls.getAdminServices();
+
+    setState(() {
+      isLoaded = false;
+    });
+  }
+
+  fetchSearch() async {
+    setState(() {
+      isLoaded = true;
+    });
+    search = await ServiceList.getPrestataire();
+    setState(() {
+      isLoaded = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    callGetServices();
+    fetchSearch();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: scaffoldBGColor,
-      body: Scaffold(
-        // backgroundColor: Colors.transparent,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            CommonAppbarView(
-              iconData: Icons.close,
-              onBackClick: () {
-                Navigator.pop(context);
-              },
-              titleText: "filter",
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      //distanceViewUI(),
-                      popularFilter(),
-                      governoratFilter(),
-                    ],
-                  ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          CommonAppbarView(
+            iconData: Icons.close,
+            onBackClick: () {
+              Navigator.pop(context);
+            },
+            titleText: "Filter page",
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    //distanceViewUI(),
+                    popularFilter(),
+                    governoratFilter(),
+                  ],
                 ),
               ),
             ),
-            const Divider(
-              height: 1,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: GestureDetector(
-                onTap: () {},
-                child: Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(left: 20, right: 20,),
-                    padding:
-                    const EdgeInsets.only(left: 20, right: 20, bottom: 5),
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: primaryColor,
-                      // boxShadow: const [
-                      //   BoxShadow(
-                      //       offset: Offset(0, 10),
-                      //       blurRadius: 50,
-                      //       color: Color(0xffEEEEEE)),
-                      // ],
+          ),
+          const Divider(
+            height: 1,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                  ),
+                  padding:
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 5),
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: primaryColor,
+                    // boxShadow: const [
+                    //   BoxShadow(
+                    //       offset: Offset(0, 10),
+                    //       blurRadius: 50,
+                    //       color: Color(0xffEEEEEE)),
+                    // ],
+                  ),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: whiteColor,
                     ),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: whiteColor,
-                      ),
-                      onPressed: () {},
-                      child: const Text(
-                        "appliquer filtre",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    )),
-              ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ResultPage(resultList: foundProviders)));
+                    },
+                    child: Text(
+                      "appliquer filtre " + foundProviders.length.toString(),
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -116,14 +158,11 @@ class _FilterPageState extends State<FilterPage> {
       children: <Widget>[
         Padding(
           padding:
-          const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             'service',
             textAlign: TextAlign.left,
-            style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
+            style: subTitleTextStyle.copyWith(fontSize: 16),
           ),
         ),
         Padding(
@@ -138,6 +177,7 @@ class _FilterPageState extends State<FilterPage> {
       ],
     );
   }
+
   Widget governoratFilter() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -145,14 +185,11 @@ class _FilterPageState extends State<FilterPage> {
       children: <Widget>[
         Padding(
           padding:
-          const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             'Governorat',
             textAlign: TextAlign.left,
-            style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
+            style: subTitleTextStyle.copyWith(fontSize: 16),
           ),
         ),
         Padding(
@@ -175,7 +212,7 @@ class _FilterPageState extends State<FilterPage> {
       children: <Widget>[
         Padding(
           padding:
-          const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             "distance from city",
             textAlign: TextAlign.left,
@@ -197,62 +234,35 @@ class _FilterPageState extends State<FilterPage> {
       ],
     );
   }
+
   List<Widget> getPList() {
     List<Widget> noList = [];
     var cout = 0;
     const columCount = 2;
-    for (var i = 0; i < popularFilterListData.length / columCount; i++) {
+    for (var i = 0; i < services.length / columCount; i++) {
       List<Widget> listUI = [];
       for (var i = 0; i < columCount; i++) {
         try {
-          final date = popularFilterListData[cout];
+          final date = services[cout];
           listUI.add(
             Expanded(
               child: Row(
                 children: <Widget>[
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(const Radius.circular(4.0)),
-                      onTap: () {
-                        setState(() {
-                          isSelected = !isSelected;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8.0, top: 8, bottom: 8, right: 0),
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              isSelected
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank,
-                              color: isSelected
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey.withOpacity(0.6),
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            FittedBox(
-                              fit: BoxFit.cover,
-                              child: Text(
-                                date,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  CustomCheckBox(
+                    title: date.title,
+                    onTapSelected: () {
+                      _filterByServices(date.title);
+                    },
+                    onUnSelect: () {
+                      _removeFromSearchResult(date.title);
+                    },
                   ),
                 ],
               ),
             ),
           );
           cout += 1;
-        } catch (e) {
-        }
+        } catch (e) {}
       }
       noList.add(Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -263,6 +273,7 @@ class _FilterPageState extends State<FilterPage> {
     }
     return noList;
   }
+
   List<Widget> getGList() {
     List<Widget> noList = [];
     var cout = 0;
@@ -276,49 +287,21 @@ class _FilterPageState extends State<FilterPage> {
             Expanded(
               child: Row(
                 children: <Widget>[
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(const Radius.circular(4.0)),
-                      onTap: () {
-                        setState(() {
-                          isSelected = !isSelected;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8.0, top: 8, bottom: 8, right: 0),
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              isSelected
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank,
-                              color: isSelected
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey.withOpacity(0.6),
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            FittedBox(
-                              fit: BoxFit.cover,
-                              child: Text(
-                                date,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  CustomCheckBox(
+                    title: date,
+                    onTapSelected: () {
+                      _filterByLocation(date);
+                    },
+                    onUnSelect: () {
+                      _removeFromSearchResult(date);
+                    },
+                  )
                 ],
               ),
             ),
           );
           cout += 1;
-        } catch (e) {
-        }
+        } catch (e) {}
       }
       noList.add(Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -330,4 +313,125 @@ class _FilterPageState extends State<FilterPage> {
     return noList;
   }
 
+  _filterByServices(text) {
+    for (var element in search) {
+      element.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(element.name);
+          setState(() {
+            if (foundServices.contains(element) == false)
+              foundServices.add(element);
+          });
+        }
+      });
+
+      foundProviders = foundServices;
+      print(foundServices);
+      // print(foundUserTaskLists);
+    }
+  }
+
+  _filterByLocation(text) {
+    print(text);
+    for (var element in search) {
+      // print(element.locations);
+      element.locations.forEach((location) {
+        print(location.place['gov']);
+        if (location.place['gov'] == text) {
+          print(element.name);
+          setState(() {
+            if (foundServices.contains(element) == false) {
+              foundServices.add(element);
+            }
+          });
+        }
+      });
+
+      foundProviders = foundServices;
+      print(foundServices);
+      // print(foundUserTaskLists);
+    }
+  }
+
+  _removeFromSearchResult(text) {
+    // List<Provider> foundServices = [];
+    search.forEach((provider) {
+      provider.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(provider.name);
+          setState(() {
+            foundProviders.remove(provider);
+          });
+        }
+      });
+    });
+  }
+}
+
+class CustomCheckBox extends StatefulWidget {
+  final String title;
+  final Function onTapSelected;
+  final Function onUnSelect;
+  CustomCheckBox(
+      {Key? key,
+      required this.title,
+      required this.onUnSelect,
+      required this.onTapSelected})
+      : super(key: key);
+
+  @override
+  State<CustomCheckBox> createState() => _CustomCheckBoxState();
+}
+
+class _CustomCheckBoxState extends State<CustomCheckBox> {
+  bool isSelected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: const BorderRadius.all(const Radius.circular(4.0)),
+        onTap: () {
+          setState(() {
+            isSelected = !isSelected;
+            if (isSelected == true) {
+              widget.onTapSelected();
+            } else {
+              widget.onUnSelect();
+            }
+          });
+        },
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 8.0, top: 8, bottom: 8, right: 0),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey.withOpacity(0.6),
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              FittedBox(
+                fit: BoxFit.cover,
+                child: Container(
+                  width: 120,
+                  child: Text(
+                    widget.title,
+                    style: regularTextStyle.copyWith(color: Colors.black54),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

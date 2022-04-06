@@ -10,6 +10,7 @@ import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:lys_wedding/shared/utils.dart';
 
 import 'common_card.dart';
 
@@ -37,8 +38,7 @@ class _ListComponentState extends State<ListComponent> {
       print(value);
       print(value.statusCode);
       if (value.statusCode == 201) {
-        showToast(
-            context: context, msg:'Liste des tâches mise en favoris');
+        showToast(context: context, msg: 'Liste des tâches mise en favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -52,8 +52,7 @@ class _ListComponentState extends State<ListComponent> {
     await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
       print(value.statusCode);
       if (value.statusCode == 200) {
-        showToast(
-            context: context, msg:'Liste des tâches retiré de favoris');
+        showToast(context: context, msg: 'Liste des tâches retiré de favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -84,7 +83,7 @@ class _ListComponentState extends State<ListComponent> {
             color: whiteColor,
             radius: 10,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderRadius: const BorderRadius.all(const Radius.circular(10.0)),
               child: Column(
                 children: <Widget>[
                   Stack(
@@ -115,18 +114,20 @@ class _ListComponentState extends State<ListComponent> {
                                   isSelected = !isSelected;
                                 });
                                 if (isSelected) {
-                                  callAddToFavorite(widget.taskList.id);
+                                  checkIfTokenExists(() {
+                                    callAddToFavorite(widget.taskList.id);
+                                  }, context);
                                 } else {
                                   deleteFromFavorites(widget.taskList.id);
                                 }
                               },
                               child: Padding(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Icon(
                                   isSelected
                                       ? EvaIcons.heart
                                       : EvaIcons.heartOutline,
-                                  color: Color(0xffEB5890),
+                                  color: const Color(0xffEB5890),
                                 ),
                               ),
                             ),
@@ -163,15 +164,14 @@ class _ListComponentState extends State<ListComponent> {
                                   fontWeight: FontWeight.w400,
                                   color: primaryColor),
                             ),
-
-
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.taskList.tasks!.length.toString() + '\ttaches',
+                              widget.taskList.tasks!.length.toString() +
+                                  '\ttaches',
                               // Helper.getRoomText(hotelInfo.roomData!),
                               style: GoogleFonts.poppins(
                                   fontSize: 12,

@@ -1,7 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/item_list.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
@@ -25,46 +24,74 @@ class HomeDetails extends StatefulWidget {
 
 class _HomeDetailsState extends State<HomeDetails>
     with TickerProviderStateMixin {
+  bool isInCall = false;
+  List<Service> services = [];
+  List<Provider> popularProviders = [];
+  List<Provider> foundProviders = [];
+  List<Provider> foundServices = [];
+  List<TaskList> lists = [];
 
- bool isInCall=false;
- List<Service> services=[];
- List<Provider> popularProviders=[];
- List<TaskList> lists=[];
   late AnimationController animationController;
   late AnimationController animationController1;
 
-  callGetServices()async{
-
-    services=await CategorieCalls.getAdminServices();
+  callGetServices() async {
+    services = await CategorieCalls.getAdminServices();
 
     setState(() {
-
-      isInCall=false;
+      isInCall = false;
     });
-
   }
 
- callGetProviders()async{
+  callGetProviders() async {
+    popularProviders = await ServiceList.getPrestataire();
+    foundProviders=popularProviders;
+    setState(() {
+      isInCall = false;
+    });
+  }
 
-   popularProviders=await ServiceList.getPrestataire();
+  callGetLists() async {
+    lists = await ListCalls.getAdminLists();
 
-   setState(() {
+    setState(() {
+      isInCall = false;
+    });
+  }
 
-     isInCall=false;
-   });
-
- }
-
- callGetLists()async{
-
-   lists=await ListCalls.getAdminLists();
-
-   setState(() {
-
-     isInCall=false;
-   });
-
- }
+  _filterByServices(text) {
+    for (var element in popularProviders) {
+      element.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(element.name);
+          setState(() {
+            if(foundServices.contains(element)==false)
+              foundServices.add(element);
+          });
+        }
+      });
+    }
+      foundProviders = foundServices;
+    print(foundProviders);
+    // print(foundUserTaskLists);
+  }
+  _removeFromSearchResult(text) {
+   // List<Provider> foundServices = [];
+    popularProviders.forEach((provider) {
+      provider.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(provider.name);
+          setState(() {
+            foundProviders.remove(provider);
+          });
+        }
+      });
+    });
+    if (foundProviders.isEmpty) {
+      callGetProviders();
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -87,11 +114,16 @@ class _HomeDetailsState extends State<HomeDetails>
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            title:  Text(
-              "Bonjour",
-              style: titleTextStyle.copyWith(fontSize: 24),
+            title: GestureDetector(
+              onTap: () {
+                deleteToken();
+              },
+              child: Text(
+                "Bonjour",
+                style: titleTextStyle.copyWith(fontSize: 24),
+              ),
             ),
-            actions:   <Widget>[
+            actions: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(right: 10.0),
                 child: Image.asset(
@@ -122,7 +154,8 @@ class _HomeDetailsState extends State<HomeDetails>
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
-                          image: AssetImage("images/11.jpg"), fit: BoxFit.fill)),
+                          image: AssetImage("images/11.jpg"),
+                          fit: BoxFit.fill)),
                 ),
                 const SizedBox(
                   height: 16,
@@ -183,13 +216,12 @@ class _HomeDetailsState extends State<HomeDetails>
                 ),
               );
               animationController.forward();
-              return GestureDetector(
-                onTap: (){
-                  _filterByServices(services[index].title);
-                },
-                child: CategoryItem(
-                    services[index].title, services[index].icon, animationController, animation,),
-              );
+              return CategoryItem(services[index].title, services[index].icon,
+                  animationController, animation, () {
+                _filterByServices(services[index].title);
+              }, () {
+                _removeFromSearchResult(services[index].title);
+              });
             }),
       )),
     );
@@ -224,56 +256,45 @@ class _HomeDetailsState extends State<HomeDetails>
   //   ));
   // }
 
- _buildListPopular(){
+  Widget _buildListPopular() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: popularProviders
-            .map((element) => ItemList(item: element, height: 150.0,
-          width: 250.0,))
+        children: foundProviders
+            .map((element) => ItemList(
+                  item: element,
+                  height: 150.0,
+                  width: 250.0,
+                ))
             .toList(),
       ),
     );
- }
+  }
 
- _buildListFavorites(){
-   return SingleChildScrollView(
-     scrollDirection: Axis.horizontal,
-     child: Container(
-       height: MediaQuery.of(context).size.height*0.35,
-       child: Row(
-         children: lists
-             .map((element) => ListComponent(taskList: element,animationController:animationController ,animation: Tween(begin: 0.0, end: 1.0).animate(
-           CurvedAnimation(
-             parent: animationController,
-             curve: const Interval((1 / 6) *10, 1.0,
-                 curve: Curves.fastOutSlowIn),
-           ),
-         ) ,
+  Widget _buildListFavorites() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.35,
+        child: Row(
+          children: lists
+              .map(
+                (element) => ListComponent(
+                  taskList: element,
+                  animationController: animationController,
+                  animation: Tween(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animationController,
+                      curve: const Interval((1 / 6) * 10, 1.0,
+                          curve: Curves.fastOutSlowIn),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
 
-         ),
-         )
-             .toList(),
-       ),
-     ),
-   );
- }
-
- _filterByServices(text) {
-    List<Provider> foundServices=[];
-   for (var element in popularProviders) {
-     element.services.forEach((service) {
-       print(service['name']);
-       if (service['name']==text) {
-         print(element.name);
-         setState(() {
-           foundServices.add(element);
-         });
-       }
-     });
-   }
-   popularProviders = foundServices;
-   print(foundServices);
-   // print(foundUserTaskLists);
- }
 }

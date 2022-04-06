@@ -23,9 +23,6 @@ class AuthCalls {
       String refreshToken = response.headers['x-refresh-token'].toString();
       print(token);
       print(refreshToken);
-      // Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-      // //debugPrint(decodedToken.toString());
-      // String userid = decodedToken['subject']['_id'];
       await saveAccessTokenSharedPref(token,refreshToken);
     }
 

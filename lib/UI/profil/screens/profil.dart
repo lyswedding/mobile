@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
 import 'package:lys_wedding/UI/profil/screens/prestataire_favorite/prestataire_favorite.dart';
-import 'package:lys_wedding/UI/profil/service/profil_service.dart';
+import 'package:lys_wedding/models/model_profil.dart';
+import 'package:lys_wedding/services/profil_service.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
 
-import '../modele/model_profil.dart';
 import 'detail_profil/screens/modif_profil/screens/modif_profil.dart';
 
 
@@ -61,17 +61,17 @@ class _ProfilPageState extends State<ProfilPage> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 100,
              // backgroundImage: NetworkImage(item.user!.imageUrl??""),
             ),
             Text(
               item.user!.firstName ?? "foulan",
-              style: TextStyle(fontSize: 25),
+              style: const TextStyle(fontSize: 25),
             ),
             Text(
               item.user!.email ?? "",
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             ),
             Column(
               children: <Widget>[
@@ -95,13 +95,11 @@ class _ProfilPageState extends State<ProfilPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              child: Row(children: const [
-                                Icon(Icons.person),
-                                Padding(padding: EdgeInsets.only(left: 20)),
-                                Text('Informations'),
-                              ]),
-                            ),
+                            Row(children: const [
+                              Icon(Icons.person),
+                              Padding(padding: EdgeInsets.only(left: 20)),
+                              Text('Informations'),
+                            ]),
                             const Icon(Icons.arrow_forward_ios_outlined),
                           ],
                         ))),
@@ -122,7 +120,7 @@ class _ProfilPageState extends State<ProfilPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => FavoritePage()));
+                                    builder: (context) => const FavoritePage()));
                           },
                           child: Row(children: const [
                             Icon(Icons.person),
@@ -190,7 +188,7 @@ class _ProfilPageState extends State<ProfilPage> {
                         onTap: () {
                           deleteToken();
                           Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) => Login()));
+                              MaterialPageRoute(builder: (context) => const Login()));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

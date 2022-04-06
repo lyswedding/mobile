@@ -1,7 +1,12 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:lys_wedding/UI/favorite/modele/model_favorite.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
+import 'package:lys_wedding/services/service_list.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:lys_wedding/shared/utils.dart';
+import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/search/screens/detail_search/component/list_image.dart';
 
 import 'package:lys_wedding/shared/constants.dart';
@@ -9,11 +14,19 @@ import 'package:lys_wedding/shared/constants.dart';
 import '../../../../../models/List_search.dart';
 import '../../../../home/components/shared/item_list.dart';
 
-class DetailSearch extends StatelessWidget {
+class DetailSearch extends StatefulWidget {
   DetailSearch({Key? key, required this.provider}) : super(key: key);
 
   final Provider provider;
+
+  @override
+  State<DetailSearch> createState() => _DetailSearchState();
+}
+
+class _DetailSearchState extends State<DetailSearch> {
   final Url = "https://www.facebook.com/adel.yakoubi.967";
+  List<Provider> popularProviders = [];
+
   List images = [
     "images/1.jpg",
     "images/2.jpg",
@@ -26,11 +39,71 @@ class DetailSearch extends StatelessWidget {
     "images/8.jpg",
     "images/8.jpg"
   ];
+  bool isInCall = false;
   bool isLoaded = false;
+  bool isSelected = false;
+  callGetProviders() async {
+    popularProviders = await ServiceList.getPrestataire();
+
+    setState(() {
+      isInCall = false;
+    });
+  }
+
+  _buildListPopular() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: popularProviders
+            .map((element) => ItemList(
+                  item: element,
+                  height: 150.0,
+                  width: 250.0,
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  callAddToFavorite() async {
+    await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
+      print(value.data);
+      if (value.statusCode == 201) {
+        showToast(context: context, msg: value.data['message'].toString());
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
+  }
+
+  deleteFromFavorite() async {
+    await FavoriteCalls.deletProviderFromFavorite(widget.provider.id)
+        .then((value) {
+      print(value.data);
+      if (value.statusCode == 200) {
+        showToast(context: context, msg: value.data['message'].toString());
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    callGetProviders();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print(provider.phone);
+    print(widget.provider.phone);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
@@ -40,7 +113,7 @@ class DetailSearch extends StatelessWidget {
           title: const Text(
             "Detail Search",
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           leading: IconButton(
               onPressed: () {
@@ -56,144 +129,197 @@ class DetailSearch extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(children: [
               // TItleForPage(),
-              ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  child: Stack(children: <Widget>[
-                    AspectRatio(
-                      aspectRatio: 1.7,
-                      child: Image.network(
-                        provider.cover,
-                        fit: BoxFit.cover,
+              Stack(
+                children: [
+                  ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                      child: Stack(children: <Widget>[
+                        AspectRatio(
+                          aspectRatio: 1.3,
+                          child: Image.network(
+                            widget.provider.cover,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ])),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.white.withOpacity(1),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(32.0),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              isSelected = !isSelected;
+                              if (isSelected) {
+                                checkIfTokenExists((){
+                                  callAddToFavorite();
+                                }, context);
+                              } else {
+                                deleteFromFavorite();
+                              }
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              isSelected
+                                  ? EvaIcons.heart
+                                  : EvaIcons.heartOutline,
+                              color: const Color(0xffEB5890),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ])),
+                  )
+                ],
+              ),
               const SizedBox(
                 height: 16,
               ),
               Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    provider.name,
+                    widget.provider.name,
                     style: titleTextStyle,
                   )),
               Row(
                 children: [
-                  Icon(
-                    Icons.pin_drop,
-                    size: 12,
-                    color: Theme.of(context).primaryColor,
+                  const Icon(
+                    EvaIcons.pin,
+                    size: 18,
+                    color: primaryColor,
+                  ),
+                  const SizedBox(
+                    width: 5,
                   ),
                   Text(
-                    provider.email,
+                    widget.provider.email,
                     // "4140 Parker Rd. Allentown, New Mexico 31134",
                     overflow: TextOverflow.ellipsis,
                     style: subTitleTextStyle,
                   ),
                 ],
               ),
-              const Align(
+              Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    "marriage,decoration..",
-                    style: TextStyle(color: Colors.grey),
+                    widget.provider.services[0]['name'].toString(),
+                    style: const TextStyle(color: Colors.grey),
                   )),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 90,
-                    width: 90,
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          final Url = provider.facebookUrl;
-                          if (await canLaunch(Url)) {
-                            await launch(Url,
-                                forceWebView: true, enableJavaScript: true);
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        child: const Image(
-                          image: AssetImage("images/17.png"),
-                        )),
-                  ),
-                  Container(
-                    height: 90,
-                    width: 90,
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          final Url = provider.instagramUrl;
-                          if (await canLaunch(Url)) {
-                            await launch(Url,
-                                forceWebView: true, enableJavaScript: true);
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        child: const Image(
-                          image: AssetImage("images/18.png"),
-                        )),
-                  ),
-                  Container(
-                    height: 90,
-                    width: 90,
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          _makeSocialMediaRequest("http://pratikbutani.com");
-                          // // final Url =
-                          // //     "https://www.facebook.com/adel.yakoubi.967";
-                          // if (await canLaunch(Url)) {
-                          //   await launch(Url,
-                          //       forceWebView: true, enableJavaScript: true);
-                          // }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          shape:  RoundedRectangleBorder(
-                            borderRadius:  BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        child: const Image(
-                          image: AssetImage("images/19.png"),
-                        )),
-                  ),
-                  Container(
-                    height: 90,
-                    width: 90,
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          if (await canLaunch('tel:${provider.phone}')) {
-                            await launch('tel:${provider.phone}');
-                          } else {
-                            throw 'call not possible';
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        child: const Image(
-                          image: AssetImage("images/20.png"),
-                        )),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                            onTap: () async {
+                              final Url = widget.provider.facebookUrl;
+                              if (await canLaunch(Url)) {
+                                await launch(Url,
+                                    forceWebView: true, enableJavaScript: true);
+                              }
+                            },
+                            child: const Image(
+                              image: AssetImage("images/17.png"),
+                            )),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                            onTap: () async {
+                              final Url = widget.provider.instagramUrl;
+                              if (await canLaunch(Url)) {
+                                await launch(Url,
+                                    forceWebView: true, enableJavaScript: true);
+                              }
+                            },
+                            child: const Image(
+                              image: AssetImage("images/18.png"),
+                            )),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                            onTap: () async {
+                              _makeSocialMediaRequest(
+                                  "http://pratikbutani.com");
+                              // // final Url =
+                              // //     "https://www.facebook.com/adel.yakoubi.967";
+                              // if (await canLaunch(Url)) {
+                              //   await launch(Url,
+                              //       forceWebView: true, enableJavaScript: true);
+                              // }
+                            },
+                            child: const Image(
+                              image: AssetImage("images/19.png"),
+                            )),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                            onTap: () async {
+                              if (await canLaunch(
+                                  'tel:${widget.provider.phone}')) {
+                                await launch('tel:${widget.provider.phone}');
+                              } else {
+                                throw 'call not possible';
+                              }
+                            },
+                            child: const Image(
+                              image: AssetImage("images/20.png"),
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Text(provider.description),
+              ReadMoreText(
+                widget.provider.description.toString(),
+                trimLines: 2,
+                style: regularTextStyle,
+                colorClickableText: Colors.pink,
+                trimMode: TrimMode.Line,
+                trimCollapsedText: 'Show more',
+                trimExpandedText: 'Show less',
+                moreStyle:
+                    regularTextStyle.copyWith(fontWeight: FontWeight.bold),
+              ),
               // "data  text Jane Cooper data  text Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii data  text Jane Cooper\n Coiffure ,maquillage data  text Jane Cooper "),
               const SizedBox(
                 height: 16,
@@ -223,15 +349,7 @@ class DetailSearch extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-
-              // ItemList(
-              //   text:
-              //       "Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii\n Coiffure ,maquillage  ",
-              //   items: images,
-              //   height: 150.0,
-              //   width: 250.0,
-              // ),
-              // _buildListFavoriteLists(),
+              _buildListPopular(),
             ]),
           ),
         ));

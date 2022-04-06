@@ -19,12 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     checkIfTokenExists();
-     Future.delayed(
-        const Duration(seconds: 3),
-            () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Login()),
-        ));
+
     super.initState();
   }
 
@@ -34,22 +29,24 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => Home(),
-              settings: RouteSettings(name: "/homePage"),
+              builder: (context) => const Home(),
+              settings: const RouteSettings(name: "/homePage"),
             ),
           );
+      }else{
+        Future.delayed(
+            const Duration(seconds: 5),
+                () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Home(),
+              settings: const RouteSettings(name: '/homePage')),
+            ));
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Timer(
-    //     const Duration(seconds: 5),
-    //         () =>
-    //         Navigator.push(context, MaterialPageRoute(
-    //             builder: (BuildContext context) =>  Signup()))
-    //         );
     return Scaffold(
       backgroundColor: splashscreenColor,
       body: Stack(
