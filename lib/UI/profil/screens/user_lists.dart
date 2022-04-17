@@ -9,7 +9,6 @@ import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
-
 import '../../../models/List_search.dart';
 
 class UserListPage extends StatefulWidget {
@@ -30,19 +29,6 @@ class _UserListPageState extends State<UserListPage>
   List<Provider> search = [];
   List<TaskList> taskLists = [];
 
-  // callAllListes() {
-  //   setState(() {
-  //     isInCall = true;
-  //   });
-  //   ListCalls.getUserLists().then((res) {
-  //     setState(() {
-  //       taskLists = res;
-  //     });
-  //   });
-  //   setState(() {
-  //     isInCall = false;
-  //   });
-  // }
 
   @override
   void initState() {

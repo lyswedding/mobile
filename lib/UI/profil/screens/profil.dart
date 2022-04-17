@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
+import 'package:lys_wedding/UI/profil/screens/modif_profil.dart';
 import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/services/profil_service.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
-
-import 'detail_profil/screens/modif_profil/screens/modif_profil.dart';
+import 'package:lys_wedding/shared/utils.dart';
 
 class ProfilPage extends StatefulWidget {
   const ProfilPage({Key? key}) : super(key: key);
@@ -19,9 +19,9 @@ class _ProfilPageState extends State<ProfilPage> {
   UserApi item = UserApi();
   bool isLoaded = false;
   final ServiceProfil service = ServiceProfil();
-  fetchprofil() async {
+  Future<void> fetchProfil() async {
     item = await service.getUser();
-    print(item);
+    print(item.user);
     setState(() {
       isLoaded = true;
     });
@@ -29,8 +29,9 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   void initState() {
-    fetchprofil();
-    print(item.user);
+    checkIfTokenExists(() {
+      fetchProfil();
+    }, context);
     super.initState();
   }
 
@@ -64,7 +65,7 @@ class _ProfilPageState extends State<ProfilPage> {
           child: Column(children: [
             CircleAvatar(
               radius: 100,
-              // backgroundImage: NetworkImage(item.user!.imageUrl??""),
+              backgroundImage: NetworkImage(item.user!.imageUrl??""),
             ),
             Text(
               item.user!.firstName ?? "foulan",

@@ -17,8 +17,8 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List<Provider> search = [];
   List<Service> services = [];
-   List<Provider> foundServices = [];
-   List<Provider> foundProviders= [];
+  List<Provider> foundServices = [];
+  List<Provider> foundProviders = [];
   bool isLoaded = false;
 
   var animationController;
@@ -29,7 +29,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       isLoaded = true;
     });
     search = await ServiceList.getPrestataire();
-    foundProviders=search;
+    foundProviders = search;
     setState(() {
       isLoaded = false;
     });
@@ -120,33 +120,30 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _buildListFavoriteProviders() {
-    return SingleChildScrollView(
-        child: SizedBox(
+    return SizedBox(
       height: MediaQuery.of(context).size.height * 0.6,
       child: ListView.builder(
-          itemCount: foundProviders.length,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            var animation = Tween(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                parent: animationController,
-                curve: const Interval((1 / 6) * 5, 1.0,
-                    curve: Curves.fastOutSlowIn),
-              ),
-            );
-            animationController.forward();
+    shrinkWrap: true,
+      itemCount: foundProviders.length,
+      scrollDirection: Axis.vertical,
+      itemBuilder: (context, index) {
+        var animation = Tween(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(
+            parent: animationController,
+            curve: const Interval((1 / 6) * 5, 1.0,
+                curve: Curves.fastOutSlowIn),
+          ),
+        );
+        animationController.forward();
 
-            return ItemListSearch(
-              provider: search[index],
-              animation: animation,
-              animationController: animationController,
-              text: '',
-              // items: search!.providers
-              //     .map((e) => ListItem(image: e.cover, label: e.name))
-              //     .toList()
-            );
-          }),
-    ));
+        return ItemListSearch(
+          provider: search[index],
+          animation: animation,
+          animationController: animationController,
+          text: '',
+        );
+      }),
+    );
   }
 
   Widget _buildCategories() {
@@ -200,23 +197,23 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
   }
 
-    _removeFromSearchResult(text) {
-      // List<Provider> foundServices = [];
-      search.forEach((provider) {
-        provider.services.forEach((service) {
-          print(service['name']);
-          if (service['name'] == text) {
-            print(provider.name);
-            setState(() {
-              foundProviders.remove(provider);
-            });
-          }
-        });
+  _removeFromSearchResult(text) {
+    // List<Provider> foundServices = [];
+    search.forEach((provider) {
+      provider.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(provider.name);
+          setState(() {
+            foundProviders.remove(provider);
+          });
+        }
       });
-      if (foundProviders.isEmpty) {
-        fetchsearch();
-      }
+    });
+    if (foundProviders.isEmpty) {
+      fetchsearch();
     }
+  }
 
   void _runFilter(String enteredKeyword) {
     List<Provider> results = [];

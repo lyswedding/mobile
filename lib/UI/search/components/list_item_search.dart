@@ -1,20 +1,13 @@
-import 'dart:convert';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/components/common_card.dart';
-import 'package:lys_wedding/UI/liste/screens/list_tasks.dart';
-import 'package:lys_wedding/UI/liste/screens/task_update.dart';
 import 'package:lys_wedding/UI/search/screens/detail_search/screens/detail_search.dart';
 import 'package:lys_wedding/models/List_search.dart';
-import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
-
-import '../../liste/screens/list_details.dart';
 
 class ItemListSearch<T> extends StatefulWidget {
   const ItemListSearch({
@@ -75,7 +68,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               height: 300,
-              width: 350,
+              width: MediaQuery.of(context).size.width*0.8,
               child: CommonCard(
                 color: whiteColor,
                 radius: 10,
@@ -84,7 +77,6 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                   child: Stack(
                     children: <Widget>[
                       Column(children: <Widget>[
-                        //ProfilePicture(restaurantId: hotelData.id,),
                         AspectRatio(
                             aspectRatio: 2,
                             child: Image.network(
@@ -96,14 +88,13 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(
-                                  flex: 6,
-                                  child: Text(
-                                    widget.provider.name,
-                                    textAlign: TextAlign.left,
-                                    style: titleTextStyle,
-                                  ),
+
+                                Text(
+                                  widget.provider.name,
+                                  textAlign: TextAlign.left,
+                                  style: titleTextStyle,
                                 ),
                                 Text(
                                   '250 visites',

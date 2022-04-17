@@ -76,7 +76,7 @@ class _ListComponentState extends State<ListComponent> {
                         taskList: widget.taskList,
                       )));
         },
-        child: Container(
+        child: SizedBox(
           //height: MediaQuery.of(context).size.height * 0.35,
           width: MediaQuery.of(context).size.width * 0.5,
           child: CommonCard(

@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (context) => SplashScreen(),
             '/signup': (context) => Signup(),
+            '/login': (context) => Login(),
             '/homePage': (context) => Home(),
           },
         ));

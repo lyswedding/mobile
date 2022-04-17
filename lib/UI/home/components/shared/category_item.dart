@@ -51,14 +51,12 @@ class _CategoryItemState extends State<CategoryItem> {
                     height: 30,
                     width: 30,
                   ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        widget.text,
-                        style:subTitleTextStyle.copyWith(fontSize: 10),
-                        textAlign: TextAlign.center,
-                      ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.text,
+                      style:subTitleTextStyle.copyWith(fontSize: 10),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
@@ -74,12 +72,10 @@ class _CategoryItemState extends State<CategoryItem> {
 
 class CategoryItemList extends StatelessWidget {
   final String text;
-  final String image;
   final AnimationController animationController;
   final Animation<double> animation;
   CategoryItemList(
     this.text,
-    this.image,
     this.animationController,
     this.animation,
   );

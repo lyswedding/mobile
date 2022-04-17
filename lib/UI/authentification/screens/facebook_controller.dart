@@ -10,8 +10,8 @@ class FacebookSignInController with ChangeNotifier {
     var result = await FacebookAuth.instance
         .login(permissions: ["public_profile", "email"]);
     print(result.message);
-    print(result.accessToken!.applicationId);
-    print(result.status);
+    //print(result.accessToken!.applicationId);
+    //print(result.status);
     // authSmService.authfacebook(result.);
     if (result.status == LoginStatus.success) {
       final requestdata =
@@ -25,8 +25,10 @@ class FacebookSignInController with ChangeNotifier {
         userdata!["picture"]["data"]["url"],
         userdata!["id"],
       );
+      print('***********************x******************');
       print(x);
       notifyListeners();
+      return true;
     }
   }
 

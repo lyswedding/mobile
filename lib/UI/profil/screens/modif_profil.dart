@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/services/profil_service.dart';
-
+import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 class ProfilPageModif extends StatefulWidget {
   const ProfilPageModif({Key? key, required this.user}) : super(key: key);
@@ -15,10 +17,14 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _PasswordController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
+  TextEditingController _oldPasswordController = TextEditingController();
+  TextEditingController _newPasswordController = TextEditingController();
   var isclickedtoedit = true;
   var isclickedtoedit1 = true;
   var isclickedtoedit2 = true;
   var isclickedtoedit3 = true;
+  PickedFile? _imageFile;
+  final ImagePicker _picker = ImagePicker();
   @override
   void initState() {
     super.initState();
@@ -27,7 +33,92 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
     _PasswordController.text = widget.user.password!;
     _phoneController.text = widget.user.phone!;
   }
+  void _pickImage() async {
+    try {
+      final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+      setState(() {
+        _imageFile = pickedFile;
+      });
+    } catch (e) {
+      print("Image picker error " + e.toString());
+    }
+  }
 
+  Widget _previewImage() {
+    if (_imageFile != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CircleAvatar(
+              radius: 100,
+              backgroundImage: FileImage(File(_imageFile!.path)),
+            ),
+            //Image.file(File(_imageFile!.path),height: 200,),
+            SizedBox(
+              height: 20,
+            ),
+            RaisedButton(
+              onPressed: () async {
+               await ServiceProfil.uploadImage(_imageFile!.path,widget.user.id).then((value) => Navigator.of(context).pop());
+              },
+              child: const Text('Upload'),
+            )
+          ],
+        ),
+      );
+    } else {
+      return Stack(
+        children: [
+          CircleAvatar(
+            radius: 100,
+            backgroundImage:
+            NetworkImage(widget.user.imageUrl as String),
+          ),
+          Positioned(
+              bottom: 12,
+              right: 12,
+              child: InkWell(
+                  onTap: (() {}),
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            width: 4,
+                            color: Theme.of(context)
+                                .scaffoldBackgroundColor),
+                        color: Colors.grey),
+                    child: IconButton(
+                        onPressed: (){
+                          _pickImage();
+                        },
+                        icon:const Icon(
+                          Icons.camera_alt_rounded,
+                          color: Colors.black,
+                        )),
+                  )))
+        ],
+      );
+    }
+  }
+
+
+
+  Future<void> retriveLostData() async {
+    final LostData response = await _picker.getLostData();
+    if (response.isEmpty) {
+      return;
+    }
+    if (response.file != null) {
+      setState(() {
+        _imageFile = response.file;
+      });
+    } else {
+      print('Retrieve error ' + response.exception!.code.toString());
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -40,7 +131,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
           title: const Text(
             "Modifier Profile",
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 40),
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           leading: IconButton(
               onPressed: () {
@@ -54,35 +145,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              // Stack(
-              //   children: [
-              //     // CircleAvatar(
-              //     //   radius: 100,
-              //     //   backgroundImage:
-              //     //       NetworkImage(widget.user.imageUrl as String),
-              //     // ),
-              //     Positioned(
-              //         bottom: 12,
-              //         right: 12,
-              //         child: InkWell(
-              //             onTap: (() {}),
-              //             child: Container(
-              //               height: 40,
-              //               width: 40,
-              //               decoration: BoxDecoration(
-              //                   shape: BoxShape.circle,
-              //                   border: Border.all(
-              //                       width: 4,
-              //                       color: Theme.of(context)
-              //                           .scaffoldBackgroundColor),
-              //                   color: Colors.grey),
-              //               child: Icon(
-              //                 Icons.camera_alt_rounded,
-              //                 color: Colors.black,
-              //               ),
-              //             )))
-              //   ],
-              // ),
+              _previewImage(),
               Column(
                 children: <Widget>[
                   Container(
@@ -111,7 +174,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                         ),
                         isclickedtoedit
                             ? IconButton(
-                                icon: Icon(Icons.edit),
+                                icon: const Icon(Icons.edit),
                                 onPressed: () {
                                   setState(() {
                                     isclickedtoedit = !isclickedtoedit;
@@ -121,15 +184,19 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                   //     _firstNameController.text);
                                 })
                             : IconButton(
-                                icon: Icon(Icons.save),
-                                onPressed: ()async {
+                                icon: const Icon(Icons.save),
+                                onPressed: () async {
                                   setState(() {
                                     isclickedtoedit = !isclickedtoedit;
                                   });
 
-                                  await ServiceProfil.updateUser(
-                                     "firstName",
-                                      _firstNameController.text).then((value) => print(value));
+                                  await ServiceProfil.updateUser("firstName",
+                                          _firstNameController.text)
+                                      .then(
+                                    (value) => showToast(
+                                        context: context,
+                                        msg: value['message']),
+                                  );
                                 }),
                       ],
                     ),
@@ -146,7 +213,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                       alignment: Alignment.centerRight,
                       children: <Widget>[
                         TextField(
-                          enabled: isclickedtoedit1,
+                          enabled: !isclickedtoedit1,
                           controller: _emailController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
@@ -156,24 +223,24 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                         ),
                         isclickedtoedit1
                             ? IconButton(
-                                icon: Icon(Icons.edit),
+                                icon: const Icon(Icons.edit),
                                 onPressed: () {
                                   setState(() {
                                     isclickedtoedit1 = !isclickedtoedit1;
                                   });
-                                  ServiceProfil.updateUser(
-                                      widget.user.email!,
-                                      _emailController.text);
                                 })
                             : IconButton(
-                                icon: Icon(Icons.save),
+                                icon: const Icon(Icons.save),
                                 onPressed: () {
                                   setState(() {
                                     isclickedtoedit1 = !isclickedtoedit1;
                                   });
                                   ServiceProfil.updateUser(
-                                      widget.user.email!,
-                                      _emailController.text);
+                                      "email", _emailController.text).then(
+                                        (value) => showToast(
+                                        context: context,
+                                        msg: value['message']),
+                                  );
                                 }),
                       ],
                     ),
@@ -192,10 +259,10 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                         TextField(
                           obscureText: true,
                           enabled: !isclickedtoedit2,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "password",
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   fontFamily: "bold", color: Colors.black)),
                         ),
                         IconButton(
@@ -204,7 +271,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                             showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                      title: Text("change password"),
+                                      title: const Text("change password"),
                                       content: Container(
                                         color: Colors.white,
                                         width: 10.0,
@@ -212,18 +279,22 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                         child: Column(
                                           children: [
                                             TextField(
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                   hintText: "Old password",
                                                   hintStyle: TextStyle(
                                                       fontFamily: "bold",
                                                       color: Colors.grey)),
+                                              controller:
+                                                  _oldPasswordController,
                                             ),
                                             TextField(
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                   hintText: "New password",
-                                                  hintStyle: TextStyle(
+                                                  hintStyle: const TextStyle(
                                                       fontFamily: "bold",
                                                       color: Colors.grey)),
+                                              controller:
+                                                  _newPasswordController,
                                             ),
                                             Container(
                                                 alignment:
@@ -232,15 +303,24 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                                   style: TextButton.styleFrom(
                                                     primary: Colors.black,
                                                   ),
-                                                  child: Text("change"),
+                                                  child: const Text("change"),
                                                   onPressed: () {
+                                                    var body = {
+                                                      "oldPassword":
+                                                          _oldPasswordController
+                                                              .text,
+                                                      "password":
+                                                          _newPasswordController
+                                                              .text
+                                                    };
                                                     Navigator.pop(context);
-                                                    // ServiceProfilModif
-                                                    //     .updateUser(
-                                                    //         widget
-                                                    //             .user.password!,
-                                                    //         _PasswordController
-                                                    //             .text);
+                                                    ServiceProfil
+                                                        .updateUserPassword(
+                                                            body).then(
+                                                          (value) => showToast(
+                                                          context: context,
+                                                          msg: value['message']),
+                                                    );
                                                   },
                                                 ))
                                           ],
@@ -266,31 +346,31 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                         TextField(
                           enabled: !isclickedtoedit3,
                           controller: _phoneController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               border: InputBorder.none,
-                              hintStyle: const TextStyle(
+                              hintStyle: TextStyle(
                                   fontFamily: "bold", color: Colors.black)),
                         ),
                         isclickedtoedit3
                             ? IconButton(
-                                icon: Icon(Icons.edit),
+                                icon: const Icon(Icons.edit),
                                 onPressed: () {
                                   setState(() {
                                     isclickedtoedit3 = !isclickedtoedit3;
                                   });
-                                  ServiceProfil.updateUser(
-                                      widget.user.phone!,
-                                      _phoneController.text);
                                 })
                             : IconButton(
-                                icon: Icon(Icons.save),
+                                icon: const Icon(Icons.save),
                                 onPressed: () {
                                   setState(() {
                                     isclickedtoedit3 = !isclickedtoedit3;
                                   });
                                   ServiceProfil.updateUser(
-                                      widget.user.phone!,
-                                      _phoneController.text);
+                                      "phone", _phoneController.text).then(
+                                        (value) => showToast(
+                                        context: context,
+                                        msg: value['message']),
+                                  );
                                 }),
                       ],
                     ),

@@ -58,6 +58,8 @@ dependencies:
   provider : ^5.0.0
   consumer : ^2.3.0
   textfield_tags : ^1.4.3
+  image_picker: ^0.8.5
+
 
 
 

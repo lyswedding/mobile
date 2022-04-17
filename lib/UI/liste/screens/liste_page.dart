@@ -135,12 +135,11 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserListPage(
-                                            tasksLists: userTaskLists,
-                                          )))
-                              .then((value) => callAllUserListes());
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserListPage(
+                                        tasksLists: userTaskLists,
+                                      ))).then((value) => callAllUserListes());
                         },
                         child: Text(
                           'view more',
@@ -319,7 +318,8 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       if (element.tags.contains(text)) {
         print(element.title);
         setState(() {
-          foundTaskLists.add(element);
+          if (foundTaskLists.contains(element) == false)
+            foundTaskLists.add(element);
         });
       }
     }

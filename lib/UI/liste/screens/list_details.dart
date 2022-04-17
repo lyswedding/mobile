@@ -266,8 +266,7 @@ class _ListDetailsState extends State<ListDetails>
               ),
             );
             animationController.forward();
-            return CategoryItemList(widget.taskList.tags![index],
-                'images/9.jpg', animationController, animation);
+            return CategoryItemList(widget.taskList.tags![index], animationController, animation);
           }),
     ));
   }

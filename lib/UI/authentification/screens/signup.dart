@@ -1,3 +1,4 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/authentification/components/button.dart';
@@ -189,7 +190,7 @@ class _SignupState extends State<Signup> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
-                      child: Image.asset("images/21.png")),
+                      child: Icon(EvaIcons.google)),
                   const Padding(padding: EdgeInsets.all(20)),
                   Container(
                       height: 70,
@@ -197,7 +198,7 @@ class _SignupState extends State<Signup> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
-                      child: Image.asset("images/22.png")),
+                      child: Icon(Icons.facebook)),
                 ],
               ),
               Padding(
@@ -211,6 +212,9 @@ class _SignupState extends State<Signup> {
                               fontSize: 12, color: Colors.black),
                         ),
                         GestureDetector(
+                          onTap: (){
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+                          },
                           child: Text(
                             "Login Now",
                             style: GoogleFonts.poppins(

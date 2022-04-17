@@ -8,7 +8,6 @@ import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/urls.dart';
 import 'package:http/http.dart' as http;
-
 import 'dio_service.dart';
 
 class ListCalls {
@@ -38,7 +37,6 @@ class ListCalls {
     var url;
     var response;
     var dio = DioUtil.getInstance();
-
 
     url = Uri.parse('${URLS.BASE_URL}/taskslists');
     var request = http.MultipartRequest('POST', url);

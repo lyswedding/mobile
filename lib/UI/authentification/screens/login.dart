@@ -1,3 +1,4 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -175,7 +176,7 @@ class _LoginState extends State<Login> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               color: Colors.white),
-                          child: Image.asset("images/21.png")),
+                          child:Icon(EvaIcons.google)),
                       onTap: SignIn,
                     ),
                     const Padding(padding: const EdgeInsets.all(20)),
@@ -186,13 +187,12 @@ class _LoginState extends State<Login> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white),
-                            child: Image.asset("images/22.png")),
+                            child:Icon(Icons.facebook)),
                         onTap: () {
                           if (Provider.of<FacebookSignInController>(context,
                                       listen: false)
-                                  .login() ==
-                              true) {
-                            Navigator.push(
+                                  .login()==true) {
+                            Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const Home(),
@@ -244,7 +244,7 @@ class _LoginState extends State<Login> {
                               decoration: TextDecoration.underline),
                         ),
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Signup(),
@@ -273,10 +273,10 @@ class _LoginState extends State<Login> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Sign in failed")));
     }
-    // else {
-    //   Navigator.of(context)
-    //       .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
-    // }
+    else {
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+    }
   }
 
   Future SignInFb() async {
