@@ -8,9 +8,7 @@ import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/search/screens/detail_search/component/list_image.dart';
-
 import 'package:lys_wedding/shared/constants.dart';
-
 import '../../../../../models/List_search.dart';
 import '../../../../home/components/shared/item_list.dart';
 
@@ -237,9 +235,8 @@ class _DetailSearchState extends State<DetailSearch> {
                                     forceWebView: true, enableJavaScript: true);
                               }
                             },
-                            child: const Image(
-                              image: AssetImage("images/17.png"),
-                            )),
+                            child: Icon(EvaIcons.email)
+                        ),
                       ),
                     ),
                     Container(
@@ -257,9 +254,10 @@ class _DetailSearchState extends State<DetailSearch> {
                                     forceWebView: true, enableJavaScript: true);
                               }
                             },
-                            child: const Image(
-                              image: AssetImage("images/18.png"),
-                            )),
+                            child:Icon(
+                              Icons.link
+                            )
+                        ),
                       ),
                     ),
                     Container(
@@ -280,9 +278,9 @@ class _DetailSearchState extends State<DetailSearch> {
                               //       forceWebView: true, enableJavaScript: true);
                               // }
                             },
-                            child: const Image(
-                              image: AssetImage("images/19.png"),
-                            )),
+                            child: Icon(Icons.facebook),
+
+                        ),
                       ),
                     ),
                     Container(
@@ -301,9 +299,8 @@ class _DetailSearchState extends State<DetailSearch> {
                                 throw 'call not possible';
                               }
                             },
-                            child: const Image(
-                              image: AssetImage("images/20.png"),
-                            )),
+                            child: Icon(EvaIcons.phone)
+                        ),
                       ),
                     ),
                   ],

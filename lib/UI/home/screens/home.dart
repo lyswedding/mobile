@@ -275,7 +275,7 @@ class _HomeDetailsState extends State<HomeDetails>
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.35,
+        height: MediaQuery.of(context).size.height * 0.4,
         child: Row(
           children: lists
               .map(

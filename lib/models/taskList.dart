@@ -96,7 +96,8 @@ class Task {
 
   factory Task.fromJson(Map<String, dynamic> json) {
     List listO = json['tags'];
-    DateTime dateTime = DateTime.parse(json['realization_date'].toString());
+    print(json['realization_date']);
+    DateTime dateTime = json['realization_date']!=null?DateTime.parse(json['realization_date'].toString()):DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
 
     return Task(

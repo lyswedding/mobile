@@ -91,10 +91,13 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
 
-                                Text(
-                                  widget.provider.name,
-                                  textAlign: TextAlign.left,
-                                  style: titleTextStyle,
+                                Expanded(
+                                  flex: 6,
+                                  child: Text(
+                                    widget.provider.name,
+                                    textAlign: TextAlign.left,
+                                    style: titleTextStyle,
+                                  ),
                                 ),
                                 Text(
                                   '250 visites',
