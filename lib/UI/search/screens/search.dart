@@ -87,19 +87,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               ),
             ),
           ],
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              )),
         ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
-            child: Column(children: [
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
               SearchBar(
                 onchanged: (text) {
                   _runFilter(text);
@@ -109,9 +103,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               _buildCategories(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [Text("Results"), Text("view more")]),
+                child: Text("Results",style: subTitleTextStyle,),
               ),
               _buildListFavoriteProviders(),
             ]),

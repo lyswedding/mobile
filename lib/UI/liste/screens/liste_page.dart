@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/search_bar.dart';
@@ -33,6 +34,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   List<TaskList> userTaskLists = [];
   List<TaskList> foundUserTaskLists = [];
   List<String> tags = [];
+  TextEditingController searchController = TextEditingController();
 
   callAllListes() {
     setState(() {
@@ -105,24 +107,34 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
         ),
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            )),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 18.0),
+            child: Container(
+              //  Transform.translate(
+              // offset: const Offset(10, 0),
+              padding: EdgeInsets.only(top: 10),
+              // margin: EdgeInsets.symmetric(vertical: 5),
+
+              child: Image.asset(
+                "images/adel.png",
+                height: 60,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-                  SearchBar(
-                    onchanged: (enteredKeyword) {
-                      _runFilter(enteredKeyword);
+                  CommonTextFieldView(
+                    onChanged: (String text) {
+                      _runFilter(text);
                     },
+                    hintText: 'search',
+                    controller: searchController,
                   ),
                   _buildCategories(),
                   Row(
@@ -148,8 +160,8 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                  // for (int i = 0; i < userTaskLists.length; i++)
-                  //   _buildListUser(i),
+                  for (int i = 0; i < userTaskLists.length; i++)
+                    _buildListUser(i),
                   TextButton(
                       onPressed: () {
                         checkIfTokenExists(() {
@@ -194,20 +206,20 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                         'Suggested lists',
                         style: titleTextStyle,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UserListPage(
-                                        tasksLists: userTaskLists,
-                                      )));
-                        },
-                        child: Text(
-                          'view more',
-                          style: regularTextStyle,
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => UserListPage(
+                      //                   tasksLists: taskLists,
+                      //                 )));
+                      //   },
+                      //   child: Text(
+                      //     'view more',
+                      //     style: regularTextStyle,
+                      //   ),
+                      // ),
                     ],
                   ),
                   // _buildListUser(),

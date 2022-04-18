@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/search/screens/detail_search/screens/detail_search.dart';
 import 'package:lys_wedding/models/List_search.dart';
 import 'package:lys_wedding/models/service.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:lys_wedding/shared/utils.dart';
 
-class ItemList extends StatelessWidget {
+class ItemList extends StatefulWidget {
   const ItemList({
     Key? key,
    required this.item,
@@ -17,10 +20,46 @@ class ItemList extends StatelessWidget {
   final double width, height;
 
   @override
+  State<ItemList> createState() => _ItemListState();
+}
+
+class _ItemListState extends State<ItemList> {
+  bool isInCall = false;
+  bool isSelected = false;
+  callAddToFavorite(id) async {
+    await FavoriteCalls.addListToFavorite(id).then((value) {
+      print(value);
+      print(value.statusCode);
+      if (value.statusCode == 201) {
+        showToast(context: context, msg: 'Liste des tâches mise en favoris');
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
+  }
+
+  deleteFromFavorites(id) async {
+    await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
+      print(value.statusCode);
+      if (value.statusCode == 200) {
+        showToast(context: context, msg: 'Liste des tâches retiré de favoris');
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return  Container(
-                  width: width,
-                  height: height,
+                  width: widget.width,
+                  height: widget.height,
                   margin: EdgeInsets.only(right: 8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
@@ -28,7 +67,7 @@ class ItemList extends StatelessWidget {
                       children: [
                         AspectRatio(
                           aspectRatio: 1.7,
-                            child: Image.network(item.cover,fit: BoxFit.cover,)),
+                            child: Image.network(widget.item.cover,fit: BoxFit.cover,)),
 
                         Container(
                           decoration: const BoxDecoration(
@@ -46,14 +85,14 @@ class ItemList extends StatelessWidget {
                                 Align(
                                     alignment: Alignment.bottomLeft,
                                     child: Text(
-                                      item.name,
+                                      widget.item.name,
                                       style:
                                           titleTextStyle.copyWith(fontSize: 13,color: Colors.white),
                                     )),
                                 Align(
                                     alignment: Alignment.bottomLeft,
                                     child: Text(
-                                      item.services[0]['name'],
+                                      widget.item.services[0]['name'],
                                       style:regularTextStyle.copyWith(color: Colors.white),
                                     )),
                               ],
@@ -74,7 +113,18 @@ class ItemList extends StatelessWidget {
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(32.0),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  setState(() {
+                                    isSelected = !isSelected;
+                                  });
+                                  if (isSelected) {
+                                    checkIfTokenExists(() {
+                                      callAddToFavorite(widget.item.id);
+                                    }, context);
+                                  } else {
+                                    deleteFromFavorites(widget.item.id);
+                                  }
+                                },
                                 child: const Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Icon(

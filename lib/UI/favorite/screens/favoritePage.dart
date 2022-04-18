@@ -85,14 +85,22 @@ class _FavoritePageState extends State<FavoritePage>
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              )),
+            actions: [
+        Padding(
+        padding: const EdgeInsets.only(right: 18.0),
+      child: Container(
+        //  Transform.translate(
+        // offset: const Offset(10, 0),
+        padding: EdgeInsets.only(top: 10),
+        // margin: EdgeInsets.symmetric(vertical: 5),
+
+        child: Image.asset(
+          "images/adel.png",
+          height: 60,
+        ),
+      ),
+
+    ),],
         ),
         body: SingleChildScrollView(
             child: Column(children: [

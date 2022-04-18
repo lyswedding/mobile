@@ -114,24 +114,22 @@ class _HomeDetailsState extends State<HomeDetails>
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            title: GestureDetector(
-              onTap: () {
-                deleteToken();
-              },
-              child: Text(
-                "Bonjour",
-                style: titleTextStyle.copyWith(fontSize: 24),
+            leading:
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0,top: 16),
+              child: Image.asset(
+                "images/adel.png",
+                height: 50,
               ),
             ),
-            actions: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: Image.asset(
-                  "images/adel.png",
-                  height: 50,
-                ),
+            title: Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Text(
+                "Bonjour",
+                style: titleTextStyle.copyWith(fontSize: 24,),
               ),
-            ],
+            ),
+
           ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
