@@ -267,7 +267,7 @@ class _LoginState extends State<Login> {
 
     print(user);
     final y = await authSmService.authGoogles(
-        user!.email, user.displayName!, user.photoUrl!, user.serverAuthCode);
+        user!.email, user.displayName!, user.photoUrl??'', user.serverAuthCode);
 
     if (user == null) {
       ScaffoldMessenger.of(context)

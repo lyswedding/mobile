@@ -62,7 +62,7 @@ class ListCalls {
   }
 
 
-  static Future<TaskList> editTaskInList(Task task,idTask,idTaskList) async {
+  static Future editTaskInList(Task task,idTask,idTaskList) async {
     var url;
     var response;
     var dio = DioUtil.getInstance();
