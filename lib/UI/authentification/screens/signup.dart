@@ -140,7 +140,7 @@ class _SignupState extends State<Signup> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Home(),
+                              builder: (context) => const Login(),
                             ),
                           );
                         } else {
@@ -186,19 +186,27 @@ class _SignupState extends State<Signup> {
                 children: [
                   Container(
                       height: 70,
+                      width: 70,
                       margin: const EdgeInsets.only(top: 20),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
-                      child: Icon(EvaIcons.google)),
+                      child: const Icon(
+                        EvaIcons.google,
+                        size: 42,
+                      )),
                   const Padding(padding: EdgeInsets.all(20)),
                   Container(
                       height: 70,
+                      width: 70,
                       margin: const EdgeInsets.only(top: 20),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
-                      child: Icon(Icons.facebook)),
+                      child: const Icon(
+                        Icons.facebook,
+                        size: 42,
+                      )),
                 ],
               ),
               Padding(
@@ -212,8 +220,11 @@ class _SignupState extends State<Signup> {
                               fontSize: 12, color: Colors.black),
                         ),
                         GestureDetector(
-                          onTap: (){
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Login()));
                           },
                           child: Text(
                             "Login Now",
@@ -231,7 +242,6 @@ class _SignupState extends State<Signup> {
                         //           "Une erreur s'est produite. Veuillez réessayer!");
                         // }
                       ])),
-            
             ]),
           )),
         ));

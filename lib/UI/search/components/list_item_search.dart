@@ -142,13 +142,15 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  isSelected = !isSelected;
+                                 // isSelected = !isSelected;
                                   if (isSelected) {
                                     checkIfTokenExists((){
-                                      callAddToFavorite();
-                                    }, context);
+                                      deleteFromFavorite();
+                                    }, context).then((value) => isSelected=false);
                                   } else {
-                                    deleteFromFavorite();
+                                    checkIfTokenExists((){
+                                      callAddToFavorite();
+                                    }, context).then((value) => isSelected=true);
                                   }
                                 });
                               },

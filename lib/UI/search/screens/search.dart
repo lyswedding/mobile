@@ -61,54 +61,58 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: scaffoldBGColor,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          centerTitle: true,
-          title: Text(
-            "Search",
-            style: titleTextStyle.copyWith(fontSize: 20),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 18.0),
-              child: Container(
-                //  Transform.translate(
-                // offset: const Offset(10, 0),
-                padding: EdgeInsets.only(top: 10),
-                // margin: EdgeInsets.symmetric(vertical: 5),
+    return ModalProgressHUD(
+      progressIndicator: CircularProgressIndicator(),
+      inAsyncCall: isLoaded,
+      child: Scaffold(
+          backgroundColor: scaffoldBGColor,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            centerTitle: true,
+            title: Text(
+              "Search",
+              style: titleTextStyle.copyWith(fontSize: 20),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 18.0),
+                child: Container(
+                  //  Transform.translate(
+                  // offset: const Offset(10, 0),
+                  padding: EdgeInsets.only(top: 10),
+                  // margin: EdgeInsets.symmetric(vertical: 5),
 
-                child: Image.asset(
-                  "images/adel.png",
-                  height: 60,
+                  child: Image.asset(
+                    "images/adel.png",
+                    height: 60,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-              SearchBar(
-                onchanged: (text) {
-                  _runFilter(text);
-                },
-              ),
-              //ItemList(text: "text", items: items, width: 150, height: 50),
-              _buildCategories(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text("Results",style: subTitleTextStyle,),
-              ),
-              _buildListFavoriteProviders(),
-            ]),
+            ],
           ),
-        ));
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                SearchBar(
+                  onchanged: (text) {
+                    _runFilter(text);
+                  },
+                ),
+                //ItemList(text: "text", items: items, width: 150, height: 50),
+                _buildCategories(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text("Results",style: subTitleTextStyle,),
+                ),
+                _buildListFavoriteProviders(),
+              ]),
+            ),
+          )),
+    );
   }
 
   Widget _buildListFavoriteProviders() {

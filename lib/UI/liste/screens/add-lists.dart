@@ -90,8 +90,7 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
           ),
           leading: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) =>  ListePage()));
+               Navigator.of(context).pop();
               },
               icon: const Icon(
                 Icons.arrow_back,

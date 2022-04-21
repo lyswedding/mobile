@@ -28,23 +28,23 @@ class ListePage extends StatefulWidget {
 
 class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   late AnimationController animationController;
-  bool isInCall = false;
+  bool isInCall = true;
   List<TaskList> taskLists = [];
-  final List<TaskList> foundTaskLists = [];
+  List<TaskList> foundTaskLists = [];
   List<TaskList> userTaskLists = [];
   List<TaskList> foundUserTaskLists = [];
+  var toRemove = [];
   List<String> tags = [];
   TextEditingController searchController = TextEditingController();
 
   callAllListes() {
-    setState(() {
-      isInCall = true;
-    });
     ListCalls.getAdminLists().then((res) {
       setState(() {
         taskLists = res;
+
       });
     });
+    foundTaskLists = taskLists;
     setState(() {
       isInCall = false;
     });
@@ -82,6 +82,28 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     });
   }
 
+  _removeByTags(text) {
+    for (var taskList in foundTaskLists) {
+      for (var tag in taskList.tags) {
+        if(tag == text){
+          print(taskList.title);
+          setState(() {
+            toRemove.add(taskList);
+          });
+        }
+      }
+    }
+    setState(() {
+      foundTaskLists.removeWhere( (e) => toRemove.contains(e));
+    });
+
+    if (foundTaskLists.isEmpty) {
+      print('list is empty');
+        callAllListes();
+    }
+  }
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -96,150 +118,155 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: scaffoldBGColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        centerTitle: true,
-        title: const Text(
-          "Liste",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 18.0),
-            child: Container(
-              //  Transform.translate(
-              // offset: const Offset(10, 0),
-              padding: EdgeInsets.only(top: 10),
-              // margin: EdgeInsets.symmetric(vertical: 5),
+    return ModalProgressHUD(
+      inAsyncCall: isInCall,
+      progressIndicator: CircularProgressIndicator(),
+      child: Scaffold(
+        backgroundColor: scaffoldBGColor,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          centerTitle: true,
+          title: const Text(
+            "Liste",
+            style: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 18.0),
+              child: Container(
+                //  Transform.translate(
+                // offset: const Offset(10, 0),
+                padding: EdgeInsets.only(top: 10),
+                // margin: EdgeInsets.symmetric(vertical: 5),
 
-              child: Image.asset(
-                "images/adel.png",
-                height: 60,
+                child: Image.asset(
+                  "images/adel.png",
+                  height: 60,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-                  CommonTextFieldView(
-                    onChanged: (String text) {
-                      _runFilter(text);
-                    },
-                    hintText: 'search',
-                    controller: searchController,
-                  ),
-                  _buildCategories(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'My lists',
-                        style: titleTextStyle,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                    CommonTextFieldView(
+                      onChanged: (String text) {
+                        _runFilter(text);
+                      },
+                      hintText: 'search',
+                      controller: searchController,
+                    ),
+                    _buildCategories(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'My lists',
+                          style: titleTextStyle,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UserListPage(
+                                              tasksLists: userTaskLists,
+                                            )))
+                                .then((value) => callAllUserListes());
+                          },
+                          child: Text(
+                            'view more',
+                            style: regularTextStyle,
+                          ),
+                        ),
+                      ],
+                    ),
+                    for (int i = 0; i < userTaskLists.length; i++)
+                      _buildListUser(i),
+                    TextButton(
+                        onPressed: () {
+                          checkIfTokenExists(() {
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UserListPage(
-                                        tasksLists: userTaskLists,
-                                      ))).then((value) => callAllUserListes());
+                                builder: (context) => const AddList(),
+                              ),
+                            );
+                          }, context);
                         },
-                        child: Text(
-                          'view more',
-                          style: regularTextStyle,
+                        child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                // color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: secondaryColor)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    EvaIcons.plusSquareOutline,
+                                    size: 24,
+                                    color: secondaryColor,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "Add new List",
+                                    style: subTitleTextStyle.copyWith(
+                                        color: secondaryColor),
+                                  ),
+                                ],
+                              ),
+                            ))),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Suggested lists',
+                          style: titleTextStyle,
                         ),
-                      ),
-                    ],
-                  ),
-                  for (int i = 0; i < userTaskLists.length; i++)
-                    _buildListUser(i),
-                  TextButton(
-                      onPressed: () {
-                        checkIfTokenExists(() {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AddList(),
-                            ),
-                          );
-                        }, context);
-                      },
-                      child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              // color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: secondaryColor)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  EvaIcons.plusSquareOutline,
-                                  size: 24,
-                                  color: secondaryColor,
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "Add new List",
-                                  style: subTitleTextStyle.copyWith(
-                                      color: secondaryColor),
-                                ),
-                              ],
-                            ),
-                          ))),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Suggested lists',
-                        style: titleTextStyle,
-                      ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => UserListPage(
-                      //                   tasksLists: taskLists,
-                      //                 )));
-                      //   },
-                      //   child: Text(
-                      //     'view more',
-                      //     style: regularTextStyle,
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                  // _buildListUser(),
-                ] +
-                getPList(),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => UserListPage(
+                        //                   tasksLists: taskLists,
+                        //                 )));
+                        //   },
+                        //   child: Text(
+                        //     'view more',
+                        //     style: regularTextStyle,
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                    // _buildListUser(),
+                  ] +
+                  getPList(),
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          checkIfTokenExists(() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddList(),
-                ));
-          }, context);
-        },
-        backgroundColor: Colors.black,
-        child: const Icon(Icons.add),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            checkIfTokenExists(() {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddList(),
+                  ));
+            }, context);
+          },
+          backgroundColor: Colors.black,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -270,6 +297,9 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                         chipName: tags[index],
                         onSelect: (bool value) {
                           _filterByTags(tags[index].toString());
+                        },
+                        onDeSelect: (){
+                          _removeByTags(tags[index].toString());
                         },
                       );
                     }),
@@ -329,10 +359,11 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     for (var element in taskLists) {
       if (element.tags.contains(text)) {
         print(element.title);
-        setState(() {
-          if (foundTaskLists.contains(element) == false)
-            foundTaskLists.add(element);
-        });
+          if (foundTaskLists.contains(element) == false) {
+            setState(() {
+              foundTaskLists.add(element);
+            });
+          }
       }
     }
 

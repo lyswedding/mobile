@@ -172,22 +172,24 @@ class _LoginState extends State<Login> {
                     InkWell(
                       child: Container(
                           height: 70,
+                          width: 70,
                           margin: const EdgeInsets.only(top: 20),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               color: Colors.white),
-                          child:Icon(EvaIcons.google)),
+                          child:const Icon(EvaIcons.google,size: 42,)),
                       onTap: SignIn,
                     ),
                     const Padding(padding: const EdgeInsets.all(20)),
                     InkWell(
                         child: Container(
                             height: 70,
+                            width: 70,
                             margin: const EdgeInsets.only(top: 20),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white),
-                            child:Icon(Icons.facebook)),
+                            child:const Icon(Icons.facebook,size: 42,)),
                         onTap: () {
                           if (Provider.of<FacebookSignInController>(context,
                                       listen: false)
@@ -199,28 +201,6 @@ class _LoginState extends State<Login> {
                                 ));
                           }
                         }
-
-                        //  () {
-                        // FacebookAuth.instance.login(permissions: [
-                        //   "public_profil",
-                        //   "email"
-                        // ]).then((value) {
-                        //   FacebookAuth.instance
-                        //       .getUserData()
-                        //       .then((userdata) {
-                        //     setState(() {
-                        //       _isloggedin = true;
-                        //       _userobj = userdata;
-                        //     });
-                        //   });
-                        // });
-                        // if (_isloggedin = true) {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => const Home(),
-                        //       ));
-                        // }
 
                         )
                   ],
@@ -271,11 +251,11 @@ class _LoginState extends State<Login> {
 
     if (user == null) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Sign in failed")));
+          .showSnackBar(const SnackBar(content: const Text("Sign in failed")));
     }
     else {
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+          .pushReplacement(MaterialPageRoute(builder: (context) => const Home()));
     }
   }
 

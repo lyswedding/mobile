@@ -110,15 +110,19 @@ class _ListComponentState extends State<ListComponent> {
                                 const Radius.circular(32.0),
                               ),
                               onTap: () {
-                                setState(() {
-                                  isSelected = !isSelected;
-                                });
+                                // setState(() {
+                                //   isSelected=!isSelected;
+                                // });
                                 if (isSelected) {
                                   checkIfTokenExists(() {
-                                    callAddToFavorite(widget.taskList.id);
-                                  }, context);
+                                    deleteFromFavorites(widget.taskList.id);
+                                  }, context).then((value) => isSelected=!isSelected);
                                 } else {
-                                  deleteFromFavorites(widget.taskList.id);
+                                  checkIfTokenExists(() {
+                                    callAddToFavorite(widget.taskList.id);
+                                  }, context).then((value) =>
+                                  isSelected=!isSelected);
+
                                 }
                               },
                               child: Padding(

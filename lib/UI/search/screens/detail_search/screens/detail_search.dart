@@ -1,4 +1,5 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:lys_wedding/UI/favorite/modele/model_favorite.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
@@ -235,7 +236,7 @@ class _DetailSearchState extends State<DetailSearch> {
                                     forceWebView: true, enableJavaScript: true);
                               }
                             },
-                            child: Icon(EvaIcons.email)
+                            child: Icon(EvaIcons.facebook)
                         ),
                       ),
                     ),
@@ -255,7 +256,7 @@ class _DetailSearchState extends State<DetailSearch> {
                               }
                             },
                             child:Icon(
-                              Icons.link
+                              EvaIcons.link
                             )
                         ),
                       ),
@@ -278,7 +279,7 @@ class _DetailSearchState extends State<DetailSearch> {
                               //       forceWebView: true, enableJavaScript: true);
                               // }
                             },
-                            child: Icon(Icons.facebook),
+                            child: Icon(Icons.email),
 
                         ),
                       ),

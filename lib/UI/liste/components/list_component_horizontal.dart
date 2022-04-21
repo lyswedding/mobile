@@ -40,6 +40,7 @@ class _ListItemHorizontalState extends State<ListItemHorizontal> {
                 MaterialPageRoute(
                     builder: (context) => ListDetails(
                           taskList: widget.taskListData,
+                      isAdmin: false,
                         )));
           },
           child: CommonCard(

@@ -33,6 +33,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
     _PasswordController.text = widget.user.password!;
     _phoneController.text = widget.user.phone!;
   }
+
   void _pickImage() async {
     try {
       final pickedFile = await _picker.getImage(source: ImageSource.gallery);
@@ -58,9 +59,11 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
             SizedBox(
               height: 20,
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () async {
-               await ServiceProfil.uploadImage(_imageFile!.path,widget.user.id).then((value) => Navigator.of(context).pop());
+                await ServiceProfil.uploadImage(
+                        _imageFile!.path, widget.user.id)
+                    .then((value) => Navigator.of(context).pop());
               },
               child: const Text('Upload'),
             )
@@ -72,39 +75,33 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
         children: [
           CircleAvatar(
             radius: 100,
-            backgroundImage:
-            NetworkImage(widget.user.imageUrl as String),
+            backgroundImage: NetworkImage(widget.user.imageUrl as String),
           ),
           Positioned(
               bottom: 12,
               right: 12,
               child: InkWell(
-                  onTap: (() {}),
-                  child: Container(
+                onTap: (() {
+                  _pickImage();
+                }),
+                child: Container(
                     height: 40,
                     width: 40,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
                             width: 4,
-                            color: Theme.of(context)
-                                .scaffoldBackgroundColor),
+                            color: Theme.of(context).scaffoldBackgroundColor),
                         color: Colors.grey),
-                    child: IconButton(
-                        onPressed: (){
-                          _pickImage();
-                        },
-                        icon:const Icon(
-                          Icons.camera_alt_rounded,
-                          color: Colors.black,
-                        )),
-                  )))
+                    child: const Icon(
+                      Icons.camera_alt_rounded,
+                      color: Colors.black,
+                    )),
+              ))
         ],
       );
     }
   }
-
-
 
   Future<void> retriveLostData() async {
     final LostData response = await _picker.getLostData();
@@ -119,6 +116,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
       print('Retrieve error ' + response.exception!.code.toString());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -179,9 +177,6 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                   setState(() {
                                     isclickedtoedit = !isclickedtoedit;
                                   });
-                                  // ServiceProfilModif.updateUser(
-                                  //     widget.user.firstName!,
-                                  //     _firstNameController.text);
                                 })
                             : IconButton(
                                 icon: const Icon(Icons.save),
@@ -236,8 +231,9 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                     isclickedtoedit1 = !isclickedtoedit1;
                                   });
                                   ServiceProfil.updateUser(
-                                      "email", _emailController.text).then(
-                                        (value) => showToast(
+                                          "email", _emailController.text)
+                                      .then(
+                                    (value) => showToast(
                                         context: context,
                                         msg: value['message']),
                                   );
@@ -262,7 +258,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                           decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "password",
-                              hintStyle: const TextStyle(
+                              hintStyle: TextStyle(
                                   fontFamily: "bold", color: Colors.black)),
                         ),
                         IconButton(
@@ -290,7 +286,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                             TextField(
                                               decoration: const InputDecoration(
                                                   hintText: "New password",
-                                                  hintStyle: const TextStyle(
+                                                  hintStyle: TextStyle(
                                                       fontFamily: "bold",
                                                       color: Colors.grey)),
                                               controller:
@@ -314,19 +310,30 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                                               .text
                                                     };
                                                     Navigator.pop(context);
-                                                    ServiceProfil
-                                                        .updateUserPassword(
-                                                            body).then(
-                                                          (value) => showToast(
+                                                    if (_oldPasswordController
+                                                            .text.isEmpty ||
+                                                        _newPasswordController
+                                                            .text.isEmpty) {
+                                                      showToast(
                                                           context: context,
-                                                          msg: value['message']),
-                                                    );
+                                                          msg:
+                                                              'Merci de remplir tous les champs !');
+                                                    } else {
+                                                      ServiceProfil
+                                                          .updateUserPassword(
+                                                              body);
+                                                    }
+                                                    ;
                                                   },
                                                 ))
                                           ],
                                         ),
                                       ),
-                                    ));
+                                    )).then(
+                              (value) => showToast(
+                                  context: context,
+                                  msg: 'Utilisateur mis à jour'),
+                            );
                           },
                         ),
                       ],
@@ -366,8 +373,9 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                     isclickedtoedit3 = !isclickedtoedit3;
                                   });
                                   ServiceProfil.updateUser(
-                                      "phone", _phoneController.text).then(
-                                        (value) => showToast(
+                                          "phone", _phoneController.text)
+                                      .then(
+                                    (value) => showToast(
                                         context: context,
                                         msg: value['message']),
                                   );

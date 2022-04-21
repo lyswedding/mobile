@@ -35,6 +35,14 @@ class _ResultPageState extends State<ResultPage> with TickerProviderStateMixin{
           "Result page",
           style: titleTextStyle.copyWith(fontSize: 20),
         ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            )),
       ),
       body: Container(
         child:  widget.resultList.isNotEmpty?ListView.builder(

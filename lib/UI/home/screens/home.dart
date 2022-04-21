@@ -14,6 +14,7 @@ import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class HomeDetails extends StatefulWidget {
   const HomeDetails({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class HomeDetails extends StatefulWidget {
 
 class _HomeDetailsState extends State<HomeDetails>
     with TickerProviderStateMixin {
-  bool isInCall = false;
+  bool isInCall = true;
   List<Service> services = [];
   List<Provider> popularProviders = [];
   List<Provider> foundProviders = [];
@@ -108,91 +109,95 @@ class _HomeDetailsState extends State<HomeDetails>
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            leading:
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0,top: 16),
-              child: Image.asset(
-                "images/adel.png",
-                height: 50,
+    return ModalProgressHUD(
+      progressIndicator: CircularProgressIndicator(),
+      inAsyncCall: isInCall,
+      child: SafeArea(
+        top: true,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              leading:
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0,top: 16),
+                child: Image.asset(
+                  "images/adel.png",
+                  height: 50,
+                ),
               ),
-            ),
-            title: Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Text(
-                "Bonjour",
-                style: titleTextStyle.copyWith(fontSize: 24,),
+              title: Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Text(
+                  "Bonjour",
+                  style: titleTextStyle.copyWith(fontSize: 24,),
+                ),
               ),
-            ),
 
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                // TItleForPage(),
-                Container(
-                  height: 150,
-                  padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                  // margin: const EdgeInsets.fromLTRB(30, 30, 10, 0),
-                  child: Center(
-                    child: Text(
-                      "We are here to help you planning your wedding",
-                      style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  // TItleForPage(),
+                  Container(
+                    height: 150,
+                    padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                    // margin: const EdgeInsets.fromLTRB(30, 30, 10, 0),
+                    child: Center(
+                      child: Text(
+                        "We are here to help you planning your wedding",
+                        style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        image: DecorationImage(
+                            image: AssetImage("images/11.jpg"),
+                            fit: BoxFit.fill)),
                   ),
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      image: DecorationImage(
-                          image: AssetImage("images/11.jpg"),
-                          fit: BoxFit.fill)),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      "Categorie",
-                      style: titleTextStyle,
-                    )),
-                _buildCategories(),
-                Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      "Bon plan",
-                      style: titleTextStyle,
-                    )),
-                const SizedBox(
-                  height: 16,
-                ),
-                _buildListPopular(),
-                const SizedBox(
-                  height: 16,
-                ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        "Categorie",
+                        style: titleTextStyle,
+                      )),
+                  _buildCategories(),
+                  Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        "Bon plan",
+                        style: titleTextStyle,
+                      )),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  _buildListPopular(),
+                  const SizedBox(
+                    height: 16,
+                  ),
 
-                Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      "Listes populaires",
-                      style: titleTextStyle,
-                    )),
-                const SizedBox(
-                  height: 10,
-                ),
+                  Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        "Listes populaires",
+                        style: titleTextStyle,
+                      )),
+                  const SizedBox(
+                    height: 10,
+                  ),
 
-                _buildListFavorites(),
-              ]),
-            ),
-          )),
+                  _buildListFavorites(),
+                ]),
+              ),
+            )),
+      ),
     );
   }
 
@@ -255,7 +260,8 @@ class _HomeDetailsState extends State<HomeDetails>
   // }
 
   Widget _buildListPopular() {
-    return SingleChildScrollView(
+    return isInCall?Container(height: MediaQuery.of(context).size.height*0.2,):
+    SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: foundProviders

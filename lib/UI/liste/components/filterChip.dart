@@ -4,7 +4,8 @@ import 'package:lys_wedding/shared/constants.dart';
 class FilterChipWidget extends StatefulWidget {
   final String chipName;
   final Function onSelect;
-  FilterChipWidget({Key? key, this.chipName = '', required this.onSelect})
+  final Function onDeSelect;
+  FilterChipWidget({Key? key, this.chipName = '', required this.onSelect,required this.onDeSelect})
       : super(key: key);
 
   @override
@@ -32,8 +33,13 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
         onSelected: (isSelected) {
           setState(() {
             _isSelected = isSelected;
-            widget.onSelect(isSelected);
           });
+          if(_isSelected==true){
+            widget.onSelect(isSelected);
+          }else{
+            print('onDeselect');
+            widget.onDeSelect();
+          }
         },
         selectedColor: primaryColor,
       ),

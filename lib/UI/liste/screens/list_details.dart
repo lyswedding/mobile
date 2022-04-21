@@ -177,7 +177,7 @@ class _ListDetailsState extends State<ListDetails>
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        UpdateList(taskList: widget.taskList)));
+                                        UpdateList(taskList:widget.taskList)));
                           },
                           child: const Icon(
                             EvaIcons.edit,
