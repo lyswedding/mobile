@@ -132,7 +132,7 @@ class _HomeState extends State<Home> {
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final List<Widget> _widgetOptions = <Widget>[
-     HomeDetails(),
+    HomeDetails(),
     SearchPage(),
     ListePage(),
     FavoritePage(),

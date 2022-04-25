@@ -59,6 +59,7 @@ dependencies:
   consumer : ^2.3.0
   textfield_tags : ^1.4.3
   image_picker: ^0.8.5
+  flutter_offline: ^2.1.0
 
 
 

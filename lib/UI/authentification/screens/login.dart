@@ -7,7 +7,7 @@ import 'package:lys_wedding/UI/authentification/components/button.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/authentification/screens/facebook_controller.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
-import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
+import 'package:lys_wedding/UI/connectivity_indicator.dart';
 import 'package:lys_wedding/models/auth_sm_model.dart';
 import 'package:lys_wedding/services/auth.services.dart';
 import 'package:lys_wedding/services/auth_sm_service.dart';
@@ -115,7 +115,7 @@ class _LoginState extends State<Login> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const Home(),
+                                builder: (context) =>  DemoPage(),
                               ),
                             );
                           } else {
@@ -197,7 +197,7 @@ class _LoginState extends State<Login> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Home(),
+                                  builder: (context) =>  DemoPage(),
                                 ));
                           }
                         }
@@ -255,7 +255,7 @@ class _LoginState extends State<Login> {
     }
     else {
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => const Home()));
+          .pushReplacement(MaterialPageRoute(builder: (context) =>  DemoPage()));
     }
   }
 
