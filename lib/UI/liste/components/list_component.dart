@@ -40,7 +40,7 @@ class _ListComponentState extends State<ListComponent> {
       if (value.statusCode == 201) {
         showToast(context: context, msg: 'Liste des tâches mise en favoris');
       } else {
-        showToast(context: context, msg: "une erreur s'est produite!");
+        showToast(context: context, msg: "Liste deja mise en favorie");
       }
     });
     setState(() {
@@ -116,13 +116,15 @@ class _ListComponentState extends State<ListComponent> {
                                 if (isSelected) {
                                   checkIfTokenExists(() {
                                     deleteFromFavorites(widget.taskList.id);
-                                  }, context).then((value) => isSelected=!isSelected);
+                                  }, context)
+                                      .then(
+                                          (value) => isSelected = !isSelected);
                                 } else {
                                   checkIfTokenExists(() {
                                     callAddToFavorite(widget.taskList.id);
-                                  }, context).then((value) =>
-                                  isSelected=!isSelected);
-
+                                  }, context)
+                                      .then(
+                                          (value) => isSelected = !isSelected);
                                 }
                               },
                               child: Padding(

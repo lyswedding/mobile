@@ -300,7 +300,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                                     primary: Colors.black,
                                                   ),
                                                   child: const Text("change"),
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     var body = {
                                                       "oldPassword":
                                                           _oldPasswordController
@@ -318,22 +318,44 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                                           context: context,
                                                           msg:
                                                               'Merci de remplir tous les champs !');
+                                                    } else if (_newPasswordController
+                                                            .text.length <
+                                                        6) {
+                                                      showToast(
+                                                          context: context,
+                                                          msg:
+                                                              "Mot de passe doit être d'au moins 6 caractères");
                                                     } else {
-                                                      ServiceProfil
+                                                      var aa = await ServiceProfil
                                                           .updateUserPassword(
                                                               body);
+                                                      // showToast(
+                                                      //     context: context,
+                                                      //     msg:
+                                                      //         "Utilisateur mis à jour");
+                                                      if (aa == null) {
+                                                        showToast(
+                                                            context: context,
+                                                            msg:
+                                                                "erreur old password");
+                                                      } else {
+                                                        showToast(
+                                                            context: context,
+                                                            msg:
+                                                                "Utilisateur mis à jour");
+                                                      }
                                                     }
-                                                    ;
                                                   },
                                                 ))
                                           ],
                                         ),
                                       ),
-                                    )).then(
-                              (value) => showToast(
-                                  context: context,
-                                  msg: 'Utilisateur mis à jour'),
-                            );
+                                    ));
+                            //         .then(
+                            //   (value) => showToast(
+                            //       context: context,
+                            //       msg: 'Utilisateur mis à jour'),
+                            // );
                           },
                         ),
                       ],

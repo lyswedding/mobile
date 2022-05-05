@@ -10,6 +10,7 @@ class ListImages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(items);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -23,7 +24,7 @@ class ListImages extends StatelessWidget {
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: AssetImage(element),
+                        image: NetworkImage(element),
                       )),
                 ))
             .toList(),

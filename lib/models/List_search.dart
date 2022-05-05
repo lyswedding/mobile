@@ -31,22 +31,22 @@ class ListSearch {
 }
 
 class Provider {
-  Provider({
-    required this.id,
-    required this.name,
-    required this.cover,
-    required this.description,
-    required this.phone,
-    required this.email,
-    required this.facebookUrl,
-    required this.instagramUrl,
-    required this.services,
-    required this.locations,
-    required this.createdAt,
-    this.updatedAt,
-    this.deletedAt,
-    required this.v,
-  });
+  Provider(
+      {required this.id,
+      required this.name,
+      required this.cover,
+      required this.description,
+      required this.phone,
+      required this.email,
+      required this.facebookUrl,
+      required this.instagramUrl,
+      required this.services,
+      required this.locations,
+      required this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      required this.v,
+      required this.images});
 
   String id;
   String name;
@@ -62,27 +62,28 @@ class Provider {
   dynamic updatedAt;
   dynamic deletedAt;
   int v;
+  List<String> images;
 
   factory Provider.fromJson(Map<String, dynamic> json) {
     var lists = json['locations'] as List;
 
     List<Location> locations = lists.map((i) => Location.fromJson(i)).toList();
     return Provider(
-      id: json["_id"],
-      name: json["name"],
-      cover: json["cover"],
-      description: json["description"],
-      phone: json["phone"],
-      email: json["email"],
-      facebookUrl: json["facebookUrl"],
-      instagramUrl: json["instagramUrl"],
-      services: List<dynamic>.from(json["services"].map((x) => x)),
-      locations:locations,
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"],
-      deletedAt: json["deleted_at"],
-      v: json["__v"],
-    );
+        id: json["_id"],
+        name: json["name"],
+        cover: json["cover"],
+        description: json["description"],
+        phone: json["phone"],
+        email: json["email"],
+        facebookUrl: json["facebookUrl"],
+        instagramUrl: json["instagramUrl"],
+        services: List<dynamic>.from(json["services"].map((x) => x)),
+        locations: locations,
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"],
+        deletedAt: json["deleted_at"],
+        v: json["__v"],
+        images: List<String>.from(json["images"].map((x) => x)));
   }
 
   Map<String, dynamic> toJson() => {
@@ -100,6 +101,7 @@ class Provider {
         "updated_at": updatedAt,
         "deleted_at": deletedAt,
         "__v": v,
+        "images": List<dynamic>.from(images.map((x) => x)),
       };
 }
 

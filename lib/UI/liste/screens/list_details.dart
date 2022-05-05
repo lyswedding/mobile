@@ -6,11 +6,13 @@ import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/UI/liste/screens/list_tasks.dart';
 import 'package:lys_wedding/UI/liste/screens/update_list.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 import 'package:readmore/readmore.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ListDetails extends StatefulWidget {
   final TaskList taskList;
@@ -25,9 +27,14 @@ class _ListDetailsState extends State<ListDetails>
     with TickerProviderStateMixin {
   late AnimationController animationController;
   bool isSelected = false;
-
+  bool isLoading = true;
   @override
   void initState() {
+    Future.delayed(Duration(milliseconds: 3000), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     // TODO: implement initState
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
@@ -177,7 +184,7 @@ class _ListDetailsState extends State<ListDetails>
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        UpdateList(taskList:widget.taskList)));
+                                        UpdateList(taskList: widget.taskList)));
                           },
                           child: const Icon(
                             EvaIcons.edit,
@@ -266,7 +273,10 @@ class _ListDetailsState extends State<ListDetails>
               ),
             );
             animationController.forward();
-            return CategoryItemList(widget.taskList.tags![index], animationController, animation);
+            return isLoading
+                ? getShimmerLoading(50, 80)
+                : CategoryItemList(widget.taskList.tags![index],
+                    animationController, animation);
           }),
     ));
   }
@@ -279,13 +289,15 @@ class _ListDetailsState extends State<ListDetails>
       ),
     );
     animationController.forward();
-    return TaskComponent(
-      task: widget.taskList.tasks![i],
-      animationController: animationController,
-      text: 'text',
-      animation: animation,
-      idList: widget.taskList.id,
-    );
+    return isLoading
+        ? getShimmerLoading(150, 400)
+        : TaskComponent(
+            task: widget.taskList.tasks![i],
+            animationController: animationController,
+            text: 'text',
+            animation: animation,
+            idList: widget.taskList.id,
+          );
   }
 
   buildRelatedLists() {
@@ -305,7 +317,7 @@ class _ListDetailsState extends State<ListDetails>
 
   Widget _buildListFavoriteLists() {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.35,
+      height: MediaQuery.of(context).size.height * 0.45,
       child: ListView.builder(
           shrinkWrap: true,
           itemCount: 4,
@@ -319,11 +331,13 @@ class _ListDetailsState extends State<ListDetails>
               ),
             );
             animationController.forward();
-            return ListComponent(
-              taskList: widget.taskList,
-              animationController: animationController,
-              animation: animation,
-            );
+            return isLoading
+                ? getShimmerLoading(250, 200)
+                : ListComponent(
+                    taskList: widget.taskList,
+                    animationController: animationController,
+                    animation: animation,
+                  );
           }),
     );
   }

@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -33,14 +32,22 @@ Future<File> getImageFileFromAssets(String path) async {
   return file;
 }
 
-
-Future checkIfTokenExists(Function function,BuildContext context) async {
+Future checkIfTokenExists(Function function, BuildContext context) async {
   await getUserInfoSharedPref("token").then((token) async {
-    if(token!=null) {
-     function();
-    }else{
+    if (token != null) {
+      function();
+    } else {
       createAccountDialog(context);
     }
   });
 }
 
+Future checkIfTokenExist(Function function, BuildContext context) async {
+  await getUserInfoSharedPref("token").then((token) async {
+    if (token != null) {
+      function();
+    } else {
+      createAccountDialogue(context);
+    }
+  });
+}

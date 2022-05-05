@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -102,7 +105,9 @@ class _SignupState extends State<Signup> {
                     if (fnameController.text.isEmpty ||
                         lnameController.text.isEmpty ||
                         emailController.text.isEmpty ||
-                        passwordController.text.isEmpty) {
+                        passwordController.text.isEmpty ||
+                        phoneController.text.length < 8 ||
+                        phoneController.text.length > 13) {
                       showToast(
                           context: context,
                           msg: 'Merci de remplir tous les champs !');
@@ -128,11 +133,11 @@ class _SignupState extends State<Signup> {
                       };
                       print(body.toString());
 
-                      AuthCalls.signup(body).then((code) {
+                      AuthCalls.signup(body).then((response) {
                         setState(() {
                           isInCall = false;
                         });
-                        if (code == 201) {
+                        if (response.statusCode == 201) {
                           showToast(
                               context: context,
                               msg:
@@ -146,8 +151,7 @@ class _SignupState extends State<Signup> {
                         } else {
                           showToast(
                               context: context,
-                              msg:
-                                  "Une erreur s'est produite. Veuillez réessayer!");
+                              msg: jsonDecode(response.body)["message"]);
                         }
                       });
                     }

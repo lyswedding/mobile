@@ -27,7 +27,7 @@ class ServiceProfil {
     UserApi userapi;
     var dio = DioUtil.getInstance();
     var response;
-    var body = {Key : value};
+    var body = {Key: value};
     await getUserInfoSharedPref("token").then((token) async {
       dio.options.headers["Authorization"] = "Bearer " + token;
       return await dio
@@ -57,43 +57,49 @@ class ServiceProfil {
     UserApi userapi;
     var dio = DioUtil.getInstance();
     var response;
-    await getUserInfoSharedPref("token").then((token) async {
-      print(body);
-      dio.options.headers["Authorization"] = "Bearer " + token;
-      return await dio
-          .patch('${URLS.BASE_URL}/users/me', data: body)
-          .then((value) {
-        print(value.data);
-        print(value.statusCode);
+    var token = await getUserInfoSharedPref("token");
 
-        response = value;
-      });
-    });
+    //  .then((token) async
+    //  {
+    print(body);
+    dio.options.headers["Authorization"] = "Bearer " + token;
+    try {
+      response = await dio.patch('${URLS.BASE_URL}/users/me', data: body);
+      return response.data;
+    } catch (e) {
+      return null;
+    }
 
-    return response.data;
+    //     .then((value) {
+    //   print(value.data);
+    //   print(value.statusCode);
+
+    //   response = value;
+    // });
+
     // if (response.statusCode == 200) {
     //   final data = json.decode(response.body);
     //   print(response.body);
     //   userapi = UserApi.fromJson(data);
     // } else {
     //   print(response.body);
-    //
+
     //   throw Exception('not found');
     // }
     // return userapi;
   }
 
- static Future<String?> uploadImage(filepath,id) async {
+  static Future<String?> uploadImage(filepath, id) async {
     print(filepath);
     var token = await getUserInfoSharedPref('token');
-    var request = http.MultipartRequest('Put', Uri.parse('${URLS.BASE_URL}/users/upload/single'));
-    request.fields['_id']=id.toString();
+    var request = http.MultipartRequest(
+        'Put', Uri.parse('${URLS.BASE_URL}/users/upload/single'));
+    request.fields['_id'] = id.toString();
     request.files.add(await http.MultipartFile.fromPath('image', filepath));
-    request.headers['Authorization']= "Bearer " + token;
+    request.headers['Authorization'] = "Bearer " + token;
     var res = await request.send();
     print(res.statusCode);
     print(res.reasonPhrase);
     return res.reasonPhrase;
   }
-
 }

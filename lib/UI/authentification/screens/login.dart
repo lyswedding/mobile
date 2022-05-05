@@ -177,7 +177,10 @@ class _LoginState extends State<Login> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               color: Colors.white),
-                          child:const Icon(EvaIcons.google,size: 42,)),
+                          child: const Icon(
+                            EvaIcons.google,
+                            size: 42,
+                          )),
                       onTap: SignIn,
                     ),
                     const Padding(padding: const EdgeInsets.all(20)),
@@ -189,20 +192,22 @@ class _LoginState extends State<Login> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white),
-                            child:const Icon(Icons.facebook,size: 42,)),
+                            child: const Icon(
+                              Icons.facebook,
+                              size: 42,
+                            )),
                         onTap: () {
                           if (Provider.of<FacebookSignInController>(context,
                                       listen: false)
-                                  .login()==true) {
+                                  .login() ==
+                              true) {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const Home(),
                                 ));
                           }
-                        }
-
-                        )
+                        })
                   ],
                 )),
                 Padding(
@@ -246,16 +251,15 @@ class _LoginState extends State<Login> {
     final user = await GoogleSingnInApi.login();
 
     print(user);
-    final y = await authSmService.authGoogles(
-        user!.email, user.displayName!, user.photoUrl??'', user.serverAuthCode);
+    final y = await authSmService.authGoogles(user!.email, user.displayName!,
+        user.photoUrl ?? '', user.serverAuthCode);
 
     if (user == null) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: const Text("Sign in failed")));
-    }
-    else {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => const Home()));
+    } else {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const Home()));
     }
   }
 

@@ -33,7 +33,7 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   void initState() {
-    checkIfTokenExists(() {
+    checkIfTokenExist(() {
       fetchProfil();
     }, context);
     super.initState();

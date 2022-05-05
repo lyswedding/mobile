@@ -35,7 +35,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
       if (value.statusCode == 201) {
         showToast(context: context, msg: value.data['message'].toString());
       } else {
-        showToast(context: context, msg: "une erreur s'est produite!");
+        showToast(context: context, msg: "prestataire deja mis en favorie");
       }
     });
     setState(() {
@@ -68,7 +68,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               height: 300,
-              width: MediaQuery.of(context).size.width*0.8,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: CommonCard(
                 color: whiteColor,
                 radius: 10,
@@ -90,7 +90,6 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-
                                 Expanded(
                                   flex: 6,
                                   child: Text(
@@ -142,15 +141,17 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                               ),
                               onTap: () {
                                 setState(() {
-                                 // isSelected = !isSelected;
+                                  // isSelected = !isSelected;
                                   if (isSelected) {
-                                    checkIfTokenExists((){
+                                    checkIfTokenExists(() {
                                       deleteFromFavorite();
-                                    }, context).then((value) => isSelected=false);
+                                    }, context)
+                                        .then((value) => isSelected = false);
                                   } else {
-                                    checkIfTokenExists((){
+                                    checkIfTokenExists(() {
                                       callAddToFavorite();
-                                    }, context).then((value) => isSelected=true);
+                                    }, context)
+                                        .then((value) => isSelected = true);
                                   }
                                 });
                               },

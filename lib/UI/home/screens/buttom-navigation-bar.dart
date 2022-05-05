@@ -108,7 +108,6 @@
 //   }
 // }
 
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
@@ -118,7 +117,6 @@ import 'package:lys_wedding/UI/search/screens/search.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 import 'home.dart';
-
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -130,9 +128,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final List<Widget> _widgetOptions = <Widget>[
-     HomeDetails(),
+    HomeDetails(),
     SearchPage(),
     ListePage(),
     FavoritePage(),
@@ -185,4 +183,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
