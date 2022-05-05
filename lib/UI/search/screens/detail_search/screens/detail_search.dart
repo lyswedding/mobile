@@ -40,6 +40,10 @@ class _DetailSearchState extends State<DetailSearch> {
   //   "images/8.jpg",
   //   "images/8.jpg"
   // ];
+  List<Widget> itemsData = [];
+  ScrollController controller = ScrollController();
+  bool closeTopContainer = false;
+  double topContainer = 0;
   bool isInCall = false;
   bool isLoaded = false;
   bool isLoading = true;
@@ -293,7 +297,7 @@ class _DetailSearchState extends State<DetailSearch> {
                                   //       forceWebView: true, enableJavaScript: true);
                                   // }
                                 },
-                                child: Icon(Icons.map_outlined),
+                                child: Icon(Icons.pin_drop_outlined),
                               ),
                             ),
                           ),
@@ -350,7 +354,91 @@ class _DetailSearchState extends State<DetailSearch> {
                     const SizedBox(
                       height: 16,
                     ),
+                    // Expanded(
+                    //     child: ListView.builder(
+                    //         controller: controller,
+                    //         itemCount: itemsData.length,
+                    //         physics: BouncingScrollPhysics(),
+                    //         itemBuilder: (context, index) {
+                    //           double scale = 1.0;
+                    //           if (topContainer > 0.5) {
+                    //             scale = index + 0.5 - topContainer;
+                    //             if (scale < 0) {
+                    //               scale = 0;
+                    //             } else if (scale > 1) {
+                    //               scale = 1;
+                    //             }
+                    //           }
+                    //           return Opacity(
+                    //             opacity: scale,
+                    //             child: Transform(
+                    //               transform: Matrix4.identity()
+                    //                 ..scale(scale, scale),
+                    //               alignment: Alignment.bottomCenter,
+                    //               child: Align(
+                    //                   heightFactor: 0.7,
+                    //                   alignment: Alignment.topCenter,
+                    //                   child: itemsData[index]),
+                    //             ),
+                    //           );
+                    //         })),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          "Adresse",
+                          style: titleTextStyle,
+                        )),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Container(
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemExtent: 35.0,
+                          shrinkWrap: true,
+                          itemCount: widget.provider.locations.length,
+                          itemBuilder: ((context, index) {
+                            return InkWell(
+                              onTap: (() {
+                                _makeSocialMediaRequest(
+                                    "https://www.google.com/maps/@34.783145,10.7544576,13z");
+                              }),
+                              child: Card(
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      EvaIcons.pin,
+                                      size: 18,
+                                      color: primaryColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        widget
+                                            .provider.locations[index].address!,
 
+                                        // "4140 Parker Rd. Allentown, New Mexico 31134",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false,
+
+                                        style: subTitleTextStyle,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          })),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
                     Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
