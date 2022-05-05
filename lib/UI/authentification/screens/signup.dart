@@ -60,7 +60,8 @@ class _SignupState extends State<Signup> {
                 titleText: 'last name',
                 hintText: "enter last name",
                 keyboardType: TextInputType.name,
-                onChanged: (String txt) {},
+                onChanged: (String txt) {
+                },
               ),
               const SizedBox(
                 height: 15,

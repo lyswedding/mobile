@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
+import 'package:lys_wedding/UI/connectivity_indicator.dart';
 import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
@@ -38,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
             const Duration(seconds: 5),
                 () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const Home(),
+              MaterialPageRoute(builder: (context) => DemoPage(),
               settings: const RouteSettings(name: '/homePage')),
             ));
       }
