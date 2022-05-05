@@ -262,7 +262,7 @@ class _ListDetailsState extends State<ListDetails>
         child: SizedBox(
       height: 40,
       child: ListView.builder(
-          itemCount: widget.taskList.tags!.length,
+          itemCount: widget.taskList.tags.length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -275,7 +275,7 @@ class _ListDetailsState extends State<ListDetails>
             animationController.forward();
             return isLoading
                 ? getShimmerLoading(50, 80)
-                : CategoryItemList(widget.taskList.tags![index],
+                : CategoryItemList(widget.taskList.tags[index],
                     animationController, animation);
           }),
     ));

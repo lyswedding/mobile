@@ -163,7 +163,7 @@ class _ListComponentState extends State<ListComponent> {
                               color: primaryColor,
                             ),
                             Text(
-                              widget.taskList.tags!.toString(),
+                              widget.taskList.tags.toString(),
                               // Helper.getRoomText(hotelInfo.roomData!),
                               style: GoogleFonts.poppins(
                                   fontSize: 12,
