@@ -51,3 +51,9 @@ Future checkIfTokenExist(Function function, BuildContext context) async {
     }
   });
 }
+
+Future<bool> ifTokenExist() async {
+  var tok = await getUserInfoSharedPref("token");
+  if (tok != null) return true;
+  return false;
+}

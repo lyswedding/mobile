@@ -34,6 +34,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   late AnimationController animationController;
   bool isInCall = true;
   bool isLoaded = false;
+  bool islogued = false;
   UserApi item = UserApi();
   final ServiceProfil service = ServiceProfil();
   List<TaskList> taskLists = [];
@@ -133,6 +134,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     // TODO: implement initState
     callAllListes();
     callAllUserListes();
+
     callTagsListes();
     if (getUserInfoSharedPref("token") != null) {
       fetchProfil();
@@ -216,30 +218,35 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                       controller: searchController,
                     ),
                     _buildCategories(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'My lists',
-                          style: titleTextStyle,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => UserListPage(
-                                              tasksLists: userTaskLists,
-                                            )))
-                                .then((value) => callAllUserListes());
-                          },
-                          child: Text(
-                            'view more',
-                            style: regularTextStyle,
+
+                    (islogued == true)
+                        ? Row(
+                            children: [],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'My lists',
+                                style: titleTextStyle,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UserListPage(
+                                                tasksLists: userTaskLists,
+                                              ))).then(
+                                      (value) => callAllUserListes());
+                                },
+                                child: Text(
+                                  'view more',
+                                  style: regularTextStyle,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                     for (int i = 0; i < userTaskLists.length; i++)
                       _buildListUser(i),
                     TextButton(

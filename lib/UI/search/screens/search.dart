@@ -89,6 +89,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     if (getUserInfoSharedPref("token") != null) {
       fetchProfil();
     }
+    fetchsearch();
     callGetServices();
     print(search);
   }
@@ -224,6 +225,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     print(textSearch);
     if (textSearch.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
+
       fetchsearch();
     } else {
       results = search
