@@ -28,6 +28,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List<Provider> foundServices = [];
   List<Provider> foundProviders = [];
   List<Provider> filtredbyservice = [];
+
   String textSearch = "";
   bool isLoaded = false;
   bool isLoading = true;
@@ -72,6 +73,24 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       isLoaded = false;
     });
   }
+
+  // _filterByServices(text) {
+  //   for (var element in popularProviders) {
+  //     element.services.forEach((service) {
+  //       print(service['name']);
+  //       if (service['name'] == text) {
+  //         print(element.name);
+  //         setState(() {
+  //           if (foundServices.contains(element) == false)
+  //             foundServices.add(element);
+  //         });
+  //       }
+  //     });
+  //   }
+  //   foundProviders = foundServices;
+  //   print(foundProviders);
+  //   // print(foundUserTaskLists);
+  // }
 
   @override
   void initState() {
@@ -222,11 +241,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   void _runFilter(String? text) {
     List<Provider> results = [];
-    print(textSearch);
+
     if (textSearch.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
 
-      fetchsearch();
+      // fetchsearch();
+      results = List.from(search);
     } else {
       results = search
           .where((provider) =>
@@ -234,10 +254,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           .toList();
     }
     if (text != null) {
+      // results.forEach((elem) => print(elem.services));
+      // print(results);
       results = results
           .where((element) =>
               element.services.where((s) => s['name'] == text).isNotEmpty)
           .toList();
+      // results.forEach((elem) => elem.services.forEach((s) => print(s['name'])));
+      print(results);
     } else {}
     setState(() {
       foundProviders = results;

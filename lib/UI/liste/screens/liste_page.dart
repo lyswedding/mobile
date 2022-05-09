@@ -45,6 +45,11 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   List<String> tags = [];
   TextEditingController searchController = TextEditingController();
   bool isLoading = true;
+
+  call() async {
+    islogued = await ifTokenExist();
+  }
+
   callAllListes() {
     ListCalls.getAdminLists().then((res) {
       setState(() {
@@ -134,7 +139,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     // TODO: implement initState
     callAllListes();
     callAllUserListes();
-
+    call();
     callTagsListes();
     if (getUserInfoSharedPref("token") != null) {
       fetchProfil();
@@ -219,7 +224,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                     ),
                     _buildCategories(),
 
-                    (islogued == true)
+                    (islogued == false)
                         ? Row(
                             children: [],
                           )
@@ -249,43 +254,43 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                           ),
                     for (int i = 0; i < userTaskLists.length; i++)
                       _buildListUser(i),
-                    TextButton(
-                        onPressed: () {
-                          checkIfTokenExists(() {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AddList(),
-                              ),
-                            ).then((value) => callAllUserListes());
-                          }, context);
-                        },
-                        child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                // color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: secondaryColor)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    EvaIcons.plusSquareOutline,
-                                    size: 24,
-                                    color: secondaryColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "Add new List",
-                                    style: subTitleTextStyle.copyWith(
-                                        color: secondaryColor),
-                                  ),
-                                ],
-                              ),
-                            ))),
+                    // TextButton(
+                    //     onPressed: () {
+                    //       checkIfTokenExists(() {
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) => const AddList(),
+                    //           ),
+                    //         ).then((value) => callAllUserListes());
+                    //       }, context);
+                    //     },
+                    //     child: Container(
+                    //         width: double.infinity,
+                    //         decoration: BoxDecoration(
+                    //             // color: Colors.white,
+                    //             borderRadius: BorderRadius.circular(10),
+                    //             border: Border.all(color: secondaryColor)),
+                    //         child: Padding(
+                    //           padding: const EdgeInsets.all(16.0),
+                    //           child: Row(
+                    //             children: [
+                    //               const Icon(
+                    //                 EvaIcons.plusSquareOutline,
+                    //                 size: 24,
+                    //                 color: secondaryColor,
+                    //               ),
+                    //               const SizedBox(
+                    //                 width: 10,
+                    //               ),
+                    //               Text(
+                    //                 "Add new List",
+                    //                 style: subTitleTextStyle.copyWith(
+                    //                     color: secondaryColor),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ))),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

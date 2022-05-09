@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/favorite/screens/favoritePage.dart';
+import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/UI/profil/screens/modif_profil.dart';
 import 'package:lys_wedding/UI/profil/screens/user_lists.dart';
 import 'package:lys_wedding/models/model_profil.dart';
@@ -200,7 +201,7 @@ class _ProfilPageState extends State<ProfilPage> {
                             deleteToken();
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: (context) => Login()));
+                                    builder: (context) => Home()));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

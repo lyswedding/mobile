@@ -32,6 +32,11 @@ class _TaskUpdateState extends State<TaskUpdate> {
   DateTime? datetime;
   bool isEnabled = false;
   bool isInCall = false;
+  bool islogued = false;
+  call() async {
+    islogued = await ifTokenExist();
+  }
+
   callAllUserListes() {
     setState(() {
       isInCall = true;
@@ -63,6 +68,7 @@ class _TaskUpdateState extends State<TaskUpdate> {
     descController.text = widget.task.description;
     dueDateController.text = widget.task.dueDate;
     costController.text = widget.task.cost.toString();
+    call();
     //tags=widget.task.tags as List<String>;
     super.initState();
   }
@@ -77,16 +83,11 @@ class _TaskUpdateState extends State<TaskUpdate> {
             IconButton(
                 onPressed: () {
                   checkIfTokenExists(() {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AddList(),
-                      ),
-                    ).then((value) => callAllUserListes());
+                    callAllUserListes();
+                    setState(() {
+                      isEnabled = !isEnabled;
+                    });
                   }, context);
-                  setState(() {
-                    isEnabled = !isEnabled;
-                  });
                 },
                 icon: Icon(
                   Icons.edit,
@@ -136,70 +137,70 @@ class _TaskUpdateState extends State<TaskUpdate> {
               textEditingController: nbUseController,
               isEnabled: isEnabled,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
                     'Due date',
                     style: titleTextStyle.copyWith(fontSize: 14),
                   ),
-                  const SizedBox(
-                    height: 10,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  // margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  height: 70,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: whiteColor,
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    // margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    height: 70,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: whiteColor,
+                  child: GestureDetector(
+                    child: Row(
+                      children: [
+                        const Icon(EvaIcons.calendarOutline),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          getText(),
+                          style: regularTextStyle,
+                        ),
+                      ],
                     ),
-                    child: GestureDetector(
-                      child: Row(
-                        children: [
-                          const Icon(EvaIcons.calendarOutline),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            getText(),
-                            style: regularTextStyle,
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        showDatePicker(
-                          context: context,
-                          initialDate:
-                              datetime == null ? DateTime.now() : datetime!,
-                          initialDatePickerMode: DatePickerMode.day,
-                          firstDate: DateTime(2021),
-                          lastDate: DateTime(2040),
-                        ).then((date) {
-                          setState(() {
-                            datetime = date;
-                            print(datetime);
-                          });
+                    onTap: () {
+                      showDatePicker(
+                        context: context,
+                        initialDate:
+                            datetime == null ? DateTime.now() : datetime!,
+                        initialDatePickerMode: DatePickerMode.day,
+                        firstDate: DateTime(2021),
+                        lastDate: DateTime(2040),
+                      ).then((date) {
+                        setState(() {
+                          datetime = date;
+                          print(datetime);
                         });
-                      },
-                    ),
+                      });
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Tags',
-                  style: titleTextStyle.copyWith(fontSize: 14),
-                ),
-                const SizedBox(
-                  height: 10,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Tags',
+                    style: titleTextStyle.copyWith(fontSize: 14),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -248,12 +249,16 @@ class _TaskUpdateState extends State<TaskUpdate> {
                 ),
               ],
             ),
-            CustomButton(
-                text: 'Enregistrer',
-                onPressed: () {
-                  _updateTaskList();
-                  // Navigator.pop(context);
-                })
+            (islogued == false)
+                ? Row(
+                    children: [],
+                  )
+                : CustomButton(
+                    text: 'Enregistrer',
+                    onPressed: () {
+                      _updateTaskList();
+                      // Navigator.pop(context);
+                    })
           ]),
         ));
   }

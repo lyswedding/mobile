@@ -293,7 +293,7 @@ class _FilterPageState extends State<FilterPage> {
                       _filterByLocation(date);
                     },
                     onUnSelect: () {
-                      _removeFromSearchResult(date);
+                      _removeFromSearchResultgov(date);
                     },
                   )
                 ],
@@ -314,43 +314,85 @@ class _FilterPageState extends State<FilterPage> {
   }
 
   _filterByServices(text) {
-    for (var element in search) {
-      element.services.forEach((service) {
-        print(service['name']);
-        if (service['name'] == text) {
-          print(element.name);
-          setState(() {
-            if (foundServices.contains(element) == false)
-              foundServices.add(element);
-          });
-        }
-      });
+    if (foundProviders.isEmpty) {
+      for (var element in search) {
+        element.services.forEach((service) {
+          print(service['name']);
+          if (service['name'] == text) {
+            print(element.name);
+            setState(() {
+              if (foundServices.contains(element) == false)
+                foundServices.add(element);
+            });
+          }
+        });
 
-      foundProviders = foundServices;
-      print(foundServices);
-      // print(foundUserTaskLists);
+        foundProviders = foundServices;
+        print(foundServices);
+        // print(foundUserTaskLists);
+      }
+    } else {
+      for (var element in foundProviders) {
+        element.services.forEach((service) {
+          print(service['name']);
+          if (service['name'] == text) {
+            print(element.name);
+            setState(() {
+              if (foundServices.contains(element) == false)
+                foundServices.add(element);
+            });
+          }
+        });
+
+        foundProviders = foundServices;
+        print(foundServices);
+        // print(foundUserTaskLists);
+      }
     }
   }
 
   _filterByLocation(text) {
     print(text);
-    for (var element in search) {
-      // print(element.locations);
-      element.locations.forEach((location) {
-        print(location.place['gov']);
-        if (location.place['gov'] == text) {
-          print(element.name);
-          setState(() {
-            if (foundServices.contains(element) == false) {
-              foundServices.add(element);
-            }
-          });
-        }
-      });
+    if (foundProviders.isEmpty) {
+      for (var element in search) {
+        // print(element.locations);
 
-      foundProviders = foundServices;
-      print(foundServices);
-      // print(foundUserTaskLists);
+        element.locations.forEach((location) {
+          print(location.place['gov']);
+          if (location.place['gov'] == text) {
+            print(element.name);
+            setState(() {
+              if (foundServices.contains(element) == false) {
+                foundServices.add(element);
+              }
+            });
+          }
+        });
+
+        foundProviders = foundServices;
+        print(foundServices);
+        // print(foundUserTaskLists);
+      }
+    } else {
+      for (var element in foundProviders) {
+        // print(element.locations);
+
+        element.locations.forEach((location) {
+          print(location.place['gov']);
+          if (location.place['gov'] == text) {
+            print(element.name);
+            setState(() {
+              if (foundServices.contains(element) == false) {
+                foundServices.add(element);
+              }
+            });
+          }
+        });
+
+        foundProviders = foundServices;
+        print(foundServices);
+        // print(foundUserTaskLists);
+      }
     }
   }
 
@@ -360,6 +402,21 @@ class _FilterPageState extends State<FilterPage> {
       provider.services.forEach((service) {
         print(service['name']);
         if (service['name'] == text) {
+          print(provider.name);
+          setState(() {
+            foundProviders.remove(provider);
+          });
+        }
+      });
+    });
+  }
+
+  _removeFromSearchResultgov(text) {
+    // List<Provider> foundServices = [];
+    search.forEach((provider) {
+      provider.locations.forEach((location) {
+        print(location.place['gov']);
+        if (location.place['gov'] == text) {
           print(provider.name);
           setState(() {
             foundProviders.remove(provider);

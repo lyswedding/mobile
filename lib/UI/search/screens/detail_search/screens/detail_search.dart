@@ -42,6 +42,8 @@ class _DetailSearchState extends State<DetailSearch> {
   // ];
   List<Widget> itemsData = [];
   ScrollController controller = ScrollController();
+  List<Provider> foundServices = [];
+  List<Provider> foundProviders = [];
   bool closeTopContainer = false;
   double topContainer = 0;
   bool isInCall = false;
@@ -54,6 +56,24 @@ class _DetailSearchState extends State<DetailSearch> {
     setState(() {
       isInCall = false;
     });
+  }
+
+  _filterByServices(text) {
+    for (var element in popularProviders) {
+      element.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(element.name);
+          setState(() {
+            if (foundServices.contains(element) == false)
+              foundServices.add(element);
+          });
+        }
+      });
+    }
+    foundProviders = foundServices;
+    print(foundProviders);
+    // print(foundUserTaskLists);
   }
 
   _buildListPopular() {
@@ -207,24 +227,7 @@ class _DetailSearchState extends State<DetailSearch> {
                           widget.provider.name,
                           style: titleTextStyle,
                         )),
-                    // Row(
-                    //   children: [
-                    //     const Icon(
-                    //       EvaIcons.pin,
-                    //       size: 18,
-                    //       color: primaryColor,
-                    //     ),
-                    //     const SizedBox(
-                    //       width: 5,
-                    //     ),
-                    //     Text(
-                    //       widget.provider.locations.first.address!,
-                    //       // "4140 Parker Rd. Allentown, New Mexico 31134",
-                    //       overflow: TextOverflow.ellipsis,
-                    //       style: subTitleTextStyle,
-                    //     ),
-                    //   ],
-                    // ),
+
                     Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
@@ -335,7 +338,6 @@ class _DetailSearchState extends State<DetailSearch> {
                       moreStyle: regularTextStyle.copyWith(
                           fontWeight: FontWeight.bold),
                     ),
-                    // "data  text Jane Cooper data  text Jane Cooper\n 1901 Thornridge Cir. Shiloh, Hawaii data  text Jane Cooper\n Coiffure ,maquillage data  text Jane Cooper "),
                     const SizedBox(
                       height: 16,
                     ),
@@ -354,34 +356,7 @@ class _DetailSearchState extends State<DetailSearch> {
                     const SizedBox(
                       height: 16,
                     ),
-                    // Expanded(
-                    //     child: ListView.builder(
-                    //         controller: controller,
-                    //         itemCount: itemsData.length,
-                    //         physics: BouncingScrollPhysics(),
-                    //         itemBuilder: (context, index) {
-                    //           double scale = 1.0;
-                    //           if (topContainer > 0.5) {
-                    //             scale = index + 0.5 - topContainer;
-                    //             if (scale < 0) {
-                    //               scale = 0;
-                    //             } else if (scale > 1) {
-                    //               scale = 1;
-                    //             }
-                    //           }
-                    //           return Opacity(
-                    //             opacity: scale,
-                    //             child: Transform(
-                    //               transform: Matrix4.identity()
-                    //                 ..scale(scale, scale),
-                    //               alignment: Alignment.bottomCenter,
-                    //               child: Align(
-                    //                   heightFactor: 0.7,
-                    //                   alignment: Alignment.topCenter,
-                    //                   child: itemsData[index]),
-                    //             ),
-                    //           );
-                    //         })),
+
                     const SizedBox(
                       height: 16,
                     ),
@@ -442,7 +417,7 @@ class _DetailSearchState extends State<DetailSearch> {
                     Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          "Listes populaires",
+                          "Prestataire liées",
                           style: titleTextStyle,
                         )),
                     const SizedBox(
