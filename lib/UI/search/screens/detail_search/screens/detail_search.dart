@@ -55,6 +55,7 @@ class _DetailSearchState extends State<DetailSearch> {
       child: Row(
         children: popularProviders
             .map((element) => ItemList(
+          isSelected: false,
                   item: element,
                   height: 150.0,
                   width: 250.0,

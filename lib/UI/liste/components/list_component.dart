@@ -18,12 +18,14 @@ class ListComponent extends StatefulWidget {
   final TaskList taskList;
   final AnimationController animationController;
   final Animation<double> animation;
+  bool isSelected = false;
 
-  const ListComponent({
+  ListComponent({
     Key? key,
     required this.animationController,
     required this.animation,
     required this.taskList,
+    required this.isSelected,
   }) : super(key: key);
 
   @override
@@ -32,13 +34,15 @@ class ListComponent extends StatefulWidget {
 
 class _ListComponentState extends State<ListComponent> {
   bool isInCall = false;
-  bool isSelected = false;
   callAddToFavorite(id) async {
     await FavoriteCalls.addListToFavorite(id).then((value) {
       print(value);
       print(value.statusCode);
       if (value.statusCode == 201) {
         showToast(context: context, msg: 'Liste des tâches mise en favoris');
+        setState(() {
+          widget.isSelected=true;
+        });
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -53,6 +57,9 @@ class _ListComponentState extends State<ListComponent> {
       print(value.statusCode);
       if (value.statusCode == 200) {
         showToast(context: context, msg: 'Liste des tâches retiré de favoris');
+        setState(() {
+          widget.isSelected=false;
+        });
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -113,22 +120,21 @@ class _ListComponentState extends State<ListComponent> {
                                 // setState(() {
                                 //   isSelected=!isSelected;
                                 // });
-                                if (isSelected) {
+                                if (widget.isSelected) {
                                   checkIfTokenExists(() {
                                     deleteFromFavorites(widget.taskList.id);
-                                  }, context).then((value) => isSelected=!isSelected);
+                                  }, context);
                                 } else {
                                   checkIfTokenExists(() {
                                     callAddToFavorite(widget.taskList.id);
-                                  }, context).then((value) =>
-                                  isSelected=!isSelected);
+                                  }, context);
 
                                 }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Icon(
-                                  isSelected
+                                  widget.isSelected
                                       ? EvaIcons.heart
                                       : EvaIcons.heartOutline,
                                   color: const Color(0xffEB5890),

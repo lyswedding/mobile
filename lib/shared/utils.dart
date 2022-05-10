@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -42,5 +41,15 @@ Future checkIfTokenExists(Function function,BuildContext context) async {
       createAccountDialog(context);
     }
   });
+}
+
+bool checkIfIsFavorite(List list,List listFavorite){
+  bool result=false ;
+  for (var element in list) {
+    if(listFavorite.contains(element)){
+      result= true;
+    }
+  }
+  return result;
 }
 

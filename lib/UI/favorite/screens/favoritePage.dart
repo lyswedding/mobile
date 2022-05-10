@@ -155,6 +155,7 @@ class _FavoritePageState extends State<FavoritePage>
                 );
                 animationController.forward();
                 return ListComponent(
+                  isSelected: true,
                     taskList: taskLists[index],
                     animationController: animationController,
                     animation: animation,
@@ -184,6 +185,7 @@ class _FavoritePageState extends State<FavoritePage>
             animationController.forward();
 
             return ItemListSearch(
+              isSelected: true,
               provider: search[index],
               animation: animation,
               animationController: animationController,

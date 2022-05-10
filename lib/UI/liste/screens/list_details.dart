@@ -297,6 +297,7 @@ class _ListDetailsState extends State<ListDetails>
     );
     animationController.forward();
     return ListComponent(
+      isSelected: false,
       taskList: widget.taskList,
       animationController: animationController,
       animation: animation,
@@ -320,6 +321,7 @@ class _ListDetailsState extends State<ListDetails>
             );
             animationController.forward();
             return ListComponent(
+              isSelected: false,
               taskList: widget.taskList,
               animationController: animationController,
               animation: animation,

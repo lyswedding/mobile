@@ -345,6 +345,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                 );
                 animationController.forward();
                 return ListComponent(
+                  isSelected: false,
                   taskList: taskLists[index],
                   animationController: animationController,
                   animation: animation,
@@ -433,6 +434,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
           animationController.forward();
           listUI.add(Expanded(
             child: ListComponent(
+              isSelected: false,
               taskList: date,
               animation: animation,
               animationController: animationController,

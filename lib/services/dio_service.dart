@@ -94,14 +94,14 @@ class DioUtil {
   }
 
 
-  static void updateCookie(Response response) {
-    String? rawCookie = response.headers['set-cookie'] as String?;
-    if (rawCookie != null) {
-      int index = rawCookie.indexOf(';');
-      headers['cookie'] =
-      (index == -1) ? rawCookie : rawCookie.substring(0, index);
-    }
-  }
+  // static void updateCookie(Response response) {
+  //   String? rawCookie = response.headers['set-cookie'] as String?;
+  //   if (rawCookie != null) {
+  //     int index = rawCookie.indexOf(';');
+  //     headers['cookie'] =
+  //     (index == -1) ? rawCookie : rawCookie.substring(0, index);
+  //   }
+  // }
 
   // Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
   //   final options = new Options(

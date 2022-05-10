@@ -133,6 +133,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         animationController.forward();
 
         return ItemListSearch(
+          isSelected: false,
           provider: search[index],
           animation: animation,
           animationController: animationController,

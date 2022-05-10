@@ -14,6 +14,7 @@ import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:lys_wedding/shared/utils.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class HomeDetails extends StatefulWidget {
@@ -31,6 +32,7 @@ class _HomeDetailsState extends State<HomeDetails>
   List<Provider> foundProviders = [];
   List<Provider> foundServices = [];
   List<TaskList> lists = [];
+  List<TaskList> favoriteLists = [];
 
   late AnimationController animationController;
   late AnimationController animationController1;
@@ -53,7 +55,12 @@ class _HomeDetailsState extends State<HomeDetails>
 
   callGetLists() async {
     lists = await ListCalls.getAdminLists();
-
+    await FavoriteCalls.getFavorite().then((res) {
+      setState(() {
+        print(res);
+        favoriteLists=res;
+      });
+    });
     setState(() {
       isInCall = false;
     });
@@ -266,6 +273,7 @@ class _HomeDetailsState extends State<HomeDetails>
       child: Row(
         children: foundProviders
             .map((element) => ItemList(
+          isSelected: false,
                   item: element,
                   height: 150.0,
                   width: 250.0,
@@ -284,6 +292,7 @@ class _HomeDetailsState extends State<HomeDetails>
           children: lists
               .map(
                 (element) => ListComponent(
+                  isSelected: false,
                   taskList: element,
                   animationController: animationController,
                   animation: Tween(begin: 0.0, end: 1.0).animate(
