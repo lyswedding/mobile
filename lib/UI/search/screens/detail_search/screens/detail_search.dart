@@ -1,8 +1,11 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lys_wedding/UI/favorite/modele/model_favorite.dart';
+import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
+import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
+import 'package:lys_wedding/services/related_list.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
@@ -26,8 +29,9 @@ class DetailSearch extends StatefulWidget {
 class _DetailSearchState extends State<DetailSearch> {
   final Url = "https://www.facebook.com/adel.yakoubi.967";
   List<Provider> popularProviders = [];
+  List<Provider> ProvidersRelated = [];
   List<Provider> images = [];
-
+  List<Service> services = [];
   // List images = [
   //   "images/11.jpg",
   //   "images/12.jpg",
@@ -44,6 +48,8 @@ class _DetailSearchState extends State<DetailSearch> {
   ScrollController controller = ScrollController();
   List<Provider> foundServices = [];
   List<Provider> foundProviders = [];
+  late AnimationController animationController;
+  late AnimationController animationController1;
   bool closeTopContainer = false;
   double topContainer = 0;
   bool isInCall = false;
@@ -56,6 +62,32 @@ class _DetailSearchState extends State<DetailSearch> {
     setState(() {
       isInCall = false;
     });
+  }
+
+  callGetRelatedlist() async {
+    ProvidersRelated = await RelatedList.getPrestataire(widget.provider.id);
+
+    setState(() {
+      isInCall = false;
+    });
+  }
+
+  _removeFromSearchResult(text) {
+    // List<Provider> foundServices = [];
+    popularProviders.forEach((provider) {
+      provider.services.forEach((service) {
+        print(service['name']);
+        if (service['name'] == text) {
+          print(provider.name);
+          setState(() {
+            foundProviders.remove(provider);
+          });
+        }
+      });
+    });
+    if (foundProviders.isEmpty) {
+      callGetProviders();
+    }
   }
 
   _filterByServices(text) {
@@ -77,17 +109,42 @@ class _DetailSearchState extends State<DetailSearch> {
   }
 
   _buildListPopular() {
+    print(ProvidersRelated.toString() + "hhhhhhh");
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: popularProviders
-            .map((element) => ItemList(
-                  item: element,
-                  height: 150.0,
-                  width: 250.0,
-                ))
-            .toList(),
+        children: ProvidersRelated.map((element) => ItemList(
+              item: element,
+              height: 150.0,
+              width: 250.0,
+            )).toList(),
       ),
+    );
+  }
+
+  Widget _buildCategories() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: SingleChildScrollView(
+          child: SizedBox(
+        height: 80,
+        child: ListView.builder(
+            itemCount: services.length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              var animation = Tween(begin: 0.0, end: 1.0).animate(
+                CurvedAnimation(
+                  parent: animationController,
+                  curve: const Interval((1 / 6) * 5, 1.0,
+                      curve: Curves.fastOutSlowIn),
+                ),
+              );
+              animationController.forward();
+              return isLoading
+                  ? getShimmerLoading(30, 80)
+                  : callGetRelatedlist();
+            }),
+      )),
     );
   }
 
@@ -130,6 +187,7 @@ class _DetailSearchState extends State<DetailSearch> {
     });
     // TODO: implement initState
     callGetProviders();
+    callGetRelatedlist();
     super.initState();
   }
 

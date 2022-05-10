@@ -38,7 +38,7 @@ class _ListComponentState extends State<ListComponent> {
       print(value);
       print(value.statusCode);
       if (value.statusCode == 201) {
-        showToast(context: context, msg: 'Liste des tâches mise en favoris');
+        showToast(context: context, msg: 'Liste Ajouté aux favoris ');
       } else {
         showToast(context: context, msg: "Liste deja mise en favorie");
       }
@@ -52,7 +52,7 @@ class _ListComponentState extends State<ListComponent> {
     await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
       print(value.statusCode);
       if (value.statusCode == 200) {
-        showToast(context: context, msg: 'Liste des tâches retiré de favoris');
+        showToast(context: context, msg: 'Liste Retiré de favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }

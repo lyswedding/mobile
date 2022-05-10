@@ -86,14 +86,14 @@ class _HomeDetailsState extends State<HomeDetails>
   _filterByServices(text) {
     for (var element in popularProviders) {
       element.services.forEach((service) {
-        print(service['name']);
+        print(service['name'] + "aaaaaaaaa");
         if (service['name'] == text) {
           print(element.name);
           setState(() {
             if (foundServices.contains(element) == false)
               foundServices.add(element);
           });
-        }
+        } else {}
       });
     }
     foundProviders = foundServices;
@@ -114,9 +114,7 @@ class _HomeDetailsState extends State<HomeDetails>
         }
       });
     });
-    if (foundProviders.isEmpty) {
-      callGetProviders();
-    }
+    if (foundProviders.isEmpty) {}
   }
 
   @override

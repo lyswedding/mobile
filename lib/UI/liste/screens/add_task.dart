@@ -223,7 +223,9 @@ class _AddTaskState extends State<AddTask> {
                   print(costController.text);
                   if (titleController.text.isEmpty ||
                       descController.text.isEmpty ||
-                      costController.text.isEmpty) {
+                      costController.text.isEmpty ||
+                      dueDateController.text.isEmpty ||
+                      tagsController.text.isEmpty) {
                     showToast(
                         context: context, msg: "une erreur s'est produite!");
                   } else {

@@ -379,11 +379,11 @@ class _FilterPageState extends State<FilterPage> {
 
         element.locations.forEach((location) {
           print(location.place['gov']);
-          if (location.place['gov'] == text) {
+          if (location.place['gov'] != text) {
             print(element.name);
             setState(() {
               if (foundServices.contains(element) == false) {
-                foundServices.add(element);
+                foundServices.remove(element);
               }
             });
           }
