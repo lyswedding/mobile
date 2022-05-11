@@ -263,7 +263,7 @@ class _TaskUpdateState extends State<TaskUpdate> {
         ));
   }
 
-  _updateTaskList() {
+  _updateTaskList() async {
     setState(() {
       isInCall = false;
     });
@@ -278,7 +278,8 @@ class _TaskUpdateState extends State<TaskUpdate> {
         widget.task.state,
         widget.task.tags);
 
-    ListCalls.editTaskInList(task, widget.task.id, widget.idList).then((value) {
+    await ListCalls.editTaskInList(task, widget.task.id, widget.idList)
+        .then((value) {
       showToast(context: context, msg: 'tache modifié avec succés');
       Navigator.pop(context);
     });

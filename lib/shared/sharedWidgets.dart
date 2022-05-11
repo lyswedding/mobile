@@ -1,5 +1,6 @@
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/shared/constants.dart';
@@ -146,10 +147,10 @@ Future<void> createAccountDialog(BuildContext context) async {
               TextButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Signup()));
+                        MaterialPageRoute(builder: (context) => Login()));
                   },
                   child: Text(
-                    'Go to sign up page',
+                    'Go to Login page',
                     style: subTitleTextStyle,
                   )),
               Text(
@@ -185,10 +186,10 @@ Future<void> createAccountDialogue(BuildContext context) async {
               TextButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Signup()));
+                        MaterialPageRoute(builder: (context) => Login()));
                   },
                   child: Text(
-                    'Go to sign up page',
+                    'Go to Login page',
                     style: subTitleTextStyle,
                   )),
               Text(

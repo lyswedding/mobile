@@ -39,6 +39,29 @@ class _SignupState extends State<Signup> {
               child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 12, left: 5, bottom: 10),
+                child: InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Home()));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: primaryColor),
+                          child: Text(
+                            "<< skeep",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
               const SizedBox(
                 height: 200,
                 width: 200,
@@ -60,8 +83,7 @@ class _SignupState extends State<Signup> {
                 titleText: 'last name',
                 hintText: "enter last name",
                 keyboardType: TextInputType.name,
-                onChanged: (String txt) {
-                },
+                onChanged: (String txt) {},
               ),
               const SizedBox(
                 height: 15,

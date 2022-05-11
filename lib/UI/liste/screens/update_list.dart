@@ -28,6 +28,34 @@ List<String> tags = [];
 late AnimationController animationController;
 
 class _UpdateListState extends State<UpdateList> with TickerProviderStateMixin {
+  _addList() async {
+    setState(() {
+      isInCall = false;
+    });
+
+    TaskList taskList = TaskList('0', titleController.text, descController.text,
+        tasks, tags, '', 1000, 0);
+
+    await ListCalls.addTaskList(taskList).then((value) {
+      print(value);
+      if (value == 200) {
+        showToast(context: context, msg: "liste créé avec succès!");
+        setState(() {
+          tags.clear();
+          tasks.clear();
+          titleController.clear();
+          descController.clear();
+        });
+      } else {
+        showToast(context: context, msg: "une erreur s'est produite!");
+      }
+    });
+
+    setState(() {
+      isInCall = true;
+    });
+  }
+
   _editList() async {
     setState(() {
       isInCall = false;
@@ -230,7 +258,7 @@ class _UpdateListState extends State<UpdateList> with TickerProviderStateMixin {
                     child: CustomButton(
                         text: 'Enregistrer',
                         onPressed: () {
-                          _editList();
+                          _addList();
                         }),
                   )
                 ]),

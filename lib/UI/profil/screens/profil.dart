@@ -88,7 +88,8 @@ class _ProfilPageState extends State<ProfilPage> {
             child: Column(children: [
               CircleAvatar(
                 radius: 100,
-                backgroundImage: NetworkImage(item.user!.imageUrl ?? ""),
+                backgroundImage: NetworkImage(item.user!.imageUrl ??
+                    "https://fr.wikipedia.org/wiki/Image#/media/Fichier:Image_created_with_a_mobile_phone.png"),
               ),
               Text(
                 item.user!.firstName ?? "foulan",

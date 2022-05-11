@@ -13,6 +13,7 @@ import 'package:lys_wedding/models/auth_sm_model.dart';
 import 'package:lys_wedding/services/auth.services.dart';
 import 'package:lys_wedding/services/auth_sm_service.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/remove_focuse.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
@@ -51,6 +52,30 @@ class _LoginState extends State<Login> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12, left: 5, bottom: 10),
+                  child: InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Home()));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: primaryColor),
+                            child: Text(
+                              "<< skeep",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
                 const SizedBox(
                   height: 200,
                   width: 200,
