@@ -184,3 +184,49 @@ Shimmer getShimmerLoading(double height, double width) {
     ),
   );
 }
+
+Shimmer getShimmerLoadingcircle(double height) {
+  return Shimmer.fromColors(
+      highlightColor: Colors.grey[300]!,
+      baseColor: Colors.grey[100]!,
+      child: Container(
+        margin: EdgeInsets.only(),
+        child: CircleAvatar(
+          radius: height,
+        ),
+      )
+
+      // Container(
+      //   height: height,
+      //   width: width,
+      //   // margin: EdgeInsets.only(right: 8.0, left: 8, top: 8),
+      //   decoration: BoxDecoration(
+      //     borderRadius: BorderRadius.circular(100),
+      //     color: Colors.white,
+      //   ),
+      // ),
+      );
+}
+
+Shimmer getShimmerLoadingcirclehome(double height) {
+  return Shimmer.fromColors(
+      highlightColor: Colors.grey[300]!,
+      baseColor: Colors.grey[100]!,
+      child: Container(
+        // margin: EdgeInsets.only(right: 8),
+        child: CircleAvatar(
+          radius: height,
+        ),
+      )
+
+      // Container(
+      //   height: height,
+      //   width: width,
+      //   // margin: EdgeInsets.only(right: 8.0, left: 8, top: 8),
+      //   decoration: BoxDecoration(
+      //     borderRadius: BorderRadius.circular(100),
+      //     color: Colors.white,
+      //   ),
+      // ),
+      );
+}

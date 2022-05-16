@@ -56,6 +56,7 @@ class _DetailSearchState extends State<DetailSearch> {
   bool isLoaded = false;
   bool isLoading = true;
   bool isSelected = false;
+  var nbraff = 3;
   callGetProviders() async {
     popularProviders = await ServiceList.getPrestataire();
 
@@ -149,7 +150,7 @@ class _DetailSearchState extends State<DetailSearch> {
   }
 
   getimages() {}
-  callAddToFavorite() async {
+  callAddToFavorite(String id) async {
     await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
       print(value.data);
       if (value.statusCode == 201) {
@@ -163,7 +164,7 @@ class _DetailSearchState extends State<DetailSearch> {
     });
   }
 
-  deleteFromFavorite() async {
+  deleteFromFavorite(String id) async {
     await FavoriteCalls.deletProviderFromFavorite(widget.provider.id)
         .then((value) {
       print(value.data);
@@ -250,16 +251,20 @@ class _DetailSearchState extends State<DetailSearch> {
                                   const Radius.circular(32.0),
                                 ),
                                 onTap: () {
-                                  setState(() {
-                                    isSelected = !isSelected;
-                                    if (isSelected) {
-                                      checkIfTokenExists(() {
-                                        callAddToFavorite();
-                                      }, context);
-                                    } else {
-                                      deleteFromFavorite();
-                                    }
-                                  });
+                                  // setState(() {
+                                  //   isSelected = !isSelected;
+                                  // });
+                                  if (isSelected) {
+                                    checkIfTokenExists(() {
+                                      deleteFromFavorite(widget.provider.id);
+                                    }, context)
+                                        .then((value) => isSelected = false);
+                                  } else {
+                                    checkIfTokenExists(() {
+                                      callAddToFavorite(widget.provider.id);
+                                    }, context)
+                                        .then((value) => isSelected = true);
+                                  }
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -427,48 +432,93 @@ class _DetailSearchState extends State<DetailSearch> {
                     const SizedBox(
                       height: 16,
                     ),
-                    Container(
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemExtent: 35.0,
-                          shrinkWrap: true,
-                          itemCount: widget.provider.locations.length,
-                          itemBuilder: ((context, index) {
-                            return InkWell(
-                              onTap: (() {
-                                _makeSocialMediaRequest(
-                                    "https://www.google.com/maps/@34.783145,10.7544576,13z");
-                              }),
-                              child: Card(
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      EvaIcons.pin,
-                                      size: 18,
-                                      color: primaryColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        widget
-                                            .provider.locations[index].address!,
-
-                                        // "4140 Parker Rd. Allentown, New Mexico 31134",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: false,
-
-                                        style: subTitleTextStyle,
+                    Stack(children: [
+                      Container(
+                        child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemExtent: 35.0,
+                            shrinkWrap: true,
+                            itemCount: widget.provider.locations.length < 3
+                                ? widget.provider.locations.length
+                                : nbraff,
+                            itemBuilder: ((context, index) {
+                              return InkWell(
+                                onTap: (() {
+                                  _makeSocialMediaRequest(
+                                      "https://www.google.com/maps/place/${widget.provider.locations[index].lat!},${widget.provider.locations[index].long!}");
+                                }),
+                                child: Card(
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        EvaIcons.pin,
+                                        size: 18,
+                                        color: primaryColor,
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          widget.provider.locations[index]
+                                              .address!,
+
+                                          // "4140 Parker Rd. Allentown, New Mexico 31134",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: false,
+
+                                          style: subTitleTextStyle,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                              );
+                            })),
+                      ),
+                      widget.provider.locations.length > nbraff
+                          ? Positioned(
+                              bottom: 0,
+                              right: 0,
+                              left: 0,
+                              top: 20,
+                              child: Container(
+                                height: 10.0,
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                      Color.fromARGB(0, 148, 148, 148),
+                                      Colors.white
+                                    ])),
                               ),
-                            );
-                          })),
-                    ),
+                            )
+                          : Positioned(
+                              child: Text(""),
+                            ),
+                      Positioned(
+                          bottom: 0,
+                          right: 1,
+                          left: 150,
+                          top: 80,
+                          child: InkWell(
+                            onTap: () {
+                              print("aaaaaaaaaaaaaaa");
+                              setState(() {
+                                nbraff = widget.provider.locations.length;
+                              });
+                            },
+                            child: widget.provider.locations.length > nbraff
+                                ? Text(
+                                    "Afficher plus ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )
+                                : null,
+                          ))
+                    ]),
                     const SizedBox(
                       height: 16,
                     ),

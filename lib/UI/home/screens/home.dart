@@ -163,15 +163,19 @@ class _HomeDetailsState extends State<HomeDetails>
                             MaterialPageRoute(
                                 builder: (context) => ProfilPage()));
                       },
-                      child: CircleAvatar(
-                        radius: 100,
-                        backgroundImage: NetworkImage(imageurl),
-                        //     "https://cdn-icons-png.flaticon.com/512/147/147144.png"),
+                      child: isLoading
+                          ? getShimmerLoadingcirclehome(
+                              35,
+                            )
+                          : CircleAvatar(
+                              radius: 100,
+                              backgroundImage: NetworkImage(imageurl),
+                              //     "https://cdn-icons-png.flaticon.com/512/147/147144.png"),
 //                   backgroundImage:  FadeInImage.memoryNetwork(
 //   placeholder: kTransparentImage,
 //   image: 'https://picsum.photos/250?image=9',
 // );
-                      ))),
+                            ))),
               title: Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: Text(

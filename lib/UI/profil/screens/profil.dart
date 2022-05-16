@@ -7,6 +7,7 @@ import 'package:lys_wedding/UI/profil/screens/modif_profil.dart';
 import 'package:lys_wedding/UI/profil/screens/user_lists.dart';
 import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/profil_service.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
@@ -24,6 +25,7 @@ class _ProfilPageState extends State<ProfilPage> {
   UserApi item = UserApi();
   bool isLoaded = false;
   bool isInCall = true;
+  bool isLoading = true;
   final ServiceProfil service = ServiceProfil();
   List<TaskList> userTaskLists = [];
   Future<void> fetchProfil() async {
@@ -55,6 +57,11 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   void initState() {
+    Future.delayed(Duration(milliseconds: 3000), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     checkIfTokenExist(() {
       fetchProfil();
     }, context);
@@ -86,11 +93,14 @@ class _ProfilPageState extends State<ProfilPage> {
           ),
           body: SingleChildScrollView(
             child: Column(children: [
-              CircleAvatar(
-                radius: 100,
-                backgroundImage: NetworkImage(item.user!.imageUrl ??
-                    "https://fr.wikipedia.org/wiki/Image#/media/Fichier:Image_created_with_a_mobile_phone.png"),
-              ),
+              isLoading
+                  ? getShimmerLoadingcirclehome(
+                      100,
+                    )
+                  : CircleAvatar(
+                      radius: 100,
+                      backgroundImage: NetworkImage(item.user!.imageUrl ?? ""),
+                    ),
               Text(
                 item.user!.firstName ?? "foulan",
                 style: TextStyle(fontSize: 25),

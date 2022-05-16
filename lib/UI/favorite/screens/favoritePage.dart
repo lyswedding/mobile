@@ -118,16 +118,22 @@ class _FavoritePageState extends State<FavoritePage>
                 padding: const EdgeInsets.only(
                   right: 18.0,
                 ),
-                child: IconButton(
-                  icon: Image(
-                    image: NetworkImage(imageurl),
-                    height: 50,
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProfilPage()));
-                  },
-                ))
+                child: isLoading
+                    ? getShimmerLoadingcircle(
+                        18,
+                      )
+                    : IconButton(
+                        icon: Image(
+                          image: NetworkImage(imageurl),
+                          height: 50,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProfilPage()));
+                        },
+                      ))
           ],
         ),
         body: SingleChildScrollView(

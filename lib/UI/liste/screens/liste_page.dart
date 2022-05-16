@@ -179,34 +179,40 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
               padding: const EdgeInsets.only(
                 right: 18.0,
               ),
-              child: IconButton(
-                icon: Image(
-                  image: NetworkImage(imageurl),
-                  height: 50,
-                ),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfilPage()));
-                },
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 40.0),
-                //   child: Container(
-                //     //  Transform.translate(
-                //     // offset: const Offset(10, 0),
-                //     padding: EdgeInsets.only(top: 10),
-                //     // margin: EdgeInsets.symmetric(vertical: 5),
+              child: isLoading
+                  ? getShimmerLoadingcircle(
+                      18,
+                    )
+                  : IconButton(
+                      icon: Image(
+                        image: NetworkImage(imageurl),
+                        height: 50,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfilPage()));
+                      },
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 40.0),
+                      //   child: Container(
+                      //     //  Transform.translate(
+                      //     // offset: const Offset(10, 0),
+                      //     padding: EdgeInsets.only(top: 10),
+                      //     // margin: EdgeInsets.symmetric(vertical: 5),
 
-                //     child: InkWell(
-                //       onTap: () {
-                //         Navigator.push(context,
-                //             MaterialPageRoute(builder: (context) => ProfilPage()));
-                //       },
-                //       child: CircleAvatar(
-                //           radius: 100,
-                //           backgroundImage: NetworkImage(item.user!.imageUrl ?? "")),
-                //     ),
-                //   ),
-              ),
+                      //     child: InkWell(
+                      //       onTap: () {
+                      //         Navigator.push(context,
+                      //             MaterialPageRoute(builder: (context) => ProfilPage()));
+                      //       },
+                      //       child: CircleAvatar(
+                      //           radius: 100,
+                      //           backgroundImage: NetworkImage(item.user!.imageUrl ?? "")),
+                      //     ),
+                      //   ),
+                    ),
             ),
           ],
         ),
