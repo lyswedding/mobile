@@ -36,23 +36,19 @@ class _FavoritePageState extends State<FavoritePage>
   List<TaskList> taskLists = [];
   UserApi item = UserApi();
   final ServiceProfil servicee = ServiceProfil();
-  callAllListes() {
+  callAllListes() async {
+    taskLists = await FavoriteCalls.getFavorite();
+
     setState(() {
-      isInCall = true;
-    });
-    FavoriteCalls.getFavorite().then((res) {
-      setState(() {
-        print(res);
-        taskLists = res;
-      });
-    });
-    setState(() {
-      isInCall = false;
+      isLoaded = true;
     });
   }
 
   fetchsearch() async {
     search = await FavoriteCalls.GetProvidersFavorite();
+    print("*****************");
+    print(search);
+    print("*****************");
     setState(() {
       isLoaded = true;
     });
@@ -74,13 +70,16 @@ class _FavoritePageState extends State<FavoritePage>
 
   @override
   void initState() {
+    // TODO: implement initState
+    callAllListes();
+    fetchsearch();
+
     Future.delayed(Duration(milliseconds: 4000), () {
       setState(() {
         isLoading = false;
       });
     });
-    // TODO: implement initState
-    callAllListes();
+
     if (getUserInfoSharedPref("token") != null) {
       fetchProfil();
     }

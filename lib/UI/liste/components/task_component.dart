@@ -29,8 +29,14 @@ class TaskComponent extends StatelessWidget {
         animation: animation,
         animationController: animationController,
         child: GestureDetector(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskUpdate(task: task,idList: idList,)));
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TaskUpdate(
+                          task: task,
+                          idList: idList,
+                        )));
           },
           child: CommonCard(
             color: whiteColor,
@@ -62,7 +68,8 @@ class TaskComponent extends StatelessWidget {
                                       child: Text(
                                         task.title,
                                         textAlign: TextAlign.left,
-                                        style: titleTextStyle.copyWith(fontSize: 15),
+                                        style: titleTextStyle.copyWith(
+                                            fontSize: 15),
                                       ),
                                     ),
                                     Expanded(
@@ -73,7 +80,9 @@ class TaskComponent extends StatelessWidget {
                                             EvaIcons.pricetags,
                                             size: 16,
                                           ),
-                                          const SizedBox(width: 5,),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
                                           Text(
                                             task.tags[0],
                                             overflow: TextOverflow.ellipsis,
@@ -94,7 +103,8 @@ class TaskComponent extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 4),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,

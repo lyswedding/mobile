@@ -29,7 +29,7 @@ class _ItemListState extends State<ItemList> {
     await FavoriteCalls.addListToFavorite(id).then((value) {
       print(value);
       print(value.statusCode);
-      if (value.statusCode == 201) {
+      if (value.statusCode == 201 || value.statusCode == 200) {
         showToast(context: context, msg: 'Ajouté aux favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
@@ -52,6 +52,12 @@ class _ItemListState extends State<ItemList> {
     setState(() {
       isInCall = true;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override

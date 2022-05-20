@@ -21,6 +21,8 @@ List<Service> services = [];
 List<Provider> search = [];
 List<Provider> foundProviders = [];
 List<Provider> foundServices = [];
+List<String> selectedlocation = [];
+List<String> selectedservices = [];
 bool isLoaded = false;
 
 List<String> GovernoratFilterListData = [
@@ -95,6 +97,7 @@ class _FilterPageState extends State<FilterPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     //distanceViewUI(),
+
                     popularFilter(),
                     governoratFilter(),
                   ],
@@ -244,6 +247,7 @@ class _FilterPageState extends State<FilterPage> {
       for (var i = 0; i < columCount; i++) {
         try {
           final date = services[cout];
+          // final datee = GovernoratFilterListData[cout];
           listUI.add(
             Expanded(
               child: Row(
@@ -251,10 +255,16 @@ class _FilterPageState extends State<FilterPage> {
                   CustomCheckBox(
                     title: date.title,
                     onTapSelected: () {
-                      _filterByServices(date.title);
+                      // if (foundProviders.isNotEmpty) {
+                      //   _filterByLocations(date.title, datee);
+                      // } else {
+                      selectedservices.add(date.title);
+                      _filter();
+                      // }
                     },
                     onUnSelect: () {
-                      _removeFromSearchResult(date.title);
+                      selectedservices.remove(date.title);
+                      _filter();
                     },
                   ),
                 ],
@@ -290,10 +300,12 @@ class _FilterPageState extends State<FilterPage> {
                   CustomCheckBox(
                     title: date,
                     onTapSelected: () {
-                      _filterByLocation(date);
+                      selectedlocation.add(date);
+                      _filter();
                     },
                     onUnSelect: () {
-                      _removeFromSearchResultgov(date);
+                      selectedlocation.remove(date);
+                      _filter();
                     },
                   )
                 ],
@@ -314,87 +326,212 @@ class _FilterPageState extends State<FilterPage> {
   }
 
   _filterByServices(text) {
-    if (foundProviders.isEmpty) {
-      for (var element in search) {
-        element.services.forEach((service) {
-          print(service['name']);
-          if (service['name'] == text) {
-            print(element.name);
+    search.forEach((provider) {
+      provider.services.forEach((service) {
+        // print(service['name']);
+        if (service['name'] == text) {
+          // print(provider.name);
+          setState(() {
+            foundProviders.add(provider);
+          });
+        }
+      });
+    });
+  }
+
+  // if (foundProviders.isEmpty) {
+  //   for (var element in search) {
+  //     element.services.forEach((service) {
+  //       print(service['name']);
+  //       if (service['name'] == text) {
+  //         print(element.name);
+  //         setState(() {
+  //           if (foundServices.contains(element) == false)
+  //             foundServices.add(element);
+  //         });
+  //       }
+  //     });
+  //     foundProviders = foundServices;
+  //     // print(foundServices);
+  //     // print(foundUserTaskLists);
+  //   }
+  // } else {
+  //   for (var element in foundProviders) {
+  //     element.services.forEach((service) {
+  //       // print(service['name']);
+  //       if (service['name'] == text) {
+  //         // print(element.name);
+  //         setState(() {
+  //           if (foundServices.contains(element) == false)
+  //             foundServices.add(element);
+  //         });
+  //       }
+  //     });
+  //     foundProviders = foundServices;
+  //     // print(foundServices);
+  //     // print(foundUserTaskLists);
+  //   }
+  // }
+  _filterByLocations(text, texte) {
+    // print(text);
+    List<Provider> resultat = [];
+    search.forEach((provider) {
+      provider.locations.forEach((location) {
+        // print(location.place['gov']);
+        if (location.place['gov'] == text) {
+          // print(provider.name);
+          print(provider.services);
+          setState(() {
+            foundProviders.add(provider);
+          });
+        }
+      });
+      print(foundProviders);
+      print("aaaaaaaaaaaaaa");
+
+      foundProviders.forEach((provider) {
+        provider.services.forEach((service) {
+          // print(service['name']);
+          if (service['name'] == texte) {
+            // print(provider.name);
+            print(texte);
             setState(() {
-              if (foundServices.contains(element) == false)
-                foundServices.add(element);
+              foundServices.add(provider); //3
+
+              print(foundProviders);
+              foundProviders = foundServices;
             });
           }
         });
+      });
+    });
+  }
 
-        foundProviders = foundServices;
-        print(foundServices);
-        // print(foundUserTaskLists);
-      }
-    } else {
-      for (var element in foundProviders) {
-        element.services.forEach((service) {
-          print(service['name']);
-          if (service['name'] == text) {
-            print(element.name);
-            setState(() {
-              if (foundServices.contains(element) == false)
-                foundServices.add(element);
-            });
-          }
-        });
-
-        foundProviders = foundServices;
-        print(foundServices);
-        // print(foundUserTaskLists);
-      }
+  _filter() {
+    if (selectedlocation.isEmpty && selectedservices.isEmpty) {
+      setState(() {
+        foundProviders = [];
+      });
+      return;
     }
+    var fp = search;
+    if (selectedlocation.isNotEmpty) {
+      fp = fp
+          .where((element) => element.locations
+              .where((e) =>
+                  selectedlocation.where((s) => e.place['gov'] == s).isNotEmpty)
+              .isNotEmpty)
+          .toList();
+      print(fp);
+    }
+    if (selectedservices.isNotEmpty) {
+      fp = fp
+          .where((element) => element.services
+              .where((e) =>
+                  selectedservices.where((s) => e['name'] == s).isNotEmpty)
+              .isNotEmpty)
+          .toList();
+    }
+    print(fp);
+    setState(() {
+      foundProviders = fp;
+    });
+    print(fp);
   }
 
   _filterByLocation(text) {
-    print(text);
+    // print(text);
     if (foundProviders.isEmpty) {
-      for (var element in search) {
-        // print(element.locations);
-
-        element.locations.forEach((location) {
-          print(location.place['gov']);
+      search.forEach((provider) {
+        provider.locations.forEach((location) {
+          // print(location.place['gov']);
           if (location.place['gov'] == text) {
-            print(element.name);
+            // print(provider.name);
+            // print(provider.services);
             setState(() {
-              if (foundServices.contains(element) == false) {
-                foundServices.add(element);
-              }
+              foundProviders.add(provider);
             });
           }
         });
-
-        foundProviders = foundServices;
-        print(foundServices);
-        // print(foundUserTaskLists);
-      }
+      });
     } else {
-      for (var element in foundProviders) {
-        // print(element.locations);
-
-        element.locations.forEach((location) {
-          print(location.place['gov']);
-          if (location.place['gov'] != text) {
-            print(element.name);
-            setState(() {
-              if (foundServices.contains(element) == false) {
-                foundServices.remove(element);
-              }
-            });
-          }
-        });
-
-        foundProviders = foundServices;
-        print(foundServices);
-        // print(foundUserTaskLists);
-      }
+      foundProviders.where((element) =>
+          element.locations.where((e) => e.place['gov'] == text).isEmpty);
     }
   }
+  //  else {
+  //   foundProviders.forEach((provider) {
+  //     provider.locations.forEach((location) {
+  //       // print(location.place['gov']);
+  //       if (location.place['gov'] == text) {
+  //         // print(provider.name);
+
+  //         setState(() {
+  //           foundProviders.add(provider);
+  //         });
+  //       }
+  //       foundProviders.forEach((provider) {
+  //         provider.services.forEach((service) {
+  //           // print(service['name']);
+  //           if (service['name'] == texte) {
+  //             // print(provider.name);
+
+  //             setState(() {
+  //               foundProviders.clear();
+
+  //               foundProviders.add(provider);
+  //               print(foundProviders);
+  //             });
+  //           }
+  //         });
+  //       });
+  //     });
+  //   });
+  // }
+
+  // for (var element in search) {
+  //   // print(element.locations);
+
+  //   element.locations.forEach((location) {
+  //     // print(location.place['gov']);
+  //     if (location.place['gov'] == text) {
+  //       // print(element.name);
+  //       setState(() {
+  //         if (foundServices.contains(element) == false) {
+  //           print(element);
+  //           foundServices.add(element);
+  //         }
+  //       });
+  //     }
+  //   });
+  //   foundProviders = foundServices;
+  //   // print(foundUserTaskLists);
+  // }
+
+  // } else {
+  //   for (var element in ) {
+  //     // print(element.locations);
+
+  //     element.locations.forEach((location) {
+  //       // print(location.place['gov']);
+  //       if (location.place['gov'] == text) {
+  //         // print(element.name);
+  //         setState(() {
+  //           if (foundServices.contains(element) == false) {
+  //             foundServices.add(element);
+  //           }
+  //         });
+  //       }
+  //       results = foundServices;
+  //     });
+
+  //     // print(foundServices);
+  //     // print(foundUserTaskLists);
+  //   }
+  //   print(foundProviders);
+  // }
+
+  // foundProviders = results;
 
   _removeFromSearchResult(text) {
     // List<Provider> foundServices = [];

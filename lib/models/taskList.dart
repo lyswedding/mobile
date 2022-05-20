@@ -15,11 +15,11 @@ class TaskList {
     this.nbUse,
   );
 
-  final String? id;
-  final String? title;
-  final String? description;
-  final List<Task>? tasks;
-  final List tags;
+  String? id;
+  String? title;
+  String? description;
+  List<Task>? tasks;
+  List tags;
   String? imageUrl = '';
   int nbUse = 0;
   int cost = 1000;
