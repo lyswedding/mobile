@@ -1,19 +1,15 @@
-import 'dart:math';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:intl/intl.dart';
 import 'package:lys_wedding/UI/authentification/components/button.dart';
-import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
+
 import 'package:lys_wedding/UI/liste/components/add-list-input.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
 import 'package:textfield_tags/textfield_tags.dart';
-import 'list_tasks.dart';
-import 'liste_page.dart';
 
 class AddTask extends StatefulWidget {
   final List<Task> taskList;
@@ -36,7 +32,8 @@ class _AddTaskState extends State<AddTask> {
     if (datetime == null) {
       return 'Select Date';
     } else {
-      return DateFormat('dd-MM-yyyy').format(datetime!);
+      //return DateFormat('dd-MM-yyyy').format(datetime!);
+      return datetime.toString();
     }
   }
 
@@ -145,7 +142,7 @@ class _AddTaskState extends State<AddTask> {
                         ).then((date) {
                           setState(() {
                             datetime = date;
-                            print(datetime);
+                            print(datetime.toString());
                           });
                         });
                       },
@@ -219,17 +216,19 @@ class _AddTaskState extends State<AddTask> {
                 onPressed: () {
                   print(titleController.text);
                   print(descController.text);
-                  print(tagsController.text);
+                  print(tags);
                   print(costController.text);
+                  print(getText());
                   if (titleController.text.isEmpty ||
                       descController.text.isEmpty ||
                       costController.text.isEmpty ||
-                      dueDateController.text.isEmpty ||
-                      tagsController.text.isEmpty) {
+                      getText() == null ||
+                      tags.isEmpty) {
                     showToast(
-                        context: context, msg: "une erreur s'est produite!");
+                        context: context, msg: "remplir tous les chams  ");
                   } else {
                     Navigator.pop(context);
+                    showToast(context: context, msg: "tache bien remplie ");
                     setState(() {
                       widget.taskList.add(Task(
                           '0',
@@ -237,7 +236,7 @@ class _AddTaskState extends State<AddTask> {
                           descController.text,
                           int.parse(costController.text),
                           0,
-                          DateTime.now().toIso8601String(),
+                          getText(),
                           'in progress',
                           tags));
                     });

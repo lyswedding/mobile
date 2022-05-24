@@ -1,10 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/liste/components/list_component_horizontal.dart';
-import 'package:lys_wedding/UI/search/components/list_item_search.dart';
 import 'package:lys_wedding/models/taskList.dart';
-import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
@@ -28,7 +25,6 @@ class _UserListPageState extends State<UserListPage>
   final ServiceList service = ServiceList();
   List<Provider> search = [];
   List<TaskList> taskLists = [];
-
 
   @override
   void initState() {

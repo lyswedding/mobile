@@ -84,6 +84,7 @@ class _HomeDetailsState extends State<HomeDetails>
   }
 
   _filterByServices(text) {
+    foundProviders = popularProviders;
     for (var element in popularProviders) {
       element.services.forEach((service) {
         print(service['name'] + "aaaaaaaaa");
@@ -93,10 +94,11 @@ class _HomeDetailsState extends State<HomeDetails>
             if (foundServices.contains(element) == false)
               foundServices.add(element);
           });
-        } else {}
+        }
       });
     }
     foundProviders = foundServices;
+
     print(foundProviders);
     // print(foundUserTaskLists);
   }
@@ -114,7 +116,9 @@ class _HomeDetailsState extends State<HomeDetails>
         }
       });
     });
-    if (foundProviders.isEmpty) {}
+    if (foundProviders.isEmpty) {
+      foundProviders = popularProviders;
+    }
   }
 
   @override

@@ -1,22 +1,14 @@
-import 'dart:io';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lys_wedding/UI/authentification/components/button.dart';
-import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/liste/components/add-list-input.dart';
 import 'package:lys_wedding/UI/liste/components/task_component.dart';
 import 'package:lys_wedding/UI/liste/screens/add_task.dart';
 import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
-import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
-import 'package:lys_wedding/shared/utils.dart';
 import 'package:textfield_tags/textfield_tags.dart';
-import 'liste_page.dart';
 
 class AddList extends StatefulWidget {
   const AddList({Key? key}) : super(key: key);
@@ -42,7 +34,7 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
     TaskList taskList = TaskList('0', titleController.text, descController.text,
         tasks, tags, '', 1000, 0);
 
-    await ListCalls.addTaskList(taskList).then((value) {
+    ListCalls.addTaskList(taskList).then((value) {
       print(value);
       if (value == 200) {
         showToast(context: context, msg: "liste créé avec succès!");
@@ -235,13 +227,15 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                     child: CustomButton(
                         text: 'Enregistrer',
                         onPressed: () {
-                          if (titleController.text.isEmpty ||
-                              descController.text.isEmpty ||
-                              tags.isEmpty ||
-                              tasks.isEmpty) {
+                          if (titleController.text.isEmpty) {
+                            showToast(context: context, msg: "verifie title ");
+                          } else if (descController.text.isEmpty) {
                             showToast(
-                                context: context,
-                                msg: "une erreur s'est produite!");
+                                context: context, msg: "verifie description ");
+                          } else if (tags.isEmpty) {
+                            showToast(context: context, msg: "verifie tags ");
+                          } else if (tasks.isEmpty) {
+                            showToast(context: context, msg: "verifie tasks ");
                           } else {
                             _addList();
                             Navigator.pop(context);
