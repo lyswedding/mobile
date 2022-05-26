@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/components/common_card.dart';
 import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CategoryItem extends StatefulWidget {
   final String text;
@@ -11,7 +12,8 @@ class CategoryItem extends StatefulWidget {
   final Animation<double> animation;
   final Function onTapSelected;
   final Function onUnSelect;
-  CategoryItem(this.text, this.image, this.animationController, this.animation,this.onTapSelected,this.onUnSelect);
+  CategoryItem(this.text, this.image, this.animationController, this.animation,
+      this.onTapSelected, this.onUnSelect);
 
   @override
   State<CategoryItem> createState() => _CategoryItemState();
@@ -19,6 +21,17 @@ class CategoryItem extends StatefulWidget {
 
 class _CategoryItemState extends State<CategoryItem> {
   bool isSelected = false;
+  bool isLoaded = true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(microseconds: 3000), () {
+      setState(() {
+        isLoaded = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +39,13 @@ class _CategoryItemState extends State<CategoryItem> {
       animationController: widget.animationController,
       animation: widget.animation,
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           setState(() {
-            isSelected=!isSelected;
+            isSelected = !isSelected;
             print(isSelected);
-            if(isSelected){
+            if (isSelected) {
               widget.onTapSelected();
-            }else{
+            } else {
               widget.onUnSelect();
             }
           });
@@ -55,7 +68,7 @@ class _CategoryItemState extends State<CategoryItem> {
                     alignment: Alignment.center,
                     child: Text(
                       widget.text,
-                      style:subTitleTextStyle.copyWith(fontSize: 10),
+                      style: subTitleTextStyle.copyWith(fontSize: 10),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -63,7 +76,7 @@ class _CategoryItemState extends State<CategoryItem> {
               ),
             ),
           ),
-          color: isSelected?Colors.pink[300]:Colors.white,
+          color: isSelected ? Colors.pink[300] : Colors.white,
         ),
       ),
     );

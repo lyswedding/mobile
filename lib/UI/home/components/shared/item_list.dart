@@ -2,7 +2,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/search/screens/detail_search/screens/detail_search.dart';
 import 'package:lys_wedding/models/List_search.dart';
-import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
@@ -30,8 +29,8 @@ class _ItemListState extends State<ItemList> {
     await FavoriteCalls.addListToFavorite(id).then((value) {
       print(value);
       print(value.statusCode);
-      if (value.statusCode == 201) {
-        showToast(context: context, msg: 'Liste des tâches mise en favoris');
+      if (value.statusCode == 201 || value.statusCode == 200) {
+        showToast(context: context, msg: 'Ajouté aux favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -45,7 +44,7 @@ class _ItemListState extends State<ItemList> {
     await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
       print(value.statusCode);
       if (value.statusCode == 200) {
-        showToast(context: context, msg: 'Liste des tâches retiré de favoris');
+        showToast(context: context, msg: ' Retiré de favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -53,6 +52,12 @@ class _ItemListState extends State<ItemList> {
     setState(() {
       isInCall = true;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override

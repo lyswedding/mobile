@@ -15,19 +15,17 @@ class TaskList {
     this.nbUse,
   );
 
-  final String? id;
-  final String? title;
-  final String? description;
-  final List<Task>? tasks;
-  final List tags;
-   String? imageUrl='';
-   int nbUse=0;
- int  cost=1000;
+  String? id;
+  String? title;
+  String? description;
+  List<Task>? tasks;
+  List tags;
+  String? imageUrl = '';
+  int nbUse = 0;
+  int cost = 1000;
 
   Map<String, dynamic> toJson() {
-
-    var  responsesJSon =
-        (tasks != null ? tasks!.map((i) =>i.toJson()).toList() : null);
+    var responsesJSon = (tasks!.map((i) => i.toJson()).toList());
     print(responsesJSon);
 
     return <String, dynamic>{
@@ -41,7 +39,6 @@ class TaskList {
       'image': imageUrl
     };
   }
-
 
   factory TaskList.fromJson(Map<String, dynamic> json) {
     var lists = json['tasks'] as List;
@@ -93,11 +90,12 @@ class Task {
     };
   }
 
-
   factory Task.fromJson(Map<String, dynamic> json) {
     List listO = json['tags'];
     print(json['realization_date']);
-    DateTime dateTime = json['realization_date']!=null?DateTime.parse(json['realization_date'].toString()):DateTime.now();
+    DateTime dateTime = json['realization_date'] != null
+        ? DateTime.parse(json['realization_date'].toString())
+        : DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
 
     return Task(

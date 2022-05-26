@@ -38,9 +38,9 @@ class _ListComponentState extends State<ListComponent> {
       print(value);
       print(value.statusCode);
       if (value.statusCode == 201) {
-        showToast(context: context, msg: 'Liste des tâches mise en favoris');
+        showToast(context: context, msg: 'Liste Ajouté aux favoris ');
       } else {
-        showToast(context: context, msg: "une erreur s'est produite!");
+        showToast(context: context, msg: "Liste deja mise en favorie");
       }
     });
     setState(() {
@@ -52,7 +52,7 @@ class _ListComponentState extends State<ListComponent> {
     await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
       print(value.statusCode);
       if (value.statusCode == 200) {
-        showToast(context: context, msg: 'Liste des tâches retiré de favoris');
+        showToast(context: context, msg: 'Liste Retiré de favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -116,13 +116,15 @@ class _ListComponentState extends State<ListComponent> {
                                 if (isSelected) {
                                   checkIfTokenExists(() {
                                     deleteFromFavorites(widget.taskList.id);
-                                  }, context).then((value) => isSelected=!isSelected);
+                                  }, context)
+                                      .then(
+                                          (value) => isSelected = !isSelected);
                                 } else {
                                   checkIfTokenExists(() {
                                     callAddToFavorite(widget.taskList.id);
-                                  }, context).then((value) =>
-                                  isSelected=!isSelected);
-
+                                  }, context)
+                                      .then(
+                                          (value) => isSelected = !isSelected);
                                 }
                               },
                               child: Padding(
@@ -161,7 +163,7 @@ class _ListComponentState extends State<ListComponent> {
                               color: primaryColor,
                             ),
                             Text(
-                              widget.taskList.tags!.toString(),
+                              widget.taskList.tags.toString(),
                               // Helper.getRoomText(hotelInfo.roomData!),
                               style: GoogleFonts.poppins(
                                   fontSize: 12,

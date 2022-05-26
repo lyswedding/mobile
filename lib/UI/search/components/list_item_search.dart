@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+
 import 'package:lys_wedding/UI/liste/components/common_card.dart';
 import 'package:lys_wedding/UI/search/screens/detail_search/screens/detail_search.dart';
 import 'package:lys_wedding/models/List_search.dart';
@@ -14,8 +15,8 @@ class ItemListSearch<T> extends StatefulWidget {
     Key? key,
     required this.provider,
     required this.text,
-    required this.animation,
     required this.animationController,
+    required this.animation,
   }) : super(key: key);
   final Provider provider;
   final String text;
@@ -29,13 +30,14 @@ class ItemListSearch<T> extends StatefulWidget {
 class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   bool isInCall = false;
   bool isSelected = false;
-  callAddToFavorite() async {
+
+  callAddToFavorite(String id) async {
     await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
       print(value.data);
       if (value.statusCode == 201) {
         showToast(context: context, msg: value.data['message'].toString());
       } else {
-        showToast(context: context, msg: "une erreur s'est produite!");
+        showToast(context: context, msg: "prestataire deja mis en favorie");
       }
     });
     setState(() {
@@ -43,7 +45,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
     });
   }
 
-  deleteFromFavorite() async {
+  deleteFromFavorite(String id) async {
     await FavoriteCalls.deletProviderFromFavorite(widget.provider.id)
         .then((value) {
       print(value.data);
@@ -59,6 +61,13 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.provider.cover);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListCellAnimationView(
       animation: widget.animation,
@@ -68,7 +77,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               height: 300,
-              width: MediaQuery.of(context).size.width*0.8,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: CommonCard(
                 color: whiteColor,
                 radius: 10,
@@ -90,7 +99,6 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-
                                 Expanded(
                                   flex: 6,
                                   child: Text(
@@ -141,18 +149,20 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                                 const Radius.circular(32.0),
                               ),
                               onTap: () {
-                                setState(() {
-                                 // isSelected = !isSelected;
-                                  if (isSelected) {
-                                    checkIfTokenExists((){
-                                      deleteFromFavorite();
-                                    }, context).then((value) => isSelected=false);
-                                  } else {
-                                    checkIfTokenExists((){
-                                      callAddToFavorite();
-                                    }, context).then((value) => isSelected=true);
-                                  }
-                                });
+                                // setState(() {
+                                //   isSelected = !isSelected;
+                                // });
+                                if (isSelected) {
+                                  checkIfTokenExists(() {
+                                    deleteFromFavorite(widget.provider.id);
+                                  }, context)
+                                      .then((value) => isSelected = false);
+                                } else {
+                                  checkIfTokenExists(() {
+                                    callAddToFavorite(widget.provider.id);
+                                  }, context)
+                                      .then((value) => isSelected = true);
+                                }
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),

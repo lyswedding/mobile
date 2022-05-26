@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:heic_to_jpg/heic_to_jpg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/services/profil_service.dart';
@@ -23,7 +24,8 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
   var isclickedtoedit1 = true;
   var isclickedtoedit2 = true;
   var isclickedtoedit3 = true;
-  PickedFile? _imageFile;
+  //PickedFile? _imageFile;
+  XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
   @override
   void initState() {
@@ -36,8 +38,12 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
 
   void _pickImage() async {
     try {
-      final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    //  retrieveLostData();
       setState(() {
+        print(pickedFile!.path);
+        print(pickedFile!.name);
+        print(pickedFile!.mimeType);
         _imageFile = pickedFile;
       });
     } catch (e) {
@@ -61,8 +67,10 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
             ),
             ElevatedButton(
               onPressed: () async {
+                String jpegPath = await HeicToJpg.convert(_imageFile!.path);
+                print(_imageFile!.mimeType);
                 await ServiceProfil.uploadImage(
-                        _imageFile!.path, widget.user.id)
+                        jpegPath, widget.user.id)
                     .then((value) => Navigator.of(context).pop());
               },
               child: const Text('Upload'),
@@ -103,15 +111,33 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
     }
   }
 
-  Future<void> retriveLostData() async {
-    final LostData response = await _picker.getLostData();
+  // Future<void> retriveLostData() async {
+  //   final LostData response = (await _picker.retrieveLostData()) as LostData;
+  //   if (response.isEmpty) {
+  //     return;
+  //   }
+  //   if (response.file != null) {
+  //     setState(() {
+  //       _imageFile = response.file;
+  //     });
+  //   } else {
+  //     print('Retrieve error ' + response.exception!.code.toString());
+  //   }
+  // }
+
+  Future<void> retrieveLostData() async {
+    final LostDataResponse response =
+    await _picker.retrieveLostData();
     if (response.isEmpty) {
       return;
     }
-    if (response.file != null) {
-      setState(() {
-        _imageFile = response.file;
-      });
+    if (response.files != null) {
+      for (final XFile file in response.files!) {
+        setState(() {
+          _imageFile=file;
+        });
+       // _handleFile(file);
+      }
     } else {
       print('Retrieve error ' + response.exception!.code.toString());
     }
@@ -300,7 +326,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                                     primary: Colors.black,
                                                   ),
                                                   child: const Text("change"),
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     var body = {
                                                       "oldPassword":
                                                           _oldPasswordController
@@ -318,22 +344,44 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                                                           context: context,
                                                           msg:
                                                               'Merci de remplir tous les champs !');
+                                                    } else if (_newPasswordController
+                                                            .text.length <
+                                                        6) {
+                                                      showToast(
+                                                          context: context,
+                                                          msg:
+                                                              "Mot de passe doit être d'au moins 6 caractères");
                                                     } else {
-                                                      ServiceProfil
+                                                      var aa = await ServiceProfil
                                                           .updateUserPassword(
                                                               body);
+                                                      // showToast(
+                                                      //     context: context,
+                                                      //     msg:
+                                                      //         "Utilisateur mis à jour");
+                                                      if (aa == null) {
+                                                        showToast(
+                                                            context: context,
+                                                            msg:
+                                                                "erreur old password");
+                                                      } else {
+                                                        showToast(
+                                                            context: context,
+                                                            msg:
+                                                                "Utilisateur mis à jour");
+                                                      }
                                                     }
-                                                    ;
                                                   },
                                                 ))
                                           ],
                                         ),
                                       ),
-                                    )).then(
-                              (value) => showToast(
-                                  context: context,
-                                  msg: 'Utilisateur mis à jour'),
-                            );
+                                    ));
+                            //         .then(
+                            //   (value) => showToast(
+                            //       context: context,
+                            //       msg: 'Utilisateur mis à jour'),
+                            // );
                           },
                         ),
                       ],

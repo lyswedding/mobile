@@ -7,10 +7,14 @@ import 'package:lys_wedding/UI/home/components/shared/search_bar.dart';
 import 'package:lys_wedding/UI/liste/components/filterChip.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/liste/components/list_component_horizontal.dart';
+import 'package:lys_wedding/UI/profil/screens/profil.dart';
 import 'package:lys_wedding/UI/profil/screens/user_lists.dart';
+import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/dio_service.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
+import 'package:lys_wedding/services/profil_service.dart';
 import 'package:lys_wedding/services/tags.services.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
@@ -29,6 +33,10 @@ class ListePage extends StatefulWidget {
 class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   late AnimationController animationController;
   bool isInCall = true;
+  bool isLoaded = false;
+  bool islogued = false;
+  UserApi item = UserApi();
+  final ServiceProfil service = ServiceProfil();
   List<TaskList> taskLists = [];
   List<TaskList> foundTaskLists = [];
   List<TaskList> userTaskLists = [];
@@ -36,17 +44,35 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   var toRemove = [];
   List<String> tags = [];
   TextEditingController searchController = TextEditingController();
+  bool isLoading = true;
+
+  call() async {
+    islogued = await ifTokenExist();
+  }
 
   callAllListes() {
     ListCalls.getAdminLists().then((res) {
       setState(() {
         taskLists = res;
-
       });
     });
     foundTaskLists = taskLists;
     setState(() {
       isInCall = false;
+    });
+  }
+
+  String imageurl = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
+  Future<void> fetchProfil() async {
+    setState(() {
+      isLoaded = true;
+    });
+
+    item = await service.getUser();
+    imageurl = item.user!.imageUrl!;
+    print(item.user);
+    setState(() {
+      isLoaded = false;
     });
   }
 
@@ -85,7 +111,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   _removeByTags(text) {
     for (var taskList in foundTaskLists) {
       for (var tag in taskList.tags) {
-        if(tag == text){
+        if (tag == text) {
           print(taskList.title);
           setState(() {
             toRemove.add(taskList);
@@ -94,24 +120,33 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       }
     }
     setState(() {
-      foundTaskLists.removeWhere( (e) => toRemove.contains(e));
+      foundTaskLists.removeWhere((e) => toRemove.contains(e));
     });
 
     if (foundTaskLists.isEmpty) {
       print('list is empty');
-        callAllListes();
+      callAllListes();
     }
   }
 
-
   @override
   void initState() {
+    Future.delayed(Duration(milliseconds: 3000), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     // TODO: implement initState
     callAllListes();
     callAllUserListes();
+    call();
     callTagsListes();
+    if (getUserInfoSharedPref("token") != null) {
+      fetchProfil();
+    }
+
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 3000), vsync: this);
     super.initState();
   }
 
@@ -133,19 +168,51 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           actions: [
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 40.0),
+            //   child: Container(
+            //     //  Transform.translate(
+            //     // offset: const Offset(10, 0),
+            //     padding: EdgeInsets.only(top: 10),
+            //     // margin: EdgeInsets.symmetric(vertical: 5),
             Padding(
-              padding: const EdgeInsets.only(right: 18.0),
-              child: Container(
-                //  Transform.translate(
-                // offset: const Offset(10, 0),
-                padding: EdgeInsets.only(top: 10),
-                // margin: EdgeInsets.symmetric(vertical: 5),
-
-                child: Image.asset(
-                  "images/adel.png",
-                  height: 60,
-                ),
+              padding: const EdgeInsets.only(
+                right: 18.0,
               ),
+              child: isLoading
+                  ? getShimmerLoadingcircle(
+                      18,
+                    )
+                  : IconButton(
+                      icon: Image(
+                        image: NetworkImage(imageurl),
+                        height: 50,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfilPage()));
+                      },
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 40.0),
+                      //   child: Container(
+                      //     //  Transform.translate(
+                      //     // offset: const Offset(10, 0),
+                      //     padding: EdgeInsets.only(top: 10),
+                      //     // margin: EdgeInsets.symmetric(vertical: 5),
+
+                      //     child: InkWell(
+                      //       onTap: () {
+                      //         Navigator.push(context,
+                      //             MaterialPageRoute(builder: (context) => ProfilPage()));
+                      //       },
+                      //       child: CircleAvatar(
+                      //           radius: 100,
+                      //           backgroundImage: NetworkImage(item.user!.imageUrl ?? "")),
+                      //     ),
+                      //   ),
+                    ),
             ),
           ],
         ),
@@ -162,69 +229,74 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                       controller: searchController,
                     ),
                     _buildCategories(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'My lists',
-                          style: titleTextStyle,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => UserListPage(
-                                              tasksLists: userTaskLists,
-                                            )))
-                                .then((value) => callAllUserListes());
-                          },
-                          child: Text(
-                            'view more',
-                            style: regularTextStyle,
+
+                    (islogued == false)
+                        ? Row(
+                            children: [],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'My lists',
+                                style: titleTextStyle,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UserListPage(
+                                                tasksLists: userTaskLists,
+                                              ))).then(
+                                      (value) => callAllUserListes());
+                                },
+                                child: Text(
+                                  'view more',
+                                  style: regularTextStyle,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                     for (int i = 0; i < userTaskLists.length; i++)
                       _buildListUser(i),
-                    TextButton(
-                        onPressed: () {
-                          checkIfTokenExists(() {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AddList(),
-                              ),
-                            );
-                          }, context);
-                        },
-                        child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                // color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: secondaryColor)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    EvaIcons.plusSquareOutline,
-                                    size: 24,
-                                    color: secondaryColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "Add new List",
-                                    style: subTitleTextStyle.copyWith(
-                                        color: secondaryColor),
-                                  ),
-                                ],
-                              ),
-                            ))),
+                    // TextButton(
+                    //     onPressed: () {
+                    //       checkIfTokenExists(() {
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) => const AddList(),
+                    //           ),
+                    //         ).then((value) => callAllUserListes());
+                    //       }, context);
+                    //     },
+                    //     child: Container(
+                    //         width: double.infinity,
+                    //         decoration: BoxDecoration(
+                    //             // color: Colors.white,
+                    //             borderRadius: BorderRadius.circular(10),
+                    //             border: Border.all(color: secondaryColor)),
+                    //         child: Padding(
+                    //           padding: const EdgeInsets.all(16.0),
+                    //           child: Row(
+                    //             children: [
+                    //               const Icon(
+                    //                 EvaIcons.plusSquareOutline,
+                    //                 size: 24,
+                    //                 color: secondaryColor,
+                    //               ),
+                    //               const SizedBox(
+                    //                 width: 10,
+                    //               ),
+                    //               Text(
+                    //                 "Add new List",
+                    //                 style: subTitleTextStyle.copyWith(
+                    //                     color: secondaryColor),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ))),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -261,7 +333,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const AddList(),
-                  ));
+                  )).then((value) => callAllUserListes());
             }, context);
           },
           backgroundColor: Colors.black,
@@ -298,7 +370,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                         onSelect: (bool value) {
                           _filterByTags(tags[index].toString());
                         },
-                        onDeSelect: (){
+                        onDeSelect: () {
                           _removeByTags(tags[index].toString());
                         },
                       );
@@ -359,11 +431,11 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     for (var element in taskLists) {
       if (element.tags.contains(text)) {
         print(element.title);
-          if (foundTaskLists.contains(element) == false) {
-            setState(() {
-              foundTaskLists.add(element);
-            });
-          }
+        if (foundTaskLists.contains(element) == false) {
+          setState(() {
+            foundTaskLists.add(element);
+          });
+        }
       }
     }
 
@@ -399,7 +471,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
 
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
-      userResults = userTaskLists;
+      callAllListes();
     } else {
       userResults = userTaskLists
           .where((userTaskList) => userTaskList.title!
@@ -432,11 +504,13 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
           );
           animationController.forward();
           listUI.add(Expanded(
-            child: ListComponent(
-              taskList: date,
-              animation: animation,
-              animationController: animationController,
-            ),
+            child: isLoading
+                ? getShimmerLoading(250, 200)
+                : ListComponent(
+                    taskList: date,
+                    animation: animation,
+                    animationController: animationController,
+                  ),
           ));
           cout += 1;
         } catch (e) {}

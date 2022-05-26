@@ -8,9 +8,11 @@ import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/authentification/screens/facebook_controller.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/connectivity_indicator.dart';
+import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/models/auth_sm_model.dart';
 import 'package:lys_wedding/services/auth.services.dart';
 import 'package:lys_wedding/services/auth_sm_service.dart';
+import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/remove_focuse.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
@@ -50,6 +52,30 @@ class _LoginState extends State<Login> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12, left: 5, bottom: 10),
+                  child: InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Home()));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: primaryColor),
+                            child: Text(
+                              "<< skeep",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
                 const SizedBox(
                   height: 200,
                   width: 200,
@@ -115,7 +141,7 @@ class _LoginState extends State<Login> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>  DemoPage(),
+                                builder: (context) => DemoPage(),
                               ),
                             );
                           } else {
@@ -177,7 +203,10 @@ class _LoginState extends State<Login> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               color: Colors.white),
-                          child:const Icon(EvaIcons.google,size: 42,)),
+                          child: const Icon(
+                            EvaIcons.google,
+                            size: 42,
+                          )),
                       onTap: SignIn,
                     ),
                     const Padding(padding: const EdgeInsets.all(20)),
@@ -189,20 +218,22 @@ class _LoginState extends State<Login> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white),
-                            child:const Icon(Icons.facebook,size: 42,)),
+                            child: const Icon(
+                              Icons.facebook,
+                              size: 42,
+                            )),
                         onTap: () {
                           if (Provider.of<FacebookSignInController>(context,
                                       listen: false)
-                                  .login()==true) {
+                                  .login() ==
+                              true) {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>  DemoPage(),
+                                  builder: (context) => DemoPage(),
                                 ));
                           }
-                        }
-
-                        )
+                        })
                   ],
                 )),
                 Padding(
@@ -246,16 +277,15 @@ class _LoginState extends State<Login> {
     final user = await GoogleSingnInApi.login();
 
     print(user);
-    final y = await authSmService.authGoogles(
-        user!.email, user.displayName!, user.photoUrl??'', user.serverAuthCode);
+    final y = await authSmService.authGoogles(user!.email, user.displayName!,
+        user.photoUrl ?? '', user.serverAuthCode);
 
     if (user == null) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: const Text("Sign in failed")));
-    }
-    else {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) =>  DemoPage()));
+    } else {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const Home()));
     }
   }
 

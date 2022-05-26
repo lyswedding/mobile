@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/favorite/service/favorite_service.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
+import 'package:lys_wedding/UI/profil/screens/profil.dart';
 import 'package:lys_wedding/UI/search/components/list_item_search.dart';
+import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
+import 'package:lys_wedding/services/profil_service.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 
 import '../../../models/List_search.dart';
@@ -25,29 +30,41 @@ class _FavoritePageState extends State<FavoritePage>
   late TabController _nestedTabController;
   bool isInCall = false;
   bool isLoaded = false;
+  bool isLoading = true;
   final ServiceFavorite service = ServiceFavorite();
   List<Provider> search = [];
   List<TaskList> taskLists = [];
+  UserApi item = UserApi();
+  final ServiceProfil servicee = ServiceProfil();
+  callAllListes() async {
+    taskLists = await FavoriteCalls.getFavorite();
 
-  callAllListes() {
     setState(() {
-      isInCall = true;
-    });
-    FavoriteCalls.getFavorite().then((res) {
-      setState(() {
-        print(res);
-        taskLists=res;
-      });
-    });
-    setState(() {
-      isInCall = false;
+      isLoaded = true;
     });
   }
 
   fetchsearch() async {
     search = await FavoriteCalls.GetProvidersFavorite();
+    print("*****************");
+    print(search);
+    print("*****************");
     setState(() {
       isLoaded = true;
+    });
+  }
+
+  String imageurl = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
+  Future<void> fetchProfil() async {
+    setState(() {
+      isLoaded = true;
+    });
+
+    item = await servicee.getUser();
+    imageurl = item.user!.imageUrl!;
+    print(item.user);
+    setState(() {
+      isLoaded = false;
     });
   }
 
@@ -56,6 +73,16 @@ class _FavoritePageState extends State<FavoritePage>
     // TODO: implement initState
     callAllListes();
     fetchsearch();
+
+    Future.delayed(Duration(milliseconds: 4000), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
+
+    if (getUserInfoSharedPref("token") != null) {
+      fetchProfil();
+    }
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
 
@@ -85,50 +112,55 @@ class _FavoritePageState extends State<FavoritePage>
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
-            actions: [
-        Padding(
-        padding: const EdgeInsets.only(right: 18.0),
-      child: Container(
-        //  Transform.translate(
-        // offset: const Offset(10, 0),
-        padding: EdgeInsets.only(top: 10),
-        // margin: EdgeInsets.symmetric(vertical: 5),
-
-        child: Image.asset(
-          "images/adel.png",
-          height: 60,
-        ),
-      ),
-
-    ),],
+          actions: [
+            Padding(
+                padding: const EdgeInsets.only(
+                  right: 18.0,
+                ),
+                child: isLoading
+                    ? getShimmerLoadingcircle(
+                        18,
+                      )
+                    : IconButton(
+                        icon: Image(
+                          image: NetworkImage(imageurl),
+                          height: 50,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProfilPage()));
+                        },
+                      ))
+          ],
         ),
         body: SingleChildScrollView(
             child: Column(children: [
-              TabBar(
-                controller: _nestedTabController,
-                indicatorColor: Colors.teal,
-                labelColor: Colors.teal,
-                unselectedLabelColor: Colors.black54,
-                isScrollable: true,
-                tabs: const <Widget>[
-                  Tab(
-                    text: "Listes",
-                  ),
-                  Tab(
-                    text: "Prestataires",
-                  ),
-                ],
+          TabBar(
+            controller: _nestedTabController,
+            indicatorColor: Colors.teal,
+            labelColor: Colors.teal,
+            unselectedLabelColor: Colors.black54,
+            isScrollable: true,
+            tabs: const <Widget>[
+              Tab(
+                text: "Listes",
               ),
-              SizedBox(
-                height: screenHeight,
-                child: TabBarView(
-                    controller: _nestedTabController,
-                    children: <Widget>[
-                      _buildListFavoriteLists(),
-                      _buildListFavoriteProviders(),
-                    ]),
+              Tab(
+                text: "Prestataires",
               ),
-            ])));
+            ],
+          ),
+          SizedBox(
+            height: screenHeight,
+            child:
+                TabBarView(controller: _nestedTabController, children: <Widget>[
+              _buildListFavoriteLists(),
+              _buildListFavoriteProviders(),
+            ]),
+          ),
+        ])));
   }
 
   Widget _buildListFavoriteLists() {
@@ -136,7 +168,7 @@ class _FavoritePageState extends State<FavoritePage>
         child: Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height *0.8,
+          height: MediaQuery.of(context).size.height * 0.8,
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -154,12 +186,13 @@ class _FavoritePageState extends State<FavoritePage>
                   ),
                 );
                 animationController.forward();
-                return ListComponent(
-                    taskList: taskLists[index],
-                    animationController: animationController,
-                    animation: animation,
-
-                );
+                return isLoading
+                    ? getShimmerLoading(250, 200)
+                    : ListComponent(
+                        taskList: taskLists[index],
+                        animationController: animationController,
+                        animation: animation,
+                      );
               }),
         )
       ],
@@ -183,14 +216,16 @@ class _FavoritePageState extends State<FavoritePage>
             );
             animationController.forward();
 
-            return ItemListSearch(
-              provider: search[index],
-              animation: animation,
-              animationController: animationController,
-              text: '',
-              //     .map((e) => ListItem(image: e.cover, label: e.name))
-              //     .toList()
-            );
+            return isLoading
+                ? getShimmerLoading(250, 200)
+                : ItemListSearch(
+                    provider: search[index],
+                    animation: animation,
+                    animationController: animationController,
+                    text: '',
+                    //     .map((e) => ListItem(image: e.cover, label: e.name))
+                    //     .toList()
+                  );
           }),
     ));
   }
