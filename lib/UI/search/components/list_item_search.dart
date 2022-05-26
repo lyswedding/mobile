@@ -61,6 +61,13 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.provider.cover);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListCellAnimationView(
       animation: widget.animation,

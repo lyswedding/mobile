@@ -99,7 +99,7 @@ class _ProfilPageState extends State<ProfilPage> {
                     )
                   : CircleAvatar(
                       radius: 100,
-                      backgroundImage: NetworkImage(item.user!.imageUrl ?? ""),
+                      backgroundImage: NetworkImage(item.user!.imageUrl??""),
                     ),
               Text(
                 item.user!.firstName ?? "foulan",

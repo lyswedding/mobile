@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/services/dio_service.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
@@ -10,6 +11,7 @@ import 'package:lys_wedding/shared/urls.dart';
 class ServiceProfil {
   Future<UserApi> getUser() async {
     var dio = DioUtil.getInstance();
+    UserApi user;
 
     var token = await getUserInfoSharedPref("token");
 
@@ -19,7 +21,10 @@ class ServiceProfil {
       final data = jsonDecode(value.toString());
       print(data);
 
-      return UserApi.fromJson(data);
+      user= UserApi.fromJson(data);
+      user.user!.imageUrl="http://102.219.178.96:3001" + user.user!.imageUrl!;
+
+      return user;
     });
   }
 
@@ -91,14 +96,16 @@ class ServiceProfil {
 
   static Future<String?> uploadImage(filepath, id) async {
     print(filepath);
+    print(id);
     var token = await getUserInfoSharedPref('token');
     var request = http.MultipartRequest(
-        'Put', Uri.parse('${URLS.BASE_URL}/users/upload/single'));
+        'Patch', Uri.parse('${URLS.BASE_URL}/users/${id}'));
     request.fields['_id'] = id.toString();
-    request.files.add(await http.MultipartFile.fromPath('image', filepath));
+    request.files.add(await http.MultipartFile.fromPath('image', filepath,contentType: MediaType.parse("image/png")));
     request.headers['Authorization'] = "Bearer " + token;
     var res = await request.send();
     print(res.statusCode);
+    print(res.stream);
     print(res.reasonPhrase);
     return res.reasonPhrase;
   }
