@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,6 +39,29 @@ class _SignupState extends State<Signup> {
               child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 12, left: 5, bottom: 10),
+                child: InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Home()));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: primaryColor),
+                          child: Text(
+                            "<< skeep",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
               const SizedBox(
                 height: 200,
                 width: 200,
@@ -57,8 +83,7 @@ class _SignupState extends State<Signup> {
                 titleText: 'last name',
                 hintText: "enter last name",
                 keyboardType: TextInputType.name,
-                onChanged: (String txt) {
-                },
+                onChanged: (String txt) {},
               ),
               const SizedBox(
                 height: 15,
@@ -103,7 +128,9 @@ class _SignupState extends State<Signup> {
                     if (fnameController.text.isEmpty ||
                         lnameController.text.isEmpty ||
                         emailController.text.isEmpty ||
-                        passwordController.text.isEmpty) {
+                        passwordController.text.isEmpty ||
+                        phoneController.text.length < 8 ||
+                        phoneController.text.length > 13) {
                       showToast(
                           context: context,
                           msg: 'Merci de remplir tous les champs !');
@@ -129,11 +156,11 @@ class _SignupState extends State<Signup> {
                       };
                       print(body.toString());
 
-                      AuthCalls.signup(body).then((code) {
+                      AuthCalls.signup(body).then((response) {
                         setState(() {
                           isInCall = false;
                         });
-                        if (code == 201) {
+                        if (response.statusCode == 201) {
                           showToast(
                               context: context,
                               msg:
@@ -147,8 +174,7 @@ class _SignupState extends State<Signup> {
                         } else {
                           showToast(
                               context: context,
-                              msg:
-                                  "Une erreur s'est produite. Veuillez réessayer!");
+                              msg: jsonDecode(response.body)["message"]);
                         }
                       });
                     }

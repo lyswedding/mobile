@@ -18,14 +18,12 @@ class ListComponent extends StatefulWidget {
   final TaskList taskList;
   final AnimationController animationController;
   final Animation<double> animation;
-  bool isSelected = false;
 
-  ListComponent({
+  const ListComponent({
     Key? key,
     required this.animationController,
     required this.animation,
     required this.taskList,
-    required this.isSelected,
   }) : super(key: key);
 
   @override
@@ -34,17 +32,15 @@ class ListComponent extends StatefulWidget {
 
 class _ListComponentState extends State<ListComponent> {
   bool isInCall = false;
+  bool isSelected = false;
   callAddToFavorite(id) async {
     await FavoriteCalls.addListToFavorite(id).then((value) {
       print(value);
       print(value.statusCode);
       if (value.statusCode == 201) {
-        showToast(context: context, msg: 'Liste des tâches mise en favoris');
-        setState(() {
-          widget.isSelected=true;
-        });
+        showToast(context: context, msg: 'Liste Ajouté aux favoris ');
       } else {
-        showToast(context: context, msg: "une erreur s'est produite!");
+        showToast(context: context, msg: "Liste deja mise en favorie");
       }
     });
     setState(() {
@@ -56,10 +52,7 @@ class _ListComponentState extends State<ListComponent> {
     await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
       print(value.statusCode);
       if (value.statusCode == 200) {
-        showToast(context: context, msg: 'Liste des tâches retiré de favoris');
-        setState(() {
-          widget.isSelected=false;
-        });
+        showToast(context: context, msg: 'Liste Retiré de favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -120,21 +113,24 @@ class _ListComponentState extends State<ListComponent> {
                                 // setState(() {
                                 //   isSelected=!isSelected;
                                 // });
-                                if (widget.isSelected) {
+                                if (isSelected) {
                                   checkIfTokenExists(() {
                                     deleteFromFavorites(widget.taskList.id);
-                                  }, context);
+                                  }, context)
+                                      .then(
+                                          (value) => isSelected = !isSelected);
                                 } else {
                                   checkIfTokenExists(() {
                                     callAddToFavorite(widget.taskList.id);
-                                  }, context);
-
+                                  }, context)
+                                      .then(
+                                          (value) => isSelected = !isSelected);
                                 }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Icon(
-                                  widget.isSelected
+                                  isSelected
                                       ? EvaIcons.heart
                                       : EvaIcons.heartOutline,
                                   color: const Color(0xffEB5890),
@@ -167,7 +163,7 @@ class _ListComponentState extends State<ListComponent> {
                               color: primaryColor,
                             ),
                             Text(
-                              widget.taskList.tags!.toString(),
+                              widget.taskList.tags.toString(),
                               // Helper.getRoomText(hotelInfo.roomData!),
                               style: GoogleFonts.poppins(
                                   fontSize: 12,

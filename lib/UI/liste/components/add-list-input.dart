@@ -9,15 +9,14 @@ class AddListInput extends StatefulWidget {
   final bool isEnabled;
   final TextInputType textInputType;
 
-   AddListInput({
-    Key? key,
-    required this.titre,
-    required this.hint,
-     required this.textEditingController,
-     this.isEnabled=false,
-     this.textInputType=TextInputType.name
-
-  }) : super(key: key);
+  AddListInput(
+      {Key? key,
+      required this.titre,
+      required this.hint,
+      required this.textEditingController,
+      this.isEnabled = false,
+      this.textInputType = TextInputType.name})
+      : super(key: key);
 
   @override
   _AddListInputState createState() => _AddListInputState();
@@ -31,13 +30,18 @@ class _AddListInputState extends State<AddListInput> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.titre,style: titleTextStyle.copyWith(fontSize: 14),),
-          const SizedBox(height: 10,),
+          Text(
+            widget.titre,
+            style: titleTextStyle.copyWith(fontSize: 14),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           CommonTextFieldView(
             hintText: widget.hint,
             controller: widget.textEditingController,
             enabled: widget.isEnabled,
-            keyboardType: widget.textInputType!,
+            keyboardType: widget.textInputType,
           )
         ],
       ),

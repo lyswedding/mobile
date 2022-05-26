@@ -32,24 +32,28 @@ Future<File> getImageFileFromAssets(String path) async {
   return file;
 }
 
-
-Future checkIfTokenExists(Function function,BuildContext context) async {
+Future checkIfTokenExists(Function function, BuildContext context) async {
   await getUserInfoSharedPref("token").then((token) async {
-    if(token!=null) {
-     function();
-    }else{
+    if (token != null) {
+      function();
+    } else {
       createAccountDialog(context);
     }
   });
 }
 
-bool checkIfIsFavorite(List list,List listFavorite){
-  bool result=false ;
-  for (var element in list) {
-    if(listFavorite.contains(element)){
-      result= true;
+Future checkIfTokenExist(Function function, BuildContext context) async {
+  await getUserInfoSharedPref("token").then((token) async {
+    if (token != null) {
+      function();
+    } else {
+      createAccountDialogue(context);
     }
-  }
-  return result;
+  });
 }
 
+Future<bool> ifTokenExist() async {
+  var tok = await getUserInfoSharedPref("token");
+  if (tok != null) return true;
+  return false;
+}

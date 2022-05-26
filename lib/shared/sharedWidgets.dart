@@ -1,6 +1,8 @@
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:lys_wedding/UI/authentification/screens/login.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
+import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 void showToast({
@@ -132,7 +134,6 @@ Future<void> showMyDialogJusrify(BuildContext context, String title,
   );
 }
 
-
 Future<void> createAccountDialog(BuildContext context) async {
   return showDialog<void>(
     context: context,
@@ -144,15 +145,18 @@ Future<void> createAccountDialog(BuildContext context) async {
           child: ListBody(
             children: <Widget>[
               TextButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup()));
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Login()));
                   },
                   child: Text(
-                    'Go to sign up page',
+                    'Go to Login page',
                     style: subTitleTextStyle,
                   )),
-                Text(
-                  'Would like continue using Lys !! ',style: regularTextStyle,),
+              Text(
+                'Would like continue using Lys !! ',
+                style: regularTextStyle,
+              ),
             ],
           ),
         ),
@@ -161,6 +165,47 @@ Future<void> createAccountDialog(BuildContext context) async {
             child: const Text('cancel'),
             onPressed: () {
               Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<void> createAccountDialogue(BuildContext context) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Create an account'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Login()));
+                  },
+                  child: Text(
+                    'Go to Login page',
+                    style: subTitleTextStyle,
+                  )),
+              Text(
+                'Would like continue using Lys !! ',
+                style: regularTextStyle,
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('cancel'),
+            onPressed: () {
+              // Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Home()));
             },
           ),
         ],

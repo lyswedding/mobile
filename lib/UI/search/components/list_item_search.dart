@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+
 import 'package:lys_wedding/UI/liste/components/common_card.dart';
 import 'package:lys_wedding/UI/search/screens/detail_search/screens/detail_search.dart';
 import 'package:lys_wedding/models/List_search.dart';
@@ -10,19 +11,17 @@ import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 
 class ItemListSearch<T> extends StatefulWidget {
-   ItemListSearch({
+  const ItemListSearch({
     Key? key,
     required this.provider,
     required this.text,
-    required this.animation,
     required this.animationController,
-    required this.isSelected
+    required this.animation,
   }) : super(key: key);
   final Provider provider;
   final String text;
   final AnimationController animationController;
   final Animation<double> animation;
-  bool isSelected = false;
 
   @override
   State<ItemListSearch<T>> createState() => _ItemListSearchState<T>();
@@ -30,14 +29,28 @@ class ItemListSearch<T> extends StatefulWidget {
 
 class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   bool isInCall = false;
-  callAddToFavorite() async {
+  bool isSelected = false;
+
+  callAddToFavorite(String id) async {
     await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
       print(value.data);
       if (value.statusCode == 201) {
         showToast(context: context, msg: value.data['message'].toString());
-        setState(() {
-          widget.isSelected=true;
-        });
+      } else {
+        showToast(context: context, msg: "prestataire deja mis en favorie");
+      }
+    });
+    setState(() {
+      isInCall = true;
+    });
+  }
+
+  deleteFromFavorite(String id) async {
+    await FavoriteCalls.deletProviderFromFavorite(widget.provider.id)
+        .then((value) {
+      print(value.data);
+      if (value.statusCode == 200) {
+        showToast(context: context, msg: value.data['message'].toString());
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -47,20 +60,11 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
     });
   }
 
-  deleteFromFavorite() async {
-    await FavoriteCalls.deletProviderFromFavorite(widget.provider.id)
-        .then((value) {
-      print(value.data);
-      if (value.statusCode == 200) {
-        showToast(context: context, msg: value.data['message'].toString());
-        widget.isSelected=false;
-      } else {
-        showToast(context: context, msg: "une erreur s'est produite!");
-      }
-    });
-    setState(() {
-      isInCall = true;
-    });
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.provider.cover);
   }
 
   @override
@@ -73,7 +77,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               height: 300,
-              width: MediaQuery.of(context).size.width*0.8,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: CommonCard(
                 color: whiteColor,
                 radius: 10,
@@ -95,7 +99,6 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-
                                 Expanded(
                                   flex: 6,
                                   child: Text(
@@ -146,21 +149,25 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                                 const Radius.circular(32.0),
                               ),
                               onTap: () {
-                                 // isSelected = !isSelected;
-                                  if (widget.isSelected) {
-                                    checkIfTokenExists((){
-                                      deleteFromFavorite();
-                                    }, context);
-                                  } else {
-                                    checkIfTokenExists((){
-                                      callAddToFavorite();
-                                    }, context);
-                                  }
+                                // setState(() {
+                                //   isSelected = !isSelected;
+                                // });
+                                if (isSelected) {
+                                  checkIfTokenExists(() {
+                                    deleteFromFavorite(widget.provider.id);
+                                  }, context)
+                                      .then((value) => isSelected = false);
+                                } else {
+                                  checkIfTokenExists(() {
+                                    callAddToFavorite(widget.provider.id);
+                                  }, context)
+                                      .then((value) => isSelected = true);
+                                }
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Icon(
-                                  widget.isSelected
+                                  isSelected
                                       ? EvaIcons.heart
                                       : EvaIcons.heartOutline,
                                   color: Color(0xffEB5890),

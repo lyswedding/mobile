@@ -18,12 +18,11 @@ class CategorieCalls {
       final data = jsonDecode(response.body);
       print(data);
       for (var item in data['services']) {
-        servicesLists.add(Service.fromJson(item));
+        var service = Service.fromJson(item);
+        service.icon = URLS.BASE_URL + service.icon;
+        servicesLists.add(service);
       }
     }
     return servicesLists.toList();
   }
-
-
-
 }

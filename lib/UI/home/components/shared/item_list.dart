@@ -2,25 +2,21 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/search/screens/detail_search/screens/detail_search.dart';
 import 'package:lys_wedding/models/List_search.dart';
-import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 
 class ItemList extends StatefulWidget {
-   ItemList({
+  const ItemList({
     Key? key,
     required this.item,
     required this.width,
     required this.height,
-    required this.isSelected
   }) : super(key: key);
 
   final Provider item;
   final double width, height;
-  bool isSelected = false;
-
 
   @override
   State<ItemList> createState() => _ItemListState();
@@ -28,15 +24,13 @@ class ItemList extends StatefulWidget {
 
 class _ItemListState extends State<ItemList> {
   bool isInCall = false;
+  bool isSelected = false;
   callAddToFavorite(id) async {
     await FavoriteCalls.addListToFavorite(id).then((value) {
       print(value);
       print(value.statusCode);
-      if (value.statusCode == 201) {
-        showToast(context: context, msg: 'Liste des tâches mise en favoris');
-        setState(() {
-          widget.isSelected=true;
-        });
+      if (value.statusCode == 201 || value.statusCode == 200) {
+        showToast(context: context, msg: 'Ajouté aux favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -50,10 +44,7 @@ class _ItemListState extends State<ItemList> {
     await FavoriteCalls.deletTaskListFromFavorite(id).then((value) {
       print(value.statusCode);
       if (value.statusCode == 200) {
-        showToast(context: context, msg: 'Liste des tâches retiré de favoris');
-        setState(() {
-          widget.isSelected=false;
-        });
+        showToast(context: context, msg: ' Retiré de favoris');
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -61,6 +52,12 @@ class _ItemListState extends State<ItemList> {
     setState(() {
       isInCall = true;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -135,20 +132,22 @@ class _ItemListState extends State<ItemList> {
                         // setState(() {
                         //   isSelected = !isSelected;
                         // });
-                        if (widget.isSelected) {
+                        if (isSelected) {
                           checkIfTokenExists(() {
                             deleteFromFavorites(widget.item.id);
-                          }, context);
+                          }, context)
+                              .then((value) => isSelected = false);
                         } else {
                           checkIfTokenExists(() {
                             callAddToFavorite(widget.item.id);
-                          }, context);
+                          }, context)
+                              .then((value) => isSelected = true);
                         }
                       },
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Icon(
-                          widget.isSelected ? EvaIcons.heart : EvaIcons.heartOutline,
+                          isSelected ? EvaIcons.heart : EvaIcons.heartOutline,
                           color: const Color(0xffEB5890),
                         ),
                       ),
