@@ -35,6 +35,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   bool isInCall = true;
   bool isLoaded = false;
   bool islogued = false;
+
   UserApi item = UserApi();
   final ServiceProfil service = ServiceProfil();
   List<TaskList> taskLists = [];
@@ -131,7 +132,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    Future.delayed(Duration(milliseconds: 3000), () {
+    Future.delayed(Duration(milliseconds: 4000), () {
       setState(() {
         isLoading = false;
       });
@@ -183,12 +184,12 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                   ? getShimmerLoadingcircle(
                       18,
                     )
-                  : IconButton(
-                      icon: Image(
-                        image: NetworkImage(imageurl),
-                        height: 50,
+                  : InkWell(
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(imageurl),
                       ),
-                      onPressed: () {
+                      onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -387,10 +388,12 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       ),
     );
     animationController.forward();
-    return ListItemHorizontal(
-        taskListData: userTaskLists[index],
-        animationController: animationController,
-        animation: animation);
+    return isLoading
+        ? getShimmerLoading(80, 400)
+        : ListItemHorizontal(
+            taskListData: userTaskLists[index],
+            animationController: animationController,
+            animation: animation);
   }
 
   Widget _buildListAdminLists() {

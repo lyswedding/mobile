@@ -57,7 +57,7 @@ class _TaskUpdateState extends State<TaskUpdate> {
     if (datetime == null) {
       return widget.task.dueDate;
     } else {
-      return DateFormat('dd-MM-yyyy').format(datetime!);
+      return datetime.toString();
     }
   }
 
@@ -274,7 +274,7 @@ class _TaskUpdateState extends State<TaskUpdate> {
         descController.text,
         int.parse(costController.text),
         widget.task.nbUse,
-        DateTime.now().toIso8601String(),
+        getText(),
         widget.task.state,
         widget.task.tags);
 

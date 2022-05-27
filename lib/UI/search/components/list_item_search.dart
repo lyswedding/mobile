@@ -11,17 +11,19 @@ import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 
 class ItemListSearch<T> extends StatefulWidget {
-  const ItemListSearch({
-    Key? key,
-    required this.provider,
-    required this.text,
-    required this.animationController,
-    required this.animation,
-  }) : super(key: key);
+  ItemListSearch(
+      {Key? key,
+      required this.provider,
+      required this.text,
+      required this.animationController,
+      required this.animation,
+      this.isSelected = false})
+      : super(key: key);
   final Provider provider;
   final String text;
   final AnimationController animationController;
   final Animation<double> animation;
+  bool isSelected;
 
   @override
   State<ItemListSearch<T>> createState() => _ItemListSearchState<T>();
@@ -29,9 +31,11 @@ class ItemListSearch<T> extends StatefulWidget {
 
 class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   bool isInCall = false;
-  bool isSelected = false;
 
   callAddToFavorite(String id) async {
+    setState(() {
+      isInCall = false;
+    });
     await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
       print(value.data);
       if (value.statusCode == 201) {
@@ -152,22 +156,24 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                                 // setState(() {
                                 //   isSelected = !isSelected;
                                 // });
-                                if (isSelected) {
+                                if (widget.isSelected) {
                                   checkIfTokenExists(() {
                                     deleteFromFavorite(widget.provider.id);
                                   }, context)
-                                      .then((value) => isSelected = false);
+                                      .then(
+                                          (value) => widget.isSelected = false);
                                 } else {
                                   checkIfTokenExists(() {
                                     callAddToFavorite(widget.provider.id);
                                   }, context)
-                                      .then((value) => isSelected = true);
+                                      .then(
+                                          (value) => widget.isSelected = true);
                                 }
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Icon(
-                                  isSelected
+                                  widget.isSelected
                                       ? EvaIcons.heart
                                       : EvaIcons.heartOutline,
                                   color: Color(0xffEB5890),

@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/liste/components/list_component_horizontal.dart';
 import 'package:lys_wedding/models/taskList.dart';
+import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
@@ -22,14 +23,37 @@ class _UserListPageState extends State<UserListPage>
   late AnimationController animationController;
   bool isInCall = false;
   bool isLoaded = false;
+  bool isLoading = true;
+  List<TaskList> userTaskLists = [];
   final ServiceList service = ServiceList();
   List<Provider> search = [];
   List<TaskList> taskLists = [];
+  callAllUserListes() {
+    setState(() {
+      isInCall = true;
+    });
+    ListCalls.getUserTaskLists().then((res) {
+      setState(() {
+        print('*******************');
+        print(res.toString());
+        userTaskLists = res;
+      });
+    });
+    setState(() {
+      isInCall = false;
+    });
+  }
 
   @override
   void initState() {
+    callAllUserListes();
     // TODO: implement initState
     // callAllListes();
+    Future.delayed(Duration(milliseconds: 3000), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
@@ -68,7 +92,7 @@ class _UserListPageState extends State<UserListPage>
 
   Widget _buildListFavoriteProviders() {
     return ListView.builder(
-        itemCount: widget.tasksLists.length,
+        itemCount: userTaskLists.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -99,15 +123,17 @@ class _UserListPageState extends State<UserListPage>
             key: UniqueKey(),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
-              showAlertDialog(context, widget.tasksLists[index].id);
+              showAlertDialog(context, userTaskLists[index].id);
             },
-            child: ListItemHorizontal(
-                taskListData: widget.tasksLists[index],
-                animationController: animationController,
-                animation: animation
-                //     .map((e) => ListItem(image: e.cover, label: e.name))
-                //     .toList()
-                ),
+            child: isLoading
+                ? getShimmerLoading(80, 400)
+                : ListItemHorizontal(
+                    taskListData: userTaskLists[index],
+                    animationController: animationController,
+                    animation: animation
+                    //     .map((e) => ListItem(image: e.cover, label: e.name))
+                    //     .toList()
+                    ),
           );
         });
   }
@@ -115,8 +141,10 @@ class _UserListPageState extends State<UserListPage>
   _deleteTask(idList) async {
     print(idList);
     await ListCalls.deleteTaskList(idList).then((value) {
+      print(value);
       if (value == 200) {
         showToast(context: context, msg: "Liste des tâches supprimée");
+        callAllUserListes();
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }

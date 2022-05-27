@@ -32,6 +32,7 @@ class FavoriteCalls {
     var token = await getUserInfoSharedPref("token");
     dio.options.headers["Authorization"] = "Bearer " + token;
     return await dio.putUri(url).then((value) {
+      print("zzzzzzzzzzzzzzzzzzzzzz");
       print(value.data);
       return value;
     });
@@ -96,7 +97,9 @@ class FavoriteCalls {
         favoriteProviders.add(provider);
       }
       for (var item in value.data['providers']) {
-        favoriteProviders.add(Provider.fromJson(item));
+        if (item != null) {
+          favoriteProviders.add(Provider.fromJson(item));
+        }
       }
       return favoriteProviders.toList();
     });

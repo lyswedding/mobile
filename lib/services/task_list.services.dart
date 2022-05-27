@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'dio_service.dart';
 
 class ListCalls {
-
   static Future<List<TaskList>> getAdminLists() async {
     var url;
     var response;
@@ -32,28 +31,28 @@ class ListCalls {
     return tasksLists.toList();
   }
 
-
   static Future<int> addTaskList(TaskList task) async {
     var url;
     var response;
     var dio = DioUtil.getInstance();
 
     url = Uri.parse('${URLS.BASE_URL}/taskslists');
-    var request = http.MultipartRequest('POST', url);
+    var request = await http.MultipartRequest('POST', url);
     var token = await getUserInfoSharedPref("token");
     dio.options.headers["Authorization"] = "Bearer " + token;
 
-    await dio.post('${URLS.BASE_URL}/taskslists',data:task.toJson()).then((value){
+    await dio
+        .post('${URLS.BASE_URL}/taskslists', data: task.toJson())
+        .then((value) {
       print(value.data);
-      response= value.statusCode;
+      response = value.statusCode;
     });
     return response;
   }
 
-
-  static jsonToFormData(http.MultipartRequest request,Map<String, dynamic> data) {
+  static jsonToFormData(
+      http.MultipartRequest request, Map<String, dynamic> data) {
     for (var key in data.keys) {
-
       request.fields[key] = data[key].toString();
       print(data[key].toString());
     }
@@ -61,27 +60,26 @@ class ListCalls {
     return request.fields;
   }
 
-
-  static Future editTaskInList(Task task,idTask,idTaskList) async {
+  static Future editTaskInList(Task task, idTask, idTaskList) async {
     var url;
     var response;
     var dio = DioUtil.getInstance();
 
-     url = Uri.parse('${URLS.BASE_URL}/taskslists/$idTaskList/task/$idTask');
+    url = Uri.parse('${URLS.BASE_URL}/taskslists/$idTaskList/task/$idTask');
 
-      await getUserInfoSharedPref("token").then((token) async {
-        dio.options.headers["Authorization"] = "Bearer " + token;
-        return  await dio.patch(url.toString(),data: jsonEncode(task.toJson())).then((value){
-          print(value.data);
-          response= value;
-
-        });
+    await getUserInfoSharedPref("token").then((token) async {
+      dio.options.headers["Authorization"] = "Bearer " + token;
+      return await dio
+          .patch(url.toString(), data: jsonEncode(task.toJson()))
+          .then((value) {
+        print(value.data);
+        response = value;
       });
+    });
     return response;
-
   }
 
-  static Future<int> editList(TaskList task,idTaskList) async {
+  static Future<int> editList(TaskList task, idTaskList) async {
     var url;
     var response;
     var dio = DioUtil.getInstance();
@@ -90,19 +88,19 @@ class ListCalls {
     await getUserInfoSharedPref("token").then((token) async {
       print(task.toJson());
       dio.options.headers["Authorization"] = "Bearer " + token;
-      return  await dio.patch('${URLS.BASE_URL}/taskslists/$idTaskList',data:task.toJson()).then((value){
+      return await dio
+          .patch('${URLS.BASE_URL}/taskslists/$idTaskList', data: task.toJson())
+          .then((value) {
         print(value.data);
         print(value.statusCode);
 
-        response= value.statusCode;
-
+        response = value.statusCode;
       });
     });
     return response;
-
   }
 
-  static Future<http.Response> deletTaskListFromTaskList(idList,idTask) async {
+  static Future<http.Response> deletTaskListFromTaskList(idList, idTask) async {
     var url;
     var response;
     var dio = DioUtil.getInstance();
@@ -111,15 +109,14 @@ class ListCalls {
 
     var token = await getUserInfoSharedPref("token");
     dio.options.headers["Authorization"] = "Bearer " + token;
-    return  await dio.deleteUri(url).then((value){
+    return await dio.deleteUri(url).then((value) {
       print(value.data);
 
       return response;
-
     });
   }
 
-  static Future<http.Response> deleteTaskList(idList) async {
+  static Future<dynamic> deleteTaskList(idList) async {
     var url;
     var response;
     var dio = DioUtil.getInstance();
@@ -128,33 +125,30 @@ class ListCalls {
 
     var token = await getUserInfoSharedPref("token");
     dio.options.headers["Authorization"] = "Bearer " + token;
-    return  await dio.deleteUri(url).then((value){
+    return await dio.deleteUri(url).then((value) {
       print(value.data);
 
-      return response;
-
+      return value.statusCode;
     });
   }
 
-  static getUserTaskLists()async{
+  static getUserTaskLists() async {
     var dio = DioUtil.getInstance();
-       final tasksLists = <TaskList>[];
+    final tasksLists = <TaskList>[];
 
     const String apiUrl = (URLS.BASE_URL + "/taskslists/my");
     var accessToken = await getUserInfoSharedPref('token');
     print(accessToken);
     dio.options.headers["Authorization"] = "Bearer " + accessToken;
 //response will be assigned to response variable
-    return  await dio.get(apiUrl).then((value){
+    return await dio.get(apiUrl).then((value) {
       print(value.data);
       final data = jsonDecode(value.toString());
-          print(data);
-          for (var item in value.data['tasksLists']) {
-            tasksLists.add(TaskList.fromJson(item));
-          }
-          return tasksLists.toList();
-
+      print(data);
+      for (var item in value.data['tasksLists']) {
+        tasksLists.add(TaskList.fromJson(item));
+      }
+      return tasksLists.toList();
     });
   }
-
 }

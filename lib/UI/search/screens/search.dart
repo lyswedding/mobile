@@ -139,12 +139,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                     ? getShimmerLoadingcircle(
                         18,
                       )
-                    : IconButton(
-                        icon: Image(
-                          image: NetworkImage(imageurl),
-                          height: 50,
+                    : InkWell(
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(imageurl),
                         ),
-                        onPressed: () {
+                        onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(

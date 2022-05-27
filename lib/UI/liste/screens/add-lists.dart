@@ -56,6 +56,10 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    titleController.clear();
+    descController.clear();
+    tags.clear();
+    tasks.clear();
     // TODO: implement initState
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
@@ -238,6 +242,12 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                             showToast(context: context, msg: "verifie tasks ");
                           } else {
                             _addList();
+                            setState(() {});
+                            titleController.clear();
+                            descController.clear();
+                            tags.clear();
+                            tasks.clear();
+
                             Navigator.pop(context);
                           }
                         }),

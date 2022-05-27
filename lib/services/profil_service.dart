@@ -21,8 +21,8 @@ class ServiceProfil {
       final data = jsonDecode(value.toString());
       print(data);
 
-      user= UserApi.fromJson(data);
-      user.user!.imageUrl="http://102.219.178.96:3001" + user.user!.imageUrl!;
+      user = UserApi.fromJson(data);
+      user.user!.imageUrl = "http://102.219.178.96:3001" + user.user!.imageUrl!;
 
       return user;
     });
@@ -101,7 +101,8 @@ class ServiceProfil {
     var request = http.MultipartRequest(
         'Patch', Uri.parse('${URLS.BASE_URL}/users/${id}'));
     request.fields['_id'] = id.toString();
-    request.files.add(await http.MultipartFile.fromPath('image', filepath,contentType: MediaType.parse("image/png")));
+    request.files.add(await http.MultipartFile.fromPath('image', filepath,
+        contentType: MediaType.parse("image/png")));
     request.headers['Authorization'] = "Bearer " + token;
     var res = await request.send();
     print(res.statusCode);
