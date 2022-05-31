@@ -58,7 +58,6 @@ class _ResultPageState extends State<ResultPage> with TickerProviderStateMixin{
             _animationController.forward();
             //Finished hotel data list and UI View
             return ItemListSearch(
-              isSelected: false,
               provider: widget.resultList[index],
               animation: animation,
               animationController: _animationController, text: 'text',
