@@ -267,7 +267,8 @@ class _TaskUpdateState extends State<TaskUpdate> {
     setState(() {
       isInCall = false;
     });
-
+print(widget.task.id);
+print(widget.idList);
     Task task = Task(
         widget.task.id,
         titleController.text,

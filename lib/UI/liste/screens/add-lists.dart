@@ -242,11 +242,6 @@ class _AddListState extends State<AddList> with TickerProviderStateMixin {
                             showToast(context: context, msg: "verifie tasks ");
                           } else {
                             _addList();
-                            setState(() {});
-                            titleController.clear();
-                            descController.clear();
-                            tags.clear();
-                            tasks.clear();
 
                             Navigator.pop(context);
                           }
