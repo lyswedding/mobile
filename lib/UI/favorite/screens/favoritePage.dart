@@ -220,6 +220,7 @@ class _FavoritePageState extends State<FavoritePage>
             return isLoading
                 ? getShimmerLoading(250, 200)
                 : ItemListSearch(
+                    isSelected: true,
                     provider: search[index],
                     animation: animation,
                     animationController: animationController,

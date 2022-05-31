@@ -86,6 +86,7 @@ class FavoriteCalls {
       final data = jsonDecode(value.toString());
       print(data);
       for (var item in data['providers']) {
+        print("aaaaaaaaaaaaa");
         var provider = Provider.fromJson(item);
         provider.cover = "http://102.219.178.96:3001" + provider.cover;
         List<String> imgs = [];
@@ -95,12 +96,13 @@ class FavoriteCalls {
         }
         provider.images = imgs;
         favoriteProviders.add(provider);
+        print(favoriteProviders);
       }
-      for (var item in value.data['providers']) {
-        if (item != null) {
-          favoriteProviders.add(Provider.fromJson(item));
-        }
-      }
+      // for (var item in value.data['providers']) {
+      //   if (item != null) {
+      //     favoriteProviders.add(Provider.fromJson(item));
+      //   }
+      // }
       return favoriteProviders.toList();
     });
   }

@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/liste/screens/list_details.dart';
@@ -11,7 +8,6 @@ import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
-
 import 'common_card.dart';
 
 class ListComponent extends StatefulWidget {
