@@ -258,7 +258,7 @@ class _UpdateListState extends State<UpdateList> with TickerProviderStateMixin {
                     child: CustomButton(
                         text: 'Enregistrer',
                         onPressed: () {
-                          _addList();
+                          _editList();
                         }),
                   )
                 ]),
@@ -275,6 +275,7 @@ class _UpdateListState extends State<UpdateList> with TickerProviderStateMixin {
     );
     animationController.forward();
     return TaskComponent(
+      idList: widget.taskList.id,
       task: tasks[i],
       animationController: animationController,
       text: 'text',
