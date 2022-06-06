@@ -121,12 +121,12 @@ class _FavoritePageState extends State<FavoritePage>
                     ? getShimmerLoadingcircle(
                         18,
                       )
-                    : IconButton(
-                        icon: Image(
-                          image: NetworkImage(imageurl),
-                          height: 50,
+                    : InkWell(
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(imageurl),
                         ),
-                        onPressed: () {
+                        onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -189,6 +189,7 @@ class _FavoritePageState extends State<FavoritePage>
                 return isLoading
                     ? getShimmerLoading(250, 200)
                     : ListComponent(
+                        isSelected: true,
                         taskList: taskLists[index],
                         animationController: animationController,
                         animation: animation,
@@ -219,6 +220,7 @@ class _FavoritePageState extends State<FavoritePage>
             return isLoading
                 ? getShimmerLoading(250, 200)
                 : ItemListSearch(
+                    isSelected: true,
                     provider: search[index],
                     animation: animation,
                     animationController: animationController,

@@ -32,6 +32,7 @@ class FavoriteCalls {
     var token = await getUserInfoSharedPref("token");
     dio.options.headers["Authorization"] = "Bearer " + token;
     return await dio.putUri(url).then((value) {
+      print("zzzzzzzzzzzzzzzzzzzzzz");
       print(value.data);
       return value;
     });
@@ -85,6 +86,7 @@ class FavoriteCalls {
       final data = jsonDecode(value.toString());
       print(data);
       for (var item in data['providers']) {
+        print("aaaaaaaaaaaaa");
         var provider = Provider.fromJson(item);
         provider.cover = "http://102.219.178.96:3001" + provider.cover;
         List<String> imgs = [];
@@ -94,10 +96,13 @@ class FavoriteCalls {
         }
         provider.images = imgs;
         favoriteProviders.add(provider);
+        print(favoriteProviders);
       }
-      for (var item in value.data['providers']) {
-        favoriteProviders.add(Provider.fromJson(item));
-      }
+      // for (var item in value.data['providers']) {
+      //   if (item != null) {
+      //     favoriteProviders.add(Provider.fromJson(item));
+      //   }
+      // }
       return favoriteProviders.toList();
     });
   }

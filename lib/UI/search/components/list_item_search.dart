@@ -11,13 +11,15 @@ import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 
 class ItemListSearch<T> extends StatefulWidget {
-  const ItemListSearch({
-    Key? key,
-    required this.provider,
-    required this.text,
-    required this.animationController,
-    required this.animation,
-  }) : super(key: key);
+  bool isSelected;
+  ItemListSearch(
+      {Key? key,
+      required this.provider,
+      required this.text,
+      required this.animationController,
+      required this.animation,
+      this.isSelected = false})
+      : super(key: key);
   final Provider provider;
   final String text;
   final AnimationController animationController;
@@ -29,16 +31,19 @@ class ItemListSearch<T> extends StatefulWidget {
 
 class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   bool isInCall = false;
-  bool isSelected = false;
 
-  callAddToFavorite(String id) async {
-    await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
+  callAddToFavorite(id) async {
+    setState(() {
+      isInCall = false;
+    });
+    await FavoriteCalls.addProviderToFavorite(id).then((value) {
       print(value.data);
-      if (value.statusCode == 201) {
-        showToast(context: context, msg: value.data['message'].toString());
-      } else {
-        showToast(context: context, msg: "prestataire deja mis en favorie");
-      }
+      showToast(context: context, msg: value.data['message'].toString());
+      // if (value.statusCode == 200) {
+      //   showToast(context: context, msg: value.data['message'].toString());
+      // } else {
+      //   showToast(context: context, msg: "prestataire deja mis en favorie");
+      // }
     });
     setState(() {
       isInCall = true;
@@ -64,7 +69,6 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.provider.cover);
   }
 
   @override
@@ -152,22 +156,24 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                                 // setState(() {
                                 //   isSelected = !isSelected;
                                 // });
-                                if (isSelected) {
+                                if (widget.isSelected) {
                                   checkIfTokenExists(() {
                                     deleteFromFavorite(widget.provider.id);
                                   }, context)
-                                      .then((value) => isSelected = false);
+                                      .then(
+                                          (value) => widget.isSelected = false);
                                 } else {
                                   checkIfTokenExists(() {
                                     callAddToFavorite(widget.provider.id);
                                   }, context)
-                                      .then((value) => isSelected = true);
+                                      .then(
+                                          (value) => widget.isSelected = true);
                                 }
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Icon(
-                                  isSelected
+                                  widget.isSelected
                                       ? EvaIcons.heart
                                       : EvaIcons.heartOutline,
                                   color: Color(0xffEB5890),

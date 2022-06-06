@@ -39,21 +39,21 @@ class _ProfilPageState extends State<ProfilPage> {
     });
   }
 
-  callAllUserListes() {
-    setState(() {
-      isInCall = true;
-    });
-    ListCalls.getUserTaskLists().then((res) {
-      setState(() {
-        print('*******************');
-        print(res.toString());
-        userTaskLists = res;
-      });
-    });
-    setState(() {
-      isInCall = false;
-    });
-  }
+  // callAllUserListes() {
+  //   setState(() {
+  //     isInCall = true;
+  //   });
+  //   ListCalls.getUserTaskLists().then((res) {
+  //     setState(() {
+  //       print('*******************');
+  //       print(res.toString());
+  //       userTaskLists = res;
+  //     });
+  //   });
+  //   setState(() {
+  //     isInCall = false;
+  //   });
+  // }
 
   @override
   void initState() {
@@ -171,12 +171,12 @@ class _ProfilPageState extends State<ProfilPage> {
                   ),
                   InkWell(
                     onTap: (() {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserListPage(
-                                    tasksLists: userTaskLists,
-                                  ))).then((value) => callAllUserListes());
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => UserListPage(
+                      //               tasksLists: userTaskLists,
+                      //             ))).then((value) => callAllUserListes());
                     }),
                     child: Container(
                         padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
