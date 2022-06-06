@@ -37,27 +37,27 @@ class _TaskUpdateState extends State<TaskUpdate> {
     islogued = await ifTokenExist();
   }
 
-  callAllUserListes() {
-    setState(() {
-      isInCall = true;
-    });
-    ListCalls.getUserTaskLists().then((res) {
-      setState(() {
-        print('*******************');
-        print(res.toString());
-        userTaskLists = res;
-      });
-    });
-    setState(() {
-      isInCall = false;
-    });
-  }
+  // callAllUserListes() {
+  //   setState(() {
+  //     isInCall = true;
+  //   });
+  //   ListCalls.getUserTaskLists().then((res) {
+  //     setState(() {
+  //       print('*******************');
+  //       print(res.toString());
+  //       userTaskLists = res;
+  //     });
+  //   });
+  //   setState(() {
+  //     isInCall = false;
+  //   });
+  // }
 
   String getText() {
     if (datetime == null) {
       return widget.task.dueDate;
     } else {
-      return DateFormat('dd-MM-yyyy').format(datetime!);
+      return datetime.toString();
     }
   }
 
@@ -83,7 +83,7 @@ class _TaskUpdateState extends State<TaskUpdate> {
             IconButton(
                 onPressed: () {
                   checkIfTokenExists(() {
-                    callAllUserListes();
+                    //callAllUserListes();
                     setState(() {
                       isEnabled = !isEnabled;
                     });
@@ -267,14 +267,15 @@ class _TaskUpdateState extends State<TaskUpdate> {
     setState(() {
       isInCall = false;
     });
-
+print(widget.task.id);
+print(widget.idList);
     Task task = Task(
         widget.task.id,
         titleController.text,
         descController.text,
         int.parse(costController.text),
         widget.task.nbUse,
-        DateTime.now().toIso8601String(),
+        getText(),
         widget.task.state,
         widget.task.tags);
 

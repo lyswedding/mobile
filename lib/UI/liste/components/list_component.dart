@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lys_wedding/UI/liste/screens/list_details.dart';
@@ -11,20 +8,20 @@ import 'package:lys_wedding/shared/animation.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
-
 import 'common_card.dart';
 
 class ListComponent extends StatefulWidget {
   final TaskList taskList;
   final AnimationController animationController;
   final Animation<double> animation;
-
-  const ListComponent({
-    Key? key,
-    required this.animationController,
-    required this.animation,
-    required this.taskList,
-  }) : super(key: key);
+  bool isSelected;
+  ListComponent(
+      {Key? key,
+      required this.animationController,
+      required this.animation,
+      required this.taskList,
+      this.isSelected = false})
+      : super(key: key);
 
   @override
   State<ListComponent> createState() => _ListComponentState();
@@ -32,7 +29,7 @@ class ListComponent extends StatefulWidget {
 
 class _ListComponentState extends State<ListComponent> {
   bool isInCall = false;
-  bool isSelected = false;
+
   callAddToFavorite(id) async {
     await FavoriteCalls.addListToFavorite(id).then((value) {
       print(value);
@@ -113,24 +110,24 @@ class _ListComponentState extends State<ListComponent> {
                                 // setState(() {
                                 //   isSelected=!isSelected;
                                 // });
-                                if (isSelected) {
+                                if (widget.isSelected) {
                                   checkIfTokenExists(() {
                                     deleteFromFavorites(widget.taskList.id);
                                   }, context)
-                                      .then(
-                                          (value) => isSelected = !isSelected);
+                                      .then((value) => widget.isSelected =
+                                          !widget.isSelected);
                                 } else {
                                   checkIfTokenExists(() {
                                     callAddToFavorite(widget.taskList.id);
                                   }, context)
-                                      .then(
-                                          (value) => isSelected = !isSelected);
+                                      .then((value) => widget.isSelected =
+                                          !widget.isSelected);
                                 }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Icon(
-                                  isSelected
+                                  widget.isSelected
                                       ? EvaIcons.heart
                                       : EvaIcons.heartOutline,
                                   color: const Color(0xffEB5890),

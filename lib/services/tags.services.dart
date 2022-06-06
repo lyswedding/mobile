@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:lys_wedding/shared/urls.dart';
 import 'package:http/http.dart' as http;
 
-class TagsServices{
+class TagsServices extends ChangeNotifier{
 
-  static Future<List<String>> getUniqueTags() async {
+  bool isProcessing = true;
+  final servicesLists = <String>[];
+
+   Future<List<String>> getUniqueTags() async {
     var url;
     var response;
-    final servicesLists = <String>[];
+    isProcessing=true;
     url = Uri.parse('${URLS.BASE_URL}/taskslists/tags');
     response = await http.get(url, headers: {
       "Content-type": "application/json",
@@ -22,6 +25,8 @@ class TagsServices{
         servicesLists.add(item);
       }
     }
+    isProcessing=false;
+    notifyListeners();
     return servicesLists.toList();
   }
 

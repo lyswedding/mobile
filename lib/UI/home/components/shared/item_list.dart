@@ -26,13 +26,13 @@ class _ItemListState extends State<ItemList> {
   bool isInCall = false;
   bool isSelected = false;
   callAddToFavorite(id) async {
-    await FavoriteCalls.addListToFavorite(id).then((value) {
+    await FavoriteCalls.addProviderToFavorite(id).then((value) {
       print(value);
       print(value.statusCode);
-      if (value.statusCode == 201 || value.statusCode == 200) {
+      if (value.statusCode == 201) {
         showToast(context: context, msg: 'Ajouté aux favoris');
       } else {
-        showToast(context: context, msg: "une erreur s'est produite!");
+        showToast(context: context, msg: "prestataire deja mis en favorie");
       }
     });
     setState(() {
