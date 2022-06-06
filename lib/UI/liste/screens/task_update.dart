@@ -37,21 +37,21 @@ class _TaskUpdateState extends State<TaskUpdate> {
     islogued = await ifTokenExist();
   }
 
-  callAllUserListes() {
-    setState(() {
-      isInCall = true;
-    });
-    ListCalls.getUserTaskLists().then((res) {
-      setState(() {
-        print('*******************');
-        print(res.toString());
-        userTaskLists = res;
-      });
-    });
-    setState(() {
-      isInCall = false;
-    });
-  }
+  // callAllUserListes() {
+  //   setState(() {
+  //     isInCall = true;
+  //   });
+  //   ListCalls.getUserTaskLists().then((res) {
+  //     setState(() {
+  //       print('*******************');
+  //       print(res.toString());
+  //       userTaskLists = res;
+  //     });
+  //   });
+  //   setState(() {
+  //     isInCall = false;
+  //   });
+  // }
 
   String getText() {
     if (datetime == null) {
@@ -83,7 +83,7 @@ class _TaskUpdateState extends State<TaskUpdate> {
             IconButton(
                 onPressed: () {
                   checkIfTokenExists(() {
-                    callAllUserListes();
+                    //callAllUserListes();
                     setState(() {
                       isEnabled = !isEnabled;
                     });

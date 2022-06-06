@@ -10,11 +10,15 @@ import 'package:lys_wedding/shared/urls.dart';
 import 'package:http/http.dart' as http;
 import 'dio_service.dart';
 
-class ListCalls {
-  static Future<List<TaskList>> getAdminLists() async {
+class ListCalls extends ChangeNotifier {
+  bool? isProcessing = true;
+  final tasksLists = <TaskList>[];
+  final userTasksLists = <TaskList>[];
+
+  Future<List<TaskList>> getAdminLists() async {
     var url;
     var response;
-    final tasksLists = <TaskList>[];
+    isProcessing=true;
     url = Uri.parse('${URLS.BASE_URL}/taskslists');
     response = await http.get(url, headers: {
       "Content-type": "application/json",
@@ -27,8 +31,12 @@ class ListCalls {
       for (var item in data['tasksLists']) {
         tasksLists.add(TaskList.fromJson(item));
       }
+      isProcessing=false;
     }
+
+    notifyListeners();
     return tasksLists.toList();
+
   }
 
   static Future<int> addTaskList(TaskList task) async {
@@ -132,10 +140,9 @@ class ListCalls {
     });
   }
 
-  static getUserTaskLists() async {
+  Future<List<TaskList>> getUserTaskLists() async {
     var dio = DioUtil.getInstance();
-    final tasksLists = <TaskList>[];
-
+    isProcessing=true;
     const String apiUrl = (URLS.BASE_URL + "/taskslists/my");
     var accessToken = await getUserInfoSharedPref('token');
     print(accessToken);
@@ -146,9 +153,11 @@ class ListCalls {
       final data = jsonDecode(value.toString());
       print(data);
       for (var item in value.data['tasksLists']) {
-        tasksLists.add(TaskList.fromJson(item));
+        userTasksLists.add(TaskList.fromJson(item));
       }
-      return tasksLists.toList();
+      isProcessing=false;
+      notifyListeners();
+      return userTasksLists.toList();
     });
   }
 }

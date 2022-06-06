@@ -28,25 +28,25 @@ class _UserListPageState extends State<UserListPage>
   final ServiceList service = ServiceList();
   List<Provider> search = [];
   List<TaskList> taskLists = [];
-  callAllUserListes() {
-    setState(() {
-      isInCall = true;
-    });
-    ListCalls.getUserTaskLists().then((res) {
-      setState(() {
-        print('*******************');
-        print(res.toString());
-        userTaskLists = res;
-      });
-    });
-    setState(() {
-      isInCall = false;
-    });
-  }
+  // callAllUserListes() {
+  //   setState(() {
+  //     isInCall = true;
+  //   });
+  //   ListCalls.getUserTaskLists().then((res) {
+  //     setState(() {
+  //       print('*******************');
+  //       print(res.toString());
+  //       userTaskLists = res;
+  //     });
+  //   });
+  //   setState(() {
+  //     isInCall = false;
+  //   });
+  // }
 
   @override
   void initState() {
-    callAllUserListes();
+    //callAllUserListes();
     // TODO: implement initState
     // callAllListes();
     Future.delayed(Duration(milliseconds: 3000), () {
@@ -144,7 +144,7 @@ class _UserListPageState extends State<UserListPage>
       print(value);
       if (value == 200) {
         showToast(context: context, msg: "Liste des tâches supprimée");
-        callAllUserListes();
+       // callAllUserListes();
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }

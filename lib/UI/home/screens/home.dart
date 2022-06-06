@@ -75,13 +75,13 @@ class _HomeDetailsState extends State<HomeDetails>
     });
   }
 
-  callGetLists() async {
-    lists = await ListCalls.getAdminLists();
-
-    setState(() {
-      isInCall = false;
-    });
-  }
+  // callGetLists() async {
+  //  // lists = await ListCalls.getAdminLists();
+  //
+  //   setState(() {
+  //     isInCall = false;
+  //   });
+  // }
 
   _filterByServices(text) {
     foundProviders = popularProviders;
@@ -134,7 +134,8 @@ class _HomeDetailsState extends State<HomeDetails>
     // TODO: implement initState
     callGetServices();
     callGetProviders();
-    callGetLists();
+    //callGetLists();
+
     if (getUserInfoSharedPref("token") != null) {
       fetchProfil();
     }

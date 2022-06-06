@@ -3,6 +3,8 @@ import 'package:lys_wedding/UI/authentification/screens/facebook_controller.dart
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
 
 import 'package:lys_wedding/UI/connectivity_indicator.dart';
+import 'package:lys_wedding/services/tags.services.dart';
+import 'package:lys_wedding/services/task_list.services.dart';
 
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,12 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) => FacebookSignInController(),
             child: Login(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => ListCalls(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => TagsServices(),
           ),
         ],
         child: MaterialApp(

@@ -22,6 +22,7 @@ import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
 
 import 'add-lists.dart';
 
@@ -51,17 +52,17 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     islogued = await ifTokenExist();
   }
 
-  callAllListes() {
-    ListCalls.getAdminLists().then((res) {
-      setState(() {
-        taskLists = res;
-      });
-    });
-    foundTaskLists = taskLists;
-    setState(() {
-      isInCall = false;
-    });
-  }
+  // callAllListes() {
+  //   ListCalls.getAdminLists().then((res) {
+  //     setState(() {
+  //       taskLists = res;
+  //     });
+  //   });
+  //   foundTaskLists = taskLists;
+  //   setState(() {
+  //     isInCall = false;
+  //   });
+  // }
 
   String imageurl = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
   Future<void> fetchProfil() async {
@@ -77,37 +78,37 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     });
   }
 
-  callAllUserListes() {
-    setState(() {
-      isInCall = true;
-    });
-    ListCalls.getUserTaskLists().then((res) {
-      setState(() {
-        print('*******************');
-        print(res.toString());
-        userTaskLists = res;
-      });
-    });
-    setState(() {
-      isInCall = false;
-    });
-  }
+  // callAllUserListes() {
+  //   setState(() {
+  //     isInCall = true;
+  //   });
+  //   ListCalls.getUserTaskLists().then((res) {
+  //     setState(() {
+  //       print('*******************');
+  //       print(res.toString());
+  //       userTaskLists = res;
+  //     });
+  //   });
+  //   setState(() {
+  //     isInCall = false;
+  //   });
+  // }
 
-  callTagsListes() {
-    setState(() {
-      isInCall = true;
-    });
-    TagsServices.getUniqueTags().then((res) {
-      setState(() {
-        print('*******************');
-        print(res.toString());
-        tags = res;
-      });
-    });
-    setState(() {
-      isInCall = false;
-    });
-  }
+  // callTagsListes() {
+  //   setState(() {
+  //     isInCall = true;
+  //   });
+  //   TagsServices.getUniqueTags().then((res) {
+  //     setState(() {
+  //       print('*******************');
+  //       print(res.toString());
+  //       tags = res;
+  //     });
+  //   });
+  //   setState(() {
+  //     isInCall = false;
+  //   });
+  // }
 
   _removeByTags(text) {
     for (var taskList in foundTaskLists) {
@@ -126,7 +127,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
 
     if (foundTaskLists.isEmpty) {
       print('list is empty');
-      callAllListes();
+      //callAllListes();
     }
   }
 
@@ -138,13 +139,17 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       });
     });
     // TODO: implement initState
-    callAllListes();
-    callAllUserListes();
-    call();
-    callTagsListes();
-    if (getUserInfoSharedPref("token") != null) {
-      fetchProfil();
-    }
+   // callAllListes();
+    print('*************provider lists**************');
+    Provider.of<ListCalls>(context,listen :false).getAdminLists();
+    Provider.of<ListCalls>(context,listen :false).getUserTaskLists();
+    Provider.of<TagsServices>(context,listen :false).getUniqueTags();
+    // callAllUserListes();
+    // call();
+     //callTagsListes();
+    // if (getUserInfoSharedPref("token") != null) {
+    //   fetchProfil();
+    // }
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
@@ -155,7 +160,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return ModalProgressHUD(
-      inAsyncCall: isInCall,
+      inAsyncCall: Provider.of<ListCalls>(context,listen: false).isProcessing,
       progressIndicator: CircularProgressIndicator(),
       child: Scaffold(
         backgroundColor: scaffoldBGColor,
@@ -230,12 +235,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                       controller: searchController,
                     ),
                     _buildCategories(),
-
-                    (islogued == false)
-                        ? Row(
-                            children: [],
-                          )
-                        : Row(
+                Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
@@ -248,9 +248,9 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => UserListPage(
-                                                tasksLists: userTaskLists,
+                                                tasksLists: Provider.of<ListCalls>(context,listen: false).userTasksLists,
                                               ))).then(
-                                      (value) => callAllUserListes());
+                                      (value) => Provider.of<ListCalls>(context,listen: false).getUserTaskLists());
                                 },
                                 child: Text(
                                   'view more',
@@ -259,7 +259,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                               ),
                             ],
                           ),
-                    for (int i = 0; i < userTaskLists.length; i++)
+                    for (int i = 0; i < Provider.of<ListCalls>(context,listen: false).userTasksLists.length; i++)
                       _buildListUser(i),
                     // TextButton(
                     //     onPressed: () {
@@ -334,7 +334,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const AddList(),
-                  )).then((value) => callAllUserListes());
+                  )).then((value) =>Provider.of<ListCalls>(context,listen: false).getUserTaskLists());
             }, context);
           },
           backgroundColor: Colors.black,
@@ -353,7 +353,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
               child: SizedBox(
                 height: 50,
                 child: ListView.builder(
-                    itemCount: tags.length,
+                    itemCount: Provider.of<TagsServices>(context,listen: false).servicesLists.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       bool selected = false;
@@ -367,12 +367,12 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                       animationController.forward();
                       return FilterChipWidget(
                         //backgroundColor: primaryColor,
-                        chipName: tags[index],
+                        chipName: Provider.of<TagsServices>(context,listen: false).servicesLists[index],
                         onSelect: (bool value) {
-                          _filterByTags(tags[index].toString());
+                          _filterByTags(Provider.of<TagsServices>(context,listen: false).servicesLists[index].toString());
                         },
                         onDeSelect: () {
-                          _removeByTags(tags[index].toString());
+                          _removeByTags(Provider.of<TagsServices>(context,listen: false).servicesLists[index].toString());
                         },
                       );
                     }),
@@ -391,7 +391,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     return isLoading
         ? getShimmerLoading(80, 400)
         : ListItemHorizontal(
-            taskListData: userTaskLists[index],
+            taskListData: Provider.of<ListCalls>(context,listen: false).userTasksLists[index],
             animationController: animationController,
             animation: animation);
   }
@@ -474,7 +474,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
 
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
-      callAllListes();
+      //callAllListes();
     } else {
       userResults = userTaskLists
           .where((userTaskList) => userTaskList.title!
@@ -493,15 +493,15 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     List<Widget> noList = [];
     var cout = 0;
     final columCount = 2;
-    for (var i = 0; i < taskLists.length / columCount; i++) {
+    for (var i = 0; i < Provider.of<ListCalls>(context,listen :false).tasksLists.length / columCount; i++) {
       List<Widget> listUI = [];
       for (var i = 0; i < columCount; i++) {
         try {
-          final date = taskLists[cout];
+          final date = Provider.of<ListCalls>(context,listen :false).tasksLists[cout];
           var animation = Tween(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
               parent: animationController,
-              curve: Interval((1 / taskLists.length) * cout, 1.0,
+              curve: Interval((1 / Provider.of<ListCalls>(context,listen :false).tasksLists.length) * cout, 1.0,
                   curve: Curves.fastOutSlowIn),
             ),
           );
