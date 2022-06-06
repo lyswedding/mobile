@@ -11,6 +11,7 @@ import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 
 class ItemListSearch<T> extends StatefulWidget {
+  bool isSelected;
   ItemListSearch(
       {Key? key,
       required this.provider,
@@ -23,7 +24,6 @@ class ItemListSearch<T> extends StatefulWidget {
   final String text;
   final AnimationController animationController;
   final Animation<double> animation;
-  bool isSelected;
 
   @override
   State<ItemListSearch<T>> createState() => _ItemListSearchState<T>();
@@ -32,17 +32,18 @@ class ItemListSearch<T> extends StatefulWidget {
 class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   bool isInCall = false;
 
-  callAddToFavorite(String id) async {
+  callAddToFavorite(id) async {
     setState(() {
       isInCall = false;
     });
-    await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
+    await FavoriteCalls.addProviderToFavorite(id).then((value) {
       print(value.data);
-      if (value.statusCode == 201) {
-        showToast(context: context, msg: value.data['message'].toString());
-      } else {
-        showToast(context: context, msg: "prestataire deja mis en favorie");
-      }
+      showToast(context: context, msg: value.data['message'].toString());
+      // if (value.statusCode == 200) {
+      //   showToast(context: context, msg: value.data['message'].toString());
+      // } else {
+      //   showToast(context: context, msg: "prestataire deja mis en favorie");
+      // }
     });
     setState(() {
       isInCall = true;
@@ -68,7 +69,6 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.provider.cover);
   }
 
   @override

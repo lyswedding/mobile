@@ -26,7 +26,8 @@ class RelatedList {
         provider.images = imgs;
         searchLists.add(provider);
       }
-      print(searchLists.toString() + 'zzzzzzzzzzzzzzzzzz');
+      print('zzzzzzzzzzzzzzzzzz');
+      print(searchLists);
     }
     return searchLists;
   }

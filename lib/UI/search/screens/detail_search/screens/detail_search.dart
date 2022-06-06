@@ -1,7 +1,4 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:lys_wedding/UI/favorite/modele/model_favorite.dart';
-import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
@@ -110,7 +107,7 @@ class _DetailSearchState extends State<DetailSearch> {
   }
 
   _buildListPopular() {
-    print(ProvidersRelated.toString() + "hhhhhhh");
+    // print(ProvidersRelated.toString() + "hhhhhhh");
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(

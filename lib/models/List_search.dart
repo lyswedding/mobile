@@ -66,6 +66,7 @@ class Provider {
 
   factory Provider.fromJson(Map<String, dynamic> json) {
     var lists = json['locations'] as List;
+    print(lists);
 
     List<Location> locations = lists.map((i) => Location.fromJson(i)).toList();
     return Provider(
