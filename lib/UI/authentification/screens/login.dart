@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lys_wedding/shared/Appnavigator.dart';
+import 'package:provider/provider.dart';
+
 import 'package:lys_wedding/UI/authentification/components/button.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/authentification/screens/facebook_controller.dart';
@@ -13,20 +16,20 @@ import 'package:lys_wedding/models/auth_sm_model.dart';
 import 'package:lys_wedding/services/auth.services.dart';
 import 'package:lys_wedding/services/auth_sm_service.dart';
 import 'package:lys_wedding/shared/constants.dart';
-import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/remove_focuse.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
-import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
-
+  // final _appNavigatorFactory;
+  Login({Key? key}) : super(key: key);
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
+  // final _appNavigatorFactory;
+  // _LoginState(this._appNavigatorFactory);
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   FocusNode emailFocusNode = FocusNode();
@@ -55,9 +58,11 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: const EdgeInsets.only(top: 12, left: 5, bottom: 10),
                   child: InkWell(
+                      key: Key("skeep"),
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => Home()));
+                        // _appNavigatorFactory.get(context).showNextscreen();
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -84,6 +89,7 @@ class _LoginState extends State<Login> {
                   controller: emailController,
                   padding:
                       const EdgeInsets.only(bottom: 16, left: 24, right: 24),
+                  key: Key("email"),
                   titleText: 'email',
                   hintText: "enter your email",
                   keyboardType: TextInputType.emailAddress,
@@ -97,6 +103,7 @@ class _LoginState extends State<Login> {
                   controller: passwordController,
                   padding:
                       const EdgeInsets.only(bottom: 16, left: 24, right: 24),
+                  key: Key("password"),
                   titleText: 'password',
                   hintText: "enter your password",
                   keyboardType: TextInputType.visiblePassword,

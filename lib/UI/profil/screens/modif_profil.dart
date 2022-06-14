@@ -39,7 +39,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
   void _pickImage() async {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    //  retrieveLostData();
+      //  retrieveLostData();
       setState(() {
         print(pickedFile!.path);
         print(pickedFile!.name);
@@ -69,8 +69,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
               onPressed: () async {
                 String jpegPath = await HeicToJpg.convert(_imageFile!.path);
                 print(_imageFile!.mimeType);
-                await ServiceProfil.uploadImage(
-                        jpegPath, widget.user.id)
+                await ServiceProfil.uploadImage(jpegPath, widget.user.id)
                     .then((value) => Navigator.of(context).pop());
               },
               child: const Text('Upload'),
@@ -126,17 +125,16 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
   // }
 
   Future<void> retrieveLostData() async {
-    final LostDataResponse response =
-    await _picker.retrieveLostData();
+    final LostDataResponse response = await _picker.retrieveLostData();
     if (response.isEmpty) {
       return;
     }
     if (response.files != null) {
       for (final XFile file in response.files!) {
         setState(() {
-          _imageFile=file;
+          _imageFile = file;
         });
-       // _handleFile(file);
+        // _handleFile(file);
       }
     } else {
       print('Retrieve error ' + response.exception!.code.toString());

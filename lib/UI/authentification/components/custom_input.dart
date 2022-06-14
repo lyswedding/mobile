@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
-
-
 class CommonTextFieldView extends StatefulWidget {
   final String? titleText;
   final String hintText;
@@ -27,7 +25,7 @@ class CommonTextFieldView extends StatefulWidget {
     this.titleText = '',
     this.controller,
     this.focusNode,
-    this.enabled=true,
+    this.enabled = true,
   }) : super(key: key);
   @override
   State<CommonTextFieldView> createState() => _CommonTextFieldViewState();
@@ -50,25 +48,24 @@ class _CommonTextFieldViewState extends State<CommonTextFieldView> {
         ),
         child: TextField(
           enabled: widget.enabled,
-        controller: widget.controller,
-        maxLines: 1,
-        onChanged: widget.onChanged,
-        style: regularTextStyle.copyWith(fontSize: 15,color: primaryColor),
-        focusNode: widget.focusNode,
-        obscureText: widget.isObscureText,
-        cursorColor: Theme.of(context).primaryColor,
-        onEditingComplete: () {
-          FocusScope.of(context).nextFocus();
-        },
-        decoration: InputDecoration(
-          errorText: null,
-          border: InputBorder.none,
-          hintText: widget.hintText,
-          hintStyle:
-          TextStyle(color: Theme.of(context).disabledColor),
+          controller: widget.controller,
+          maxLines: 1,
+          onChanged: widget.onChanged,
+          style: regularTextStyle.copyWith(fontSize: 15, color: primaryColor),
+          focusNode: widget.focusNode,
+          obscureText: widget.isObscureText,
+          cursorColor: Theme.of(context).primaryColor,
+          onEditingComplete: () {
+            FocusScope.of(context).nextFocus();
+          },
+          decoration: InputDecoration(
+            errorText: null,
+            border: InputBorder.none,
+            hintText: widget.hintText,
+            hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+          ),
+          keyboardType: widget.keyboardType,
         ),
-        keyboardType: widget.keyboardType,
-      ),
       ),
     );
   }

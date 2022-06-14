@@ -10,8 +10,8 @@ import 'package:lys_wedding/shared/urls.dart';
 
 class ServiceProfil {
   Future<UserApi> getUser() async {
-    var dio = DioUtil.getInstance();
     UserApi user;
+    var dio = DioUtil.getInstance();
 
     var token = await getUserInfoSharedPref("token");
 

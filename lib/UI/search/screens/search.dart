@@ -161,6 +161,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SearchBar(
+                      key: Key("search"),
                       onchanged: (text) {
                         textSearch = text;
                         _runFilter(null);

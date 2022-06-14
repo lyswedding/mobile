@@ -4,7 +4,7 @@ import 'package:lys_wedding/shared/constants.dart';
 class CustomButton extends StatefulWidget {
   final String text;
   final Function onPressed;
-  const CustomButton({required this.text, required this.onPressed});
+  const CustomButton({Key? key, required this.text, required this.onPressed});
 
   @override
   _CustomButtonState createState() => _CustomButtonState();
@@ -25,7 +25,9 @@ class _CustomButtonState extends State<CustomButton> {
             child: Center(
               child: Text(
                 widget.text,
-                style: btnTextStyle.copyWith(color: whiteColor,),
+                style: btnTextStyle.copyWith(
+                  color: whiteColor,
+                ),
               ),
             ),
           ),

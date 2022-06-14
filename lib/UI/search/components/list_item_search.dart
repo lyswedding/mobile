@@ -38,12 +38,12 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
     });
     await FavoriteCalls.addProviderToFavorite(id).then((value) {
       print(value.data);
-      showToast(context: context, msg: value.data['message'].toString());
-      // if (value.statusCode == 200) {
-      //   showToast(context: context, msg: value.data['message'].toString());
-      // } else {
-      //   showToast(context: context, msg: "prestataire deja mis en favorie");
-      // }
+
+      if (value.statusCode == 200) {
+        showToast(context: context, msg: value.data['message'].toString());
+      } else {
+        showToast(context: context, msg: "prestataire deja mis en favorie");
+      }
     });
     setState(() {
       isInCall = true;

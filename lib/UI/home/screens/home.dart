@@ -172,6 +172,8 @@ class _HomeDetailsState extends State<HomeDetails>
                               35,
                             )
                           : CircleAvatar(
+                              key: Key("avatar"),
+
                               radius: 100,
                               backgroundImage: NetworkImage(imageurl),
                               //     "https://cdn-icons-png.flaticon.com/512/147/147144.png"),
@@ -196,6 +198,8 @@ class _HomeDetailsState extends State<HomeDetails>
                 child: Column(children: [
                   // TItleForPage(),
                   Container(
+                    key: Key("image"),
+
                     height: 150,
                     padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
                     // margin: const EdgeInsets.fromLTRB(30, 30, 10, 0),
@@ -328,6 +332,7 @@ class _HomeDetailsState extends State<HomeDetails>
                   .map((element) => isLoading
                       ? getShimmerLoading(150, 250)
                       : ItemList(
+                          key: Key("list of list"),
                           item: element,
                           height: 150.0,
                           width: 250.0,

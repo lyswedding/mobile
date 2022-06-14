@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,11 +14,16 @@ import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 
 class Signup extends StatefulWidget {
+  // final _appNavigatorFactory;
+  const Signup({Key? key}) : super(key: key);
+
   @override
   _SignupState createState() => _SignupState();
 }
 
 class _SignupState extends State<Signup> {
+  // final _appNavigatorFactory;
+  // _SignupState(this._appNavigatorFactory);
   TextEditingController fnameController = TextEditingController();
   TextEditingController lnameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -50,6 +54,7 @@ class _SignupState extends State<Signup> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
+                          key: Key("seek"),
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
@@ -67,6 +72,7 @@ class _SignupState extends State<Signup> {
                 width: 200,
               ),
               CommonTextFieldView(
+                key: Key("first name"),
                 controller: fnameController,
                 padding: const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                 titleText: 'first name',
@@ -78,6 +84,7 @@ class _SignupState extends State<Signup> {
                 height: 15,
               ),
               CommonTextFieldView(
+                key: Key("last name"),
                 controller: lnameController,
                 padding: const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                 titleText: 'last name',
@@ -89,6 +96,7 @@ class _SignupState extends State<Signup> {
                 height: 15,
               ),
               CommonTextFieldView(
+                key: Key("email"),
                 controller: emailController,
                 padding: const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                 titleText: 'email',
@@ -100,6 +108,7 @@ class _SignupState extends State<Signup> {
                 height: 15,
               ),
               CommonTextFieldView(
+                key: Key("password"),
                 controller: passwordController,
                 padding: const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                 titleText: 'password',
@@ -112,6 +121,7 @@ class _SignupState extends State<Signup> {
                 height: 15,
               ),
               CommonTextFieldView(
+                key: Key("phone"),
                 controller: phoneController,
                 padding: const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                 titleText: 'phone',
@@ -168,7 +178,7 @@ class _SignupState extends State<Signup> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Login(),
+                              builder: (context) => Login(),
                             ),
                           );
                         } else {
@@ -248,10 +258,10 @@ class _SignupState extends State<Signup> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Login()));
+                                    builder: (context) => Login()));
                           },
                           child: Text(
                             "Login Now",

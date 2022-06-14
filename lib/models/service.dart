@@ -1,15 +1,18 @@
 class Service {
   Service(
-      this.id,
-      this.title,
-      this.icon,
-      );
+    this.id,
+    this.title,
+    this.icon,
+  );
 
   String title;
- String id;
- String icon;
+  String id;
+  String icon;
 
-
+  @override
+  String toString() {
+    return "($title,$icon)";
+  }
 
   factory Service.fromJson(Map<String, dynamic> json) {
     return Service(
