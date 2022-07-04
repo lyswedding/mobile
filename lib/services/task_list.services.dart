@@ -19,7 +19,8 @@ class ListCalls extends ChangeNotifier {
     var url;
     var response;
     isProcessing=true;
-    url = Uri.parse('${URLS.BASE_URL}/taskslists');
+    tasksLists.clear();
+    url = Uri.parse('${URLS.BASE_URL}/taskslists/suggestions');
     response = await http.get(url, headers: {
       "Content-type": "application/json",
     });
@@ -143,6 +144,7 @@ class ListCalls extends ChangeNotifier {
   Future<List<TaskList>> getUserTaskLists() async {
     var dio = DioUtil.getInstance();
     isProcessing=true;
+    userTasksLists.clear();
     const String apiUrl = (URLS.BASE_URL + "/taskslists/my");
     var accessToken = await getUserInfoSharedPref('token');
     print(accessToken);

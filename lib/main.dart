@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lys_wedding/UI/authentification/screens/facebook_controller.dart';
 import 'package:lys_wedding/UI/authentification/screens/login.dart';
+import 'package:lys_wedding/UI/authentification/screens/splash_screen.dart';
 
 import 'package:lys_wedding/UI/connectivity_indicator.dart';
+import 'package:lys_wedding/services/categorie.services.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
+import 'package:lys_wedding/services/profil_service.dart';
+import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/tags.services.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 
@@ -29,12 +34,24 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) => TagsServices(),
           ),
+          ChangeNotifierProvider(
+            create: (context) => FavoriteCalls(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => ProviderCalls(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => CategorieCalls(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => ServiceProfil(),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(),
-          home: DemoPage(),
+          home: SplashScreen(),
           // routes: {
           //   '/': (context) => SplashScreen(),
           //   '/signup': (context) => Signup(),

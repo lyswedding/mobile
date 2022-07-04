@@ -7,6 +7,7 @@ import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:provider/provider.dart';
 import '../../../models/List_search.dart';
 
 class UserListPage extends StatefulWidget {
@@ -25,30 +26,14 @@ class _UserListPageState extends State<UserListPage>
   bool isLoaded = false;
   bool isLoading = true;
   List<TaskList> userTaskLists = [];
-  final ServiceList service = ServiceList();
-  List<Provider> search = [];
+  final ProviderCalls service = ProviderCalls();
+  List<ServiceProvider> search = [];
   List<TaskList> taskLists = [];
-  // callAllUserListes() {
-  //   setState(() {
-  //     isInCall = true;
-  //   });
-  //   ListCalls.getUserTaskLists().then((res) {
-  //     setState(() {
-  //       print('*******************');
-  //       print(res.toString());
-  //       userTaskLists = res;
-  //     });
-  //   });
-  //   setState(() {
-  //     isInCall = false;
-  //   });
-  // }
+
 
   @override
   void initState() {
-    //callAllUserListes();
     // TODO: implement initState
-    // callAllListes();
     Future.delayed(Duration(milliseconds: 3000), () {
       setState(() {
         isLoading = false;
@@ -92,7 +77,9 @@ class _UserListPageState extends State<UserListPage>
 
   Widget _buildListFavoriteProviders() {
     return ListView.builder(
-        itemCount: userTaskLists.length,
+        itemCount: Provider.of<ListCalls>(context, listen: false)
+            .userTasksLists
+            .length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -123,12 +110,17 @@ class _UserListPageState extends State<UserListPage>
             key: UniqueKey(),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
-              showAlertDialog(context, userTaskLists[index].id);
+              showAlertDialog(
+                  context,
+                  Provider.of<ListCalls>(context, listen: false)
+                      .userTasksLists[index]
+                      .id);
             },
             child: isLoading
                 ? getShimmerLoading(80, 400)
                 : ListItemHorizontal(
-                    taskListData: userTaskLists[index],
+                    taskListData: Provider.of<ListCalls>(context, listen: false)
+                        .userTasksLists[index],
                     animationController: animationController,
                     animation: animation
                     //     .map((e) => ListItem(image: e.cover, label: e.name))
@@ -144,7 +136,7 @@ class _UserListPageState extends State<UserListPage>
       print(value);
       if (value == 200) {
         showToast(context: context, msg: "Liste des tâches supprimée");
-       // callAllUserListes();
+        // callAllUserListes();
       } else {
         showToast(context: context, msg: "une erreur s'est produite!");
       }
@@ -168,6 +160,7 @@ class _UserListPageState extends State<UserListPage>
       onPressed: () {
         _deleteTask(idList);
         Navigator.of(context).pop();
+        Provider.of<ListCalls>(context, listen: false).getUserTaskLists();
       },
     );
 
@@ -175,7 +168,7 @@ class _UserListPageState extends State<UserListPage>
     AlertDialog alert = AlertDialog(
       title: Text("AlertDialog"),
       content: Text(
-          "Would you like to continue learning how to use Flutter alerts?"),
+          "Vous voulez vraiment supprimer cette liste ! "),
       actions: [
         cancelButton,
         continueButton,

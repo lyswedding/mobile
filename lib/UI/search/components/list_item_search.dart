@@ -20,7 +20,7 @@ class ItemListSearch<T> extends StatefulWidget {
       required this.animation,
       this.isSelected = false})
       : super(key: key);
-  final Provider provider;
+  final ServiceProvider provider;
   final String text;
   final AnimationController animationController;
   final Animation<double> animation;
@@ -194,6 +194,7 @@ class _ItemListSearchState<T> extends State<ItemListSearch<T>> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => DetailSearch(
+                      isSelected: widget.isSelected,
                           provider: widget.provider,
                         )));
           }),

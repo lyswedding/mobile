@@ -4,11 +4,13 @@ import 'package:lys_wedding/shared/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:lys_wedding/models/service.dart';
 
-class CategorieCalls {
-  static Future<List<Service>> getAdminServices() async {
+class CategorieCalls extends ChangeNotifier{
+  final servicesLists = <Service>[];
+  bool isProcessing= false;
+  Future<List<Service>> getAdminServices() async {
     var url;
     var response;
-    final servicesLists = <Service>[];
+    isProcessing = true;
     url = Uri.parse('${URLS.BASE_URL}/services');
     response = await http.get(url, headers: {
       "Content-type": "application/json",
@@ -23,6 +25,8 @@ class CategorieCalls {
         servicesLists.add(service);
       }
     }
+    isProcessing=false;
+    notifyListeners();
     return servicesLists.toList();
   }
 }

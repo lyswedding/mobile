@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
+import 'package:lys_wedding/UI/home/screens/home.dart';
 
 class DemoPage extends StatelessWidget {
   @override

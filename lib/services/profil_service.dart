@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:lys_wedding/models/model_profil.dart';
@@ -8,13 +9,15 @@ import 'package:lys_wedding/services/dio_service.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:lys_wedding/shared/urls.dart';
 
-class ServiceProfil {
+class ServiceProfil extends ChangeNotifier {
+  UserApi user=UserApi();
+  String userImageUrl = 'https://cdn-icons-png.flaticon.com/512/147/147144.png';
+  bool isProcessing = false;
+
   Future<UserApi> getUser() async {
     var dio = DioUtil.getInstance();
-    UserApi user;
-
+    isProcessing = true;
     var token = await getUserInfoSharedPref("token");
-
     dio.options.headers["Authorization"] = "Bearer " + token;
     return await dio.get(URLS.BASE_URL + '/users/me').then((value) {
       print(value.data);
@@ -22,8 +25,9 @@ class ServiceProfil {
       print(data);
 
       user = UserApi.fromJson(data);
-      user.user!.imageUrl = "http://102.219.178.96:3001" + user.user!.imageUrl!;
-
+      userImageUrl = "http://102.219.178.96:3001" + user.user!.imageUrl!;
+      isProcessing = false;
+      notifyListeners();
       return user;
     });
   }

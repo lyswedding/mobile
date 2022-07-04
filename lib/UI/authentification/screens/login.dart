@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lys_wedding/UI/authentification/components/button.dart';
@@ -67,7 +68,7 @@ class _LoginState extends State<Login> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
                                 color: primaryColor),
-                            child: Text(
+                            child: const Text(
                               "<< skeep",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
@@ -78,7 +79,6 @@ class _LoginState extends State<Login> {
                 ),
                 const SizedBox(
                   height: 200,
-                  width: 200,
                 ),
                 CommonTextFieldView(
                   controller: emailController,

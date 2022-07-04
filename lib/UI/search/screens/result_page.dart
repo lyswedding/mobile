@@ -4,7 +4,7 @@ import 'package:lys_wedding/models/List_search.dart';
 import 'package:lys_wedding/shared/constants.dart';
 
 class ResultPage extends StatefulWidget {
-  final List<Provider> resultList;
+  final List<ServiceProvider> resultList;
   ResultPage({Key? key,required this.resultList}) : super(key: key);
 
   @override

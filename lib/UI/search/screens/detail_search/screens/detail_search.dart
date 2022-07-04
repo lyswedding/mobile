@@ -1,11 +1,13 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
-import 'package:lys_wedding/services/related_list.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
+import 'package:map_launcher/map_launcher.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +17,11 @@ import '../../../../../models/List_search.dart';
 import '../../../../home/components/shared/item_list.dart';
 
 class DetailSearch extends StatefulWidget {
-  DetailSearch({Key? key, required this.provider}) : super(key: key);
+  DetailSearch({Key? key, required this.provider, required this.isSelected})
+      : super(key: key);
 
-  final Provider provider;
+  final ServiceProvider provider;
+  bool isSelected;
 
   @override
   State<DetailSearch> createState() => _DetailSearchState();
@@ -25,26 +29,13 @@ class DetailSearch extends StatefulWidget {
 
 class _DetailSearchState extends State<DetailSearch> {
   final Url = "https://www.facebook.com/adel.yakoubi.967";
-  List<Provider> popularProviders = [];
-  List<Provider> ProvidersRelated = [];
-  List<Provider> images = [];
+  List<ServiceProvider> popularProviders = [];
+  List<ServiceProvider> ProvidersRelated = [];
+  List<ServiceProvider> images = [];
   List<Service> services = [];
-  // List images = [
-  //   "images/11.jpg",
-  //   "images/12.jpg",
-  //   "images/3.jpg",
-  //   "images/4.jpg",
-  //   "images/5.jpg",
-  //   "images/6.jpg",
-  //   "images/7.jpg",
-  //   "images/8.jpg",
-  //   "images/8.jpg",
-  //   "images/8.jpg"
-  // ];
+
   List<Widget> itemsData = [];
   ScrollController controller = ScrollController();
-  List<Provider> foundServices = [];
-  List<Provider> foundProviders = [];
   late AnimationController animationController;
   late AnimationController animationController1;
   bool closeTopContainer = false;
@@ -52,101 +43,28 @@ class _DetailSearchState extends State<DetailSearch> {
   bool isInCall = false;
   bool isLoaded = false;
   bool isLoading = true;
-  bool isSelected = false;
   var nbraff = 3;
-  callGetProviders() async {
-    popularProviders = await ServiceList.getPrestataire();
-
-    setState(() {
-      isInCall = false;
-    });
-  }
-
-  callGetRelatedlist() async {
-    ProvidersRelated = await RelatedList.getPrestataire(widget.provider.id);
-
-    setState(() {
-      isInCall = false;
-    });
-  }
-
-  _removeFromSearchResult(text) {
-    // List<Provider> foundServices = [];
-    popularProviders.forEach((provider) {
-      provider.services.forEach((service) {
-        print(service['name']);
-        if (service['name'] == text) {
-          print(provider.name);
-          setState(() {
-            foundProviders.remove(provider);
-          });
-        }
-      });
-    });
-    if (foundProviders.isEmpty) {
-      callGetProviders();
-    }
-  }
-
-  _filterByServices(text) {
-    for (var element in popularProviders) {
-      element.services.forEach((service) {
-        print(service['name']);
-        if (service['name'] == text) {
-          print(element.name);
-          setState(() {
-            if (foundServices.contains(element) == false)
-              foundServices.add(element);
-          });
-        }
-      });
-    }
-    foundProviders = foundServices;
-    print(foundProviders);
-    // print(foundUserTaskLists);
-  }
 
   _buildListPopular() {
-    // print(ProvidersRelated.toString() + "hhhhhhh");
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: ProvidersRelated.map((element) => ItemList(
-              item: element,
-              height: 150.0,
-              width: 250.0,
-            )).toList(),
+        children: Provider.of<ProviderCalls>(context, listen: false)
+            .favoriteSearchLists
+            .map((element) => ItemList(
+                  isSelected: checkIsFavorite(
+                      Provider.of<FavoriteCalls>(context, listen: false)
+                          .favoriteProvidersId,
+                      element.id)!,
+                  item: element,
+                  height: 150.0,
+                  width: 250.0,
+                ))
+            .toList(),
       ),
     );
   }
 
-  Widget _buildCategories() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SingleChildScrollView(
-          child: SizedBox(
-        height: 80,
-        child: ListView.builder(
-            itemCount: services.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              var animation = Tween(begin: 0.0, end: 1.0).animate(
-                CurvedAnimation(
-                  parent: animationController,
-                  curve: const Interval((1 / 6) * 5, 1.0,
-                      curve: Curves.fastOutSlowIn),
-                ),
-              );
-              animationController.forward();
-              return isLoading
-                  ? getShimmerLoading(30, 80)
-                  : callGetRelatedlist();
-            }),
-      )),
-    );
-  }
-
-  getimages() {}
   callAddToFavorite(String id) async {
     await FavoriteCalls.addProviderToFavorite(widget.provider.id).then((value) {
       print(value.data);
@@ -176,6 +94,14 @@ class _DetailSearchState extends State<DetailSearch> {
     });
   }
 
+  bool? checkIsFavorite(List<String> list, listId) {
+    if (list.contains(listId)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   void initState() {
     Future.delayed(Duration(milliseconds: 3000), () {
@@ -184,8 +110,10 @@ class _DetailSearchState extends State<DetailSearch> {
       });
     });
     // TODO: implement initState
-    callGetProviders();
-    callGetRelatedlist();
+    //callGetProviders();
+    Provider.of<ProviderCalls>(context, listen: false).getPrestataire();
+    Provider.of<ProviderCalls>(context, listen: false)
+        .getFavoritePrestataire(widget.provider.id);
     super.initState();
   }
 
@@ -251,22 +179,24 @@ class _DetailSearchState extends State<DetailSearch> {
                                   // setState(() {
                                   //   isSelected = !isSelected;
                                   // });
-                                  if (isSelected) {
+                                  if (widget.isSelected) {
                                     checkIfTokenExists(() {
                                       deleteFromFavorite(widget.provider.id);
                                     }, context)
-                                        .then((value) => isSelected = false);
+                                        .then((value) =>
+                                            widget.isSelected = false);
                                   } else {
                                     checkIfTokenExists(() {
                                       callAddToFavorite(widget.provider.id);
                                     }, context)
-                                        .then((value) => isSelected = true);
+                                        .then((value) =>
+                                            widget.isSelected = true);
                                   }
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Icon(
-                                    isSelected
+                                    widget.isSelected
                                         ? EvaIcons.heart
                                         : EvaIcons.heartOutline,
                                     color: const Color(0xffEB5890),
@@ -440,10 +370,25 @@ class _DetailSearchState extends State<DetailSearch> {
                                 : nbraff,
                             itemBuilder: ((context, index) {
                               return InkWell(
-                                onTap: (() {
-                                  _makeSocialMediaRequest(
-                                      "https://www.google.com/maps/place/${widget.provider.locations[index].lat!},${widget.provider.locations[index].long!}");
-                                }),
+                                // onTap: (() {
+                                //   _makeSocialMediaRequest(
+                                //       "https://www.google.com/maps/place/${widget.provider.locations[index].lat!},${widget.provider.locations[index].long!}");
+                                // }),
+                                onTap: () async {
+                                  List<Location> locations = await GeocodingPlatform
+                                      .instance
+                                      .locationFromAddress(widget
+                                          .provider.name);
+                                  print(locations.first.latitude);
+                                  print(locations.first.longitude);
+                                  print(widget.provider.locations[index].place);
+                                  print(widget.provider.locations[index].address);
+                                  await MapLauncher.showDirections(
+                                      mapType: MapType.google,
+                                      destination: Coords(
+                                          locations.first.latitude,
+                                          locations.first.longitude));
+                                },
                                 child: Card(
                                   child: Row(
                                     children: [

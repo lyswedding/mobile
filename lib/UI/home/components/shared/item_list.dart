@@ -8,15 +8,17 @@ import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 
 class ItemList extends StatefulWidget {
-  const ItemList({
+   ItemList({
     Key? key,
     required this.item,
     required this.width,
     required this.height,
+    this.isSelected=false
   }) : super(key: key);
 
-  final Provider item;
+  final ServiceProvider item;
   final double width, height;
+  bool isSelected=false;
 
   @override
   State<ItemList> createState() => _ItemListState();
@@ -67,7 +69,7 @@ class _ItemListState extends State<ItemList> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailSearch(provider: widget.item)));
+                builder: (context) => DetailSearch(provider: widget.item,isSelected: widget.isSelected,)));
       },
       child: Container(
         width: widget.width,
@@ -132,22 +134,22 @@ class _ItemListState extends State<ItemList> {
                         // setState(() {
                         //   isSelected = !isSelected;
                         // });
-                        if (isSelected) {
+                        if (widget.isSelected) {
                           checkIfTokenExists(() {
                             deleteFromFavorites(widget.item.id);
                           }, context)
-                              .then((value) => isSelected = false);
+                              .then((value) => widget.isSelected = false);
                         } else {
                           checkIfTokenExists(() {
                             callAddToFavorite(widget.item.id);
                           }, context)
-                              .then((value) => isSelected = true);
+                              .then((value) => widget.isSelected = true);
                         }
                       },
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Icon(
-                          isSelected ? EvaIcons.heart : EvaIcons.heartOutline,
+                          widget.isSelected ? EvaIcons.heart : EvaIcons.heartOutline,
                           color: const Color(0xffEB5890),
                         ),
                       ),

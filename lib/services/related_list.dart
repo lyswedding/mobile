@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import '../../models/List_search.dart';
 
 class RelatedList {
-  static Future<List<Provider>> getPrestataire(String id) async {
-    final searchLists = <Provider>[];
+  static Future<List<ServiceProvider>> getPrestataire(String id) async {
+    final searchLists = <ServiceProvider>[];
     var base_url = "http://102.219.178.96:3001/providers/related/";
 
     final response = await http.get(Uri.parse('${base_url}' + id));
@@ -15,7 +15,7 @@ class RelatedList {
       final data = json.decode(response.body);
 
       for (var item in data['providers']) {
-        var provider = Provider.fromJson(item);
+        var provider = ServiceProvider.fromJson(item);
         print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         provider.cover = "http://102.219.178.96:3001" + provider.cover;
         List<String> imgs = [];

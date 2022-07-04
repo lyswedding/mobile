@@ -1,10 +1,11 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:heic_to_jpg/heic_to_jpg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/services/profil_service.dart';
 import 'package:lys_wedding/shared/sharedWidgets.dart';
+import 'package:provider/provider.dart';
 
 class ProfilPageModif extends StatefulWidget {
   const ProfilPageModif({Key? key, required this.user}) : super(key: key);
@@ -39,11 +40,8 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
   void _pickImage() async {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    //  retrieveLostData();
+      //  retrieveLostData();
       setState(() {
-        print(pickedFile!.path);
-        print(pickedFile!.name);
-        print(pickedFile!.mimeType);
         _imageFile = pickedFile;
       });
     } catch (e) {
@@ -67,10 +65,9 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
             ),
             ElevatedButton(
               onPressed: () async {
-                String jpegPath = await HeicToJpg.convert(_imageFile!.path);
                 print(_imageFile!.mimeType);
                 await ServiceProfil.uploadImage(
-                        jpegPath, widget.user.id)
+                        _imageFile!.path, widget.user.id)
                     .then((value) => Navigator.of(context).pop());
               },
               child: const Text('Upload'),
@@ -83,7 +80,9 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
         children: [
           CircleAvatar(
             radius: 100,
-            backgroundImage: NetworkImage(widget.user.imageUrl as String),
+            backgroundImage: NetworkImage(
+                Provider.of<ServiceProfil>(context, listen: false)
+                    .userImageUrl),
           ),
           Positioned(
               bottom: 12,
@@ -111,32 +110,17 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
     }
   }
 
-  // Future<void> retriveLostData() async {
-  //   final LostData response = (await _picker.retrieveLostData()) as LostData;
-  //   if (response.isEmpty) {
-  //     return;
-  //   }
-  //   if (response.file != null) {
-  //     setState(() {
-  //       _imageFile = response.file;
-  //     });
-  //   } else {
-  //     print('Retrieve error ' + response.exception!.code.toString());
-  //   }
-  // }
-
   Future<void> retrieveLostData() async {
-    final LostDataResponse response =
-    await _picker.retrieveLostData();
+    final LostDataResponse response = await _picker.retrieveLostData();
     if (response.isEmpty) {
       return;
     }
     if (response.files != null) {
       for (final XFile file in response.files!) {
         setState(() {
-          _imageFile=file;
+          _imageFile = file;
         });
-       // _handleFile(file);
+        // _handleFile(file);
       }
     } else {
       print('Retrieve error ' + response.exception!.code.toString());
@@ -401,6 +385,7 @@ class _ProfilPageModifState extends State<ProfilPageModif> {
                         TextField(
                           enabled: !isclickedtoedit3,
                           controller: _phoneController,
+                          keyboardType: TextInputType.phone,
                           decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintStyle: TextStyle(

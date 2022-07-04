@@ -15,12 +15,12 @@ class ListSearch {
     required this.success,
   });
 
-  List<Provider> providers;
+  List<ServiceProvider> providers;
   bool success;
 
   factory ListSearch.fromJson(Map<String, dynamic> json) => ListSearch(
-        providers: List<Provider>.from(
-            json["providers"].map((x) => Provider.fromJson(x))),
+        providers: List<ServiceProvider>.from(
+            json["providers"].map((x) => ServiceProvider.fromJson(x))),
         success: json["success"],
       );
 
@@ -30,8 +30,8 @@ class ListSearch {
       };
 }
 
-class Provider {
-  Provider(
+class ServiceProvider {
+  ServiceProvider(
       {required this.id,
       required this.name,
       required this.cover,
@@ -57,19 +57,19 @@ class Provider {
   String facebookUrl;
   String instagramUrl;
   List<dynamic> services;
-  List<Location> locations;
+  List<LocationProvider> locations;
   DateTime createdAt;
   dynamic updatedAt;
   dynamic deletedAt;
   int v;
   List<String> images;
 
-  factory Provider.fromJson(Map<String, dynamic> json) {
+  factory ServiceProvider.fromJson(Map<String, dynamic> json) {
     var lists = json['locations'] as List;
     print(lists);
 
-    List<Location> locations = lists.map((i) => Location.fromJson(i)).toList();
-    return Provider(
+    List<LocationProvider> locations = lists.map((i) => LocationProvider.fromJson(i)).toList();
+    return ServiceProvider(
         id: json["_id"],
         name: json["name"],
         cover: json["cover"],
@@ -106,8 +106,8 @@ class Provider {
       };
 }
 
-class Location {
-  Location({
+class LocationProvider {
+  LocationProvider({
     this.id,
     this.address,
     this.lat,
@@ -121,7 +121,7 @@ class Location {
   String? long;
   dynamic place;
 
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
+  factory LocationProvider.fromJson(Map<String, dynamic> json) => LocationProvider(
         id: json["_id"],
         address: json["address"],
         lat: json["lat"],

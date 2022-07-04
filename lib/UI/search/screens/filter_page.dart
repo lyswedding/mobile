@@ -7,6 +7,7 @@ import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/services/categorie.services.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/shared/constants.dart';
+import 'package:provider/provider.dart';
 
 class FilterPage extends StatefulWidget {
   FilterPage({
@@ -18,9 +19,9 @@ class FilterPage extends StatefulWidget {
 }
 
 List<Service> services = [];
-List<Provider> search = [];
-List<Provider> foundProviders = [];
-List<Provider> foundServices = [];
+List<ServiceProvider> search = [];
+List<ServiceProvider> foundProviders = [];
+List<ServiceProvider> foundServices = [];
 List<String> selectedlocation = [];
 List<String> selectedservices = [];
 bool isLoaded = false;
@@ -44,32 +45,35 @@ List<String> GovernoratFilterListData = [
 double distValue = 50.0;
 
 class _FilterPageState extends State<FilterPage> {
-  callGetServices() async {
-    setState(() {
-      isLoaded = true;
-    });
-    services = await CategorieCalls.getAdminServices();
+  // callGetServices() async {
+  //   setState(() {
+  //     isLoaded = true;
+  //   });
+  //   services = await CategorieCalls.getAdminServices();
+  //
+  //   setState(() {
+  //     isLoaded = false;
+  //   });
+  // }
 
-    setState(() {
-      isLoaded = false;
-    });
-  }
-
-  fetchSearch() async {
-    setState(() {
-      isLoaded = true;
-    });
-    search = await ServiceList.getPrestataire();
-    setState(() {
-      isLoaded = false;
-    });
-  }
+  // fetchSearch() async {
+  //   setState(() {
+  //     isLoaded = true;
+  //   });
+  //   search = await ProviderCalls.getPrestataire();
+  //   setState(() {
+  //     isLoaded = false;
+  //   });
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
-    callGetServices();
-    fetchSearch();
+    //callGetServices();
+    // fetchSearch();
+    Provider.of<ProviderCalls>(context, listen: false).getPrestataire();
+    Provider.of<CategorieCalls>(context, listen: false).getAdminServices();
+
     super.initState();
   }
 
@@ -242,11 +246,18 @@ class _FilterPageState extends State<FilterPage> {
     List<Widget> noList = [];
     var cout = 0;
     const columCount = 2;
-    for (var i = 0; i < services.length / columCount; i++) {
+    for (var i = 0;
+        i <
+            Provider.of<CategorieCalls>(context, listen: false)
+                    .servicesLists
+                    .length /
+                columCount;
+        i++) {
       List<Widget> listUI = [];
       for (var i = 0; i < columCount; i++) {
         try {
-          final date = services[cout];
+          final date = Provider.of<CategorieCalls>(context, listen: false)
+              .servicesLists[cout];
           // final datee = GovernoratFilterListData[cout];
           listUI.add(
             Expanded(
@@ -374,7 +385,7 @@ class _FilterPageState extends State<FilterPage> {
   // }
   _filterByLocations(text, texte) {
     // print(text);
-    List<Provider> resultat = [];
+    List<ServiceProvider> resultat = [];
     search.forEach((provider) {
       provider.locations.forEach((location) {
         // print(location.place['gov']);
@@ -414,7 +425,7 @@ class _FilterPageState extends State<FilterPage> {
       });
       return;
     }
-    var fp = search;
+    var fp = Provider.of<ProviderCalls>(context,listen: false).searchLists;
     if (selectedlocation.isNotEmpty) {
       fp = fp
           .where((element) => element.locations
@@ -439,129 +450,6 @@ class _FilterPageState extends State<FilterPage> {
     print(fp);
   }
 
-  _filterByLocation(text) {
-    // print(text);
-    if (foundProviders.isEmpty) {
-      search.forEach((provider) {
-        provider.locations.forEach((location) {
-          // print(location.place['gov']);
-          if (location.place['gov'] == text) {
-            // print(provider.name);
-            // print(provider.services);
-            setState(() {
-              foundProviders.add(provider);
-            });
-          }
-        });
-      });
-    } else {
-      foundProviders.where((element) =>
-          element.locations.where((e) => e.place['gov'] == text).isEmpty);
-    }
-  }
-  //  else {
-  //   foundProviders.forEach((provider) {
-  //     provider.locations.forEach((location) {
-  //       // print(location.place['gov']);
-  //       if (location.place['gov'] == text) {
-  //         // print(provider.name);
-
-  //         setState(() {
-  //           foundProviders.add(provider);
-  //         });
-  //       }
-  //       foundProviders.forEach((provider) {
-  //         provider.services.forEach((service) {
-  //           // print(service['name']);
-  //           if (service['name'] == texte) {
-  //             // print(provider.name);
-
-  //             setState(() {
-  //               foundProviders.clear();
-
-  //               foundProviders.add(provider);
-  //               print(foundProviders);
-  //             });
-  //           }
-  //         });
-  //       });
-  //     });
-  //   });
-  // }
-
-  // for (var element in search) {
-  //   // print(element.locations);
-
-  //   element.locations.forEach((location) {
-  //     // print(location.place['gov']);
-  //     if (location.place['gov'] == text) {
-  //       // print(element.name);
-  //       setState(() {
-  //         if (foundServices.contains(element) == false) {
-  //           print(element);
-  //           foundServices.add(element);
-  //         }
-  //       });
-  //     }
-  //   });
-  //   foundProviders = foundServices;
-  //   // print(foundUserTaskLists);
-  // }
-
-  // } else {
-  //   for (var element in ) {
-  //     // print(element.locations);
-
-  //     element.locations.forEach((location) {
-  //       // print(location.place['gov']);
-  //       if (location.place['gov'] == text) {
-  //         // print(element.name);
-  //         setState(() {
-  //           if (foundServices.contains(element) == false) {
-  //             foundServices.add(element);
-  //           }
-  //         });
-  //       }
-  //       results = foundServices;
-  //     });
-
-  //     // print(foundServices);
-  //     // print(foundUserTaskLists);
-  //   }
-  //   print(foundProviders);
-  // }
-
-  // foundProviders = results;
-
-  _removeFromSearchResult(text) {
-    // List<Provider> foundServices = [];
-    search.forEach((provider) {
-      provider.services.forEach((service) {
-        print(service['name']);
-        if (service['name'] == text) {
-          print(provider.name);
-          setState(() {
-            foundProviders.remove(provider);
-          });
-        }
-      });
-    });
-  }
-
-  _removeFromSearchResultgov(text) {
-    // List<Provider> foundServices = [];
-    search.forEach((provider) {
-      provider.locations.forEach((location) {
-        print(location.place['gov']);
-        if (location.place['gov'] == text) {
-          print(provider.name);
-          setState(() {
-            foundProviders.remove(provider);
-          });
-        }
-      });
-    });
-  }
 }
 
 class CustomCheckBox extends StatefulWidget {

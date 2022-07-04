@@ -1,4 +1,6 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:lys_wedding/UI/favorite/service/favorite_service.dart';
 import 'package:lys_wedding/UI/liste/components/list_component.dart';
 import 'package:lys_wedding/UI/profil/screens/profil.dart';
@@ -8,13 +10,9 @@ import 'package:lys_wedding/models/taskList.dart';
 import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/services/profil_service.dart';
-import 'package:lys_wedding/services/service_list.dart';
-import 'package:lys_wedding/services/task_list.services.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
-import 'package:lys_wedding/shared/sharedWidgets.dart';
-
-import '../../../models/List_search.dart';
+import 'package:provider/provider.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({Key? key}) : super(key: key);
@@ -36,23 +34,6 @@ class _FavoritePageState extends State<FavoritePage>
   List<TaskList> taskLists = [];
   UserApi item = UserApi();
   final ServiceProfil servicee = ServiceProfil();
-  callAllListes() async {
-    taskLists = await FavoriteCalls.getFavorite();
-
-    setState(() {
-      isLoaded = true;
-    });
-  }
-
-  fetchsearch() async {
-    search = await FavoriteCalls.GetProvidersFavorite();
-    print("*****************");
-    print(search);
-    print("*****************");
-    setState(() {
-      isLoaded = true;
-    });
-  }
 
   String imageurl = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
   Future<void> fetchProfil() async {
@@ -71,8 +52,10 @@ class _FavoritePageState extends State<FavoritePage>
   @override
   void initState() {
     // TODO: implement initState
-    callAllListes();
-    fetchsearch();
+    //callAllListes();
+   // fetchsearch();
+   // Provider.of<FavoriteCalls>(context,listen :false).GetProvidersFavorite();
+   // Provider.of<FavoriteCalls>(context,listen :false).getFavorite();
 
     Future.delayed(Duration(milliseconds: 4000), () {
       setState(() {
@@ -124,7 +107,7 @@ class _FavoritePageState extends State<FavoritePage>
                     : InkWell(
                         child: CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(imageurl),
+                          backgroundImage: NetworkImage(Provider.of<ServiceProfil>(context,listen: false).userImageUrl),
                         ),
                         onTap: () {
                           Navigator.push(
@@ -135,32 +118,71 @@ class _FavoritePageState extends State<FavoritePage>
                       ))
           ],
         ),
-        body: SingleChildScrollView(
-            child: Column(children: [
-          TabBar(
-            controller: _nestedTabController,
-            indicatorColor: Colors.teal,
-            labelColor: Colors.teal,
-            unselectedLabelColor: Colors.black54,
-            isScrollable: true,
-            tabs: const <Widget>[
-              Tab(
-                text: "Listes",
+        body: OfflineBuilder(
+          connectivityBuilder: (
+              BuildContext context,
+              ConnectivityResult connectivity,
+              Widget child,
+              ) {
+            final bool connected = connectivity != ConnectivityResult.none;
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                connected
+                    ? SingleChildScrollView(
+                    child: Column(children: [
+                      TabBar(
+                        controller: _nestedTabController,
+                        indicatorColor: Colors.teal,
+                        labelColor: Colors.teal,
+                        unselectedLabelColor: Colors.black54,
+                        isScrollable: true,
+                        tabs: const <Widget>[
+                          Tab(
+                            text: "Listes",
+                          ),
+                          Tab(
+                            text: "Prestataires",
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: screenHeight,
+                        child:
+                        TabBarView(controller: _nestedTabController, children: <Widget>[
+                          _buildListFavoriteLists(),
+                          _buildListFavoriteProviders(),
+                        ]),
+                      ),
+                    ]))
+                    : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(EvaIcons.wifiOff,size: 70,),
+                      Text(
+                        'Turn on your internet connection',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'There are no bottons to push :)',
               ),
-              Tab(
-                text: "Prestataires",
+              Text(
+                'Just turn off your internet.',
               ),
             ],
           ),
-          SizedBox(
-            height: screenHeight,
-            child:
-                TabBarView(controller: _nestedTabController, children: <Widget>[
-              _buildListFavoriteLists(),
-              _buildListFavoriteProviders(),
-            ]),
-          ),
-        ])));
+        ),
+
+        );
   }
 
   Widget _buildListFavoriteLists() {
@@ -175,7 +197,7 @@ class _FavoritePageState extends State<FavoritePage>
                   // crossAxisSpacing: 5,
                   // mainAxisSpacing: 5,
                   childAspectRatio: 0.6),
-              itemCount: taskLists.length,
+              itemCount: Provider.of<FavoriteCalls>(context,listen: false).favoriteList.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -186,11 +208,11 @@ class _FavoritePageState extends State<FavoritePage>
                   ),
                 );
                 animationController.forward();
-                return isLoading
+                return Provider.of<FavoriteCalls>(context,listen: false).isProcessing
                     ? getShimmerLoading(250, 200)
                     : ListComponent(
                         isSelected: true,
-                        taskList: taskLists[index],
+                        taskList: Provider.of<FavoriteCalls>(context,listen: false).favoriteList[index],
                         animationController: animationController,
                         animation: animation,
                       );
@@ -205,7 +227,7 @@ class _FavoritePageState extends State<FavoritePage>
         child: SizedBox(
       height: 800,
       child: ListView.builder(
-          itemCount: search.length,
+          itemCount:  Provider.of<FavoriteCalls>(context,listen: false).favoriteProviders.length,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -217,11 +239,11 @@ class _FavoritePageState extends State<FavoritePage>
             );
             animationController.forward();
 
-            return isLoading
+            return Provider.of<FavoriteCalls>(context,listen: false).isProcessing
                 ? getShimmerLoading(250, 200)
                 : ItemListSearch(
                     isSelected: true,
-                    provider: search[index],
+                    provider: Provider.of<FavoriteCalls>(context,listen: false).favoriteProviders[index],
                     animation: animation,
                     animationController: animationController,
                     text: '',

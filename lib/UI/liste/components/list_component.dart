@@ -71,6 +71,7 @@ class _ListComponentState extends State<ListComponent> {
               MaterialPageRoute(
                   builder: (context) => ListDetails(
                         taskList: widget.taskList,
+                    isSelected: widget.isSelected,
                       )));
         },
         child: SizedBox(

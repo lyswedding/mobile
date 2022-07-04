@@ -1,4 +1,6 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
 import 'package:lys_wedding/UI/home/components/shared/search_bar.dart';
 import 'package:lys_wedding/UI/home/screens/buttom-navigation-bar.dart';
@@ -10,11 +12,14 @@ import 'package:lys_wedding/models/model_profil.dart';
 import 'package:lys_wedding/models/service.dart';
 import 'package:lys_wedding/progress.dart';
 import 'package:lys_wedding/services/categorie.services.dart';
+import 'package:lys_wedding/services/favorite.services.dart';
 import 'package:lys_wedding/services/profil_service.dart';
 import 'package:lys_wedding/services/service_list.dart';
 import 'package:lys_wedding/shared/constants.dart';
 import 'package:lys_wedding/shared/sharedPrefValues.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SearchPage extends StatefulWidget {
@@ -23,11 +28,11 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
-  List<Provider> search = [];
+  List<ServiceProvider> search = [];
   List<Service> services = [];
-  List<Provider> foundServices = [];
-  List<Provider> foundProviders = [];
-  List<Provider> filtredbyservice = [];
+  List<ServiceProvider> foundServices = [];
+  List<ServiceProvider> foundProviders = [];
+  List<ServiceProvider> filtredbyservice = [];
 
   String textSearch = "";
   bool isLoaded = false;
@@ -38,59 +43,22 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   var animationController;
   var animationController1;
 
-  fetchsearch() async {
-    setState(() {
-      isLoaded = true;
-    });
-    search = await ServiceList.getPrestataire();
-    foundProviders = search;
-    setState(() {
-      isLoaded = false;
-    });
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    foundProviders =
+        Provider.of<ProviderCalls>(context, listen: false).searchLists;
+    Provider.of<ProviderCalls>(context, listen: false).getPrestataire();
+    Provider.of<ProviderCalls>(context, listen: false).getFavoritePrestataire(
+        Provider.of<ServiceProfil>(context, listen: false).user.user!.id!);
+    Provider.of<ServiceProfil>(context, listen: false).getUser();
+
+    _refreshController.refreshCompleted();
   }
-
-  callGetServices() async {
-    setState(() {
-      isLoaded = true;
-    });
-    services = await CategorieCalls.getAdminServices();
-
-    setState(() {
-      isLoaded = false;
-    });
-  }
-
-  String imageurl = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
-  Future<void> fetchProfil() async {
-    setState(() {
-      isLoaded = true;
-    });
-
-    item = await service.getUser();
-    imageurl = item.user!.imageUrl!;
-    print(item.user);
-    setState(() {
-      isLoaded = false;
-    });
-  }
-
-  // _filterByServices(text) {
-  //   for (var element in popularProviders) {
-  //     element.services.forEach((service) {
-  //       print(service['name']);
-  //       if (service['name'] == text) {
-  //         print(element.name);
-  //         setState(() {
-  //           if (foundServices.contains(element) == false)
-  //             foundServices.add(element);
-  //         });
-  //       }
-  //     });
-  //   }
-  //   foundProviders = foundServices;
-  //   print(foundProviders);
-  //   // print(foundUserTaskLists);
-  // }
 
   @override
   void initState() {
@@ -106,18 +74,26 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         duration: Duration(milliseconds: 3000), vsync: this);
     super.initState();
     if (getUserInfoSharedPref("token") != null) {
-      fetchProfil();
+      Provider.of<ServiceProfil>(context, listen: false).getUser();
     }
-    fetchsearch();
-    callGetServices();
-    print(search);
+    foundProviders =
+        Provider.of<ProviderCalls>(context, listen: false).searchLists;
+  }
+
+  bool? checkIsFavorite(List<String> list, listId) {
+    if (list.contains(listId)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(),
-      inAsyncCall: isLoaded,
+      inAsyncCall:
+          Provider.of<ProviderCalls>(context, listen: false).isProcessing,
       child: Scaffold(
           backgroundColor: scaffoldBGColor,
           appBar: AppBar(
@@ -135,14 +111,17 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 padding: const EdgeInsets.only(
                   right: 18.0,
                 ),
-                child: isLoading
+                child: Provider.of<ProviderCalls>(context, listen: false)
+                        .isProcessing
                     ? getShimmerLoadingcircle(
                         18,
                       )
                     : InkWell(
                         child: CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(imageurl),
+                          backgroundImage: NetworkImage(
+                              Provider.of<ServiceProfil>(context, listen: false)
+                                  .userImageUrl),
                         ),
                         onTap: () {
                           Navigator.push(
@@ -154,31 +133,76 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               ),
             ],
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SearchBar(
-                      onchanged: (text) {
-                        textSearch = text;
-                        _runFilter(null);
-                      },
-                    ),
-                    //ItemList(text: "text", items: items, width: 150, height: 50),
-                    _buildCategories(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        "Results",
-                        style: subTitleTextStyle,
+          body:
+          OfflineBuilder(
+            connectivityBuilder: (
+                BuildContext context,
+                ConnectivityResult connectivity,
+                Widget child,
+                ) {
+              final bool connected = connectivity != ConnectivityResult.none;
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  connected
+                      ? SmartRefresher(
+                    onRefresh: _onRefresh,
+                    controller: _refreshController,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SearchBar(
+                                onchanged: (text) {
+                                  textSearch = text;
+                                  _runFilter(null);
+                                },
+                              ),
+                              //ItemList(text: "text", items: items, width: 150, height: 50),
+                              _buildCategories(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                child: Text(
+                                  "Results",
+                                  style: subTitleTextStyle,
+                                ),
+                              ),
+                              _buildListFavoriteProviders(),
+                            ]),
                       ),
                     ),
-                    _buildListFavoriteProviders(),
-                  ]),
+                  )
+                      : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(EvaIcons.wifiOff,size: 70,),
+                        Text(
+                          'Turn on your internet connection',
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'There are no bottons to push :)',
+                ),
+                Text(
+                  'Just turn off your internet.',
+                ),
+              ],
             ),
-          )),
+          ),
+
+
+          ),
     );
   }
 
@@ -199,13 +223,18 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             );
             animationController.forward();
 
-            return isLoading
+            return Provider.of<ProviderCalls>(context, listen: false)
+                    .isProcessing
                 ? getShimmerLoading(250, 200)
                 : ItemListSearch(
                     provider: foundProviders[index],
                     animation: animation,
                     animationController: animationController,
                     text: '',
+                    isSelected: checkIsFavorite(
+                        Provider.of<FavoriteCalls>(context, listen: false)
+                            .favoriteProvidersId,
+                        foundProviders[index].id)!,
                   );
           }),
     );
@@ -220,7 +249,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         child: SizedBox(
           height: 80,
           child: ListView.builder(
-              itemCount: services.length,
+              itemCount: Provider.of<CategorieCalls>(context, listen: false)
+                  .servicesLists
+                  .length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 var animation = Tween(begin: 0.0, end: 1.0).animate(
@@ -233,9 +264,19 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 animationController1.forward();
                 return isLoading
                     ? getShimmerLoading(30, 80)
-                    : CategoryItem(services[index].title, services[index].icon,
-                        animationController1, animation, () {
-                        _runFilter(services[index].title);
+                    : CategoryItem(
+                        Provider.of<CategorieCalls>(context, listen: false)
+                            .servicesLists[index]
+                            .title,
+                        Provider.of<CategorieCalls>(context, listen: false)
+                            .servicesLists[index]
+                            .icon,
+                        animationController1,
+                        animation, () {
+                        _runFilter(
+                            Provider.of<CategorieCalls>(context, listen: false)
+                                .servicesLists[index]
+                                .title);
                       }, () {
                         _runFilter(null);
                       });
@@ -246,29 +287,33 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   void _runFilter(String? text) {
-    List<Provider> results = [];
+    print(text);
+    List<ServiceProvider> results = [];
 
     if (textSearch.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
 
-      // fetchsearch();
-      results = List.from(search);
+      results = List.from(
+          Provider.of<ProviderCalls>(context, listen: false).searchLists);
     } else {
-      results = search
+      results = foundProviders
           .where((provider) =>
               provider.name.toLowerCase().contains(textSearch.toLowerCase()))
           .toList();
     }
     if (text != null) {
-      // results.forEach((elem) => print(elem.services));
-      // print(results);
       results = results
-          .where((element) =>
-              element.services.where((s) => s['name'] == text).isNotEmpty)
+          .where((element) => element.services
+              .where((s) =>
+                  s['name'].toString().toLowerCase() == text.toLowerCase())
+              .isNotEmpty)
           .toList();
       // results.forEach((elem) => elem.services.forEach((s) => print(s['name'])));
       print(results);
-    } else {}
+    } else {
+      // results = List.from(
+      //     Provider.of<ProviderCalls>(context, listen: false).searchLists);
+    }
     setState(() {
       foundProviders = results;
     });

@@ -36,10 +36,10 @@ class _SplashScreenState extends State<SplashScreen> {
           );
       }else{
         Future.delayed(
-            const Duration(seconds: 5),
+            const Duration(seconds: 10),
                 () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DemoPage(),
+              MaterialPageRoute(builder: (context) => Home(),
               settings: const RouteSettings(name: '/homePage')),
             ));
       }

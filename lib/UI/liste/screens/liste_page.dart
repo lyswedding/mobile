@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:lys_wedding/UI/authentification/components/custom_input.dart';
 import 'package:lys_wedding/UI/authentification/screens/signup.dart';
 import 'package:lys_wedding/UI/home/components/shared/category_item.dart';
@@ -23,6 +24,7 @@ import 'package:lys_wedding/shared/sharedWidgets.dart';
 import 'package:lys_wedding/shared/utils.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'add-lists.dart';
 
@@ -52,66 +54,23 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     islogued = await ifTokenExist();
   }
 
-  // callAllListes() {
-  //   ListCalls.getAdminLists().then((res) {
-  //     setState(() {
-  //       taskLists = res;
-  //     });
-  //   });
-  //   foundTaskLists = taskLists;
-  //   setState(() {
-  //     isInCall = false;
-  //   });
-  // }
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
-  String imageurl = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
-  Future<void> fetchProfil() async {
-    setState(() {
-      isLoaded = true;
-    });
-
-    item = await service.getUser();
-    imageurl = item.user!.imageUrl!;
-    print(item.user);
-    setState(() {
-      isLoaded = false;
-    });
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    Provider.of<ListCalls>(context, listen: false).getAdminLists();
+    Provider.of<ListCalls>(context, listen: false).getUserTaskLists();
+    Provider.of<TagsServices>(context, listen: false).getUniqueTags();
+    Provider.of<FavoriteCalls>(context, listen: false).getFavorite();
+    taskLists = Provider.of<ListCalls>(context, listen: false).tasksLists;
+    _refreshController.refreshCompleted();
   }
 
-  // callAllUserListes() {
-  //   setState(() {
-  //     isInCall = true;
-  //   });
-  //   ListCalls.getUserTaskLists().then((res) {
-  //     setState(() {
-  //       print('*******************');
-  //       print(res.toString());
-  //       userTaskLists = res;
-  //     });
-  //   });
-  //   setState(() {
-  //     isInCall = false;
-  //   });
-  // }
-
-  // callTagsListes() {
-  //   setState(() {
-  //     isInCall = true;
-  //   });
-  //   TagsServices.getUniqueTags().then((res) {
-  //     setState(() {
-  //       print('*******************');
-  //       print(res.toString());
-  //       tags = res;
-  //     });
-  //   });
-  //   setState(() {
-  //     isInCall = false;
-  //   });
-  // }
-
   _removeByTags(text) {
-    for (var taskList in foundTaskLists) {
+    for (var taskList in taskLists) {
       for (var tag in taskList.tags) {
         if (tag == text) {
           print(taskList.title);
@@ -122,12 +81,12 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       }
     }
     setState(() {
-      foundTaskLists.removeWhere((e) => toRemove.contains(e));
+      taskLists.removeWhere((e) => toRemove.contains(e));
     });
 
-    if (foundTaskLists.isEmpty) {
+    if (taskLists.isEmpty) {
       print('list is empty');
-      //callAllListes();
+      taskLists = Provider.of<ListCalls>(context, listen: false).tasksLists;
     }
   }
 
@@ -139,18 +98,11 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
       });
     });
     // TODO: implement initState
-   // callAllListes();
-    print('*************provider lists**************');
-    Provider.of<ListCalls>(context,listen :false).getAdminLists();
-    Provider.of<ListCalls>(context,listen :false).getUserTaskLists();
-    Provider.of<TagsServices>(context,listen :false).getUniqueTags();
-    // callAllUserListes();
-    // call();
-     //callTagsListes();
-    // if (getUserInfoSharedPref("token") != null) {
-    //   fetchProfil();
-    // }
-
+    Provider.of<ListCalls>(context, listen: false).getAdminLists();
+    Provider.of<ListCalls>(context, listen: false).getUserTaskLists();
+    Provider.of<TagsServices>(context, listen: false).getUniqueTags();
+    Provider.of<FavoriteCalls>(context, listen: false).getFavorite();
+    taskLists = Provider.of<ListCalls>(context, listen: false).tasksLists;
     animationController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
     super.initState();
@@ -160,7 +112,7 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return ModalProgressHUD(
-      inAsyncCall: Provider.of<ListCalls>(context,listen: false).isProcessing,
+      inAsyncCall: isLoading,
       progressIndicator: CircularProgressIndicator(),
       child: Scaffold(
         backgroundColor: scaffoldBGColor,
@@ -174,13 +126,6 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           actions: [
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 40.0),
-            //   child: Container(
-            //     //  Transform.translate(
-            //     // offset: const Offset(10, 0),
-            //     padding: EdgeInsets.only(top: 10),
-            //     // margin: EdgeInsets.symmetric(vertical: 5),
             Padding(
               padding: const EdgeInsets.only(
                 right: 18.0,
@@ -192,7 +137,9 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                   : InkWell(
                       child: CircleAvatar(
                         radius: 20,
-                        backgroundImage: NetworkImage(imageurl),
+                        backgroundImage: NetworkImage(
+                            Provider.of<ServiceProfil>(context, listen: false)
+                                .userImageUrl),
                       ),
                       onTap: () {
                         Navigator.push(
@@ -200,142 +147,147 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                             MaterialPageRoute(
                                 builder: (context) => ProfilPage()));
                       },
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 40.0),
-                      //   child: Container(
-                      //     //  Transform.translate(
-                      //     // offset: const Offset(10, 0),
-                      //     padding: EdgeInsets.only(top: 10),
-                      //     // margin: EdgeInsets.symmetric(vertical: 5),
-
-                      //     child: InkWell(
-                      //       onTap: () {
-                      //         Navigator.push(context,
-                      //             MaterialPageRoute(builder: (context) => ProfilPage()));
-                      //       },
-                      //       child: CircleAvatar(
-                      //           radius: 100,
-                      //           backgroundImage: NetworkImage(item.user!.imageUrl ?? "")),
-                      //     ),
-                      //   ),
                     ),
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
+        body: OfflineBuilder(
+          connectivityBuilder: (
+              BuildContext context,
+              ConnectivityResult connectivity,
+              Widget child,
+              ) {
+            final bool connected = connectivity != ConnectivityResult.none;
+            return Stack(
+              fit: StackFit.expand,
               children: [
-                    CommonTextFieldView(
-                      onChanged: (String text) {
-                        _runFilter(text);
-                      },
-                      hintText: 'search',
-                      controller: searchController,
-                    ),
-                    _buildCategories(),
-                Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'My lists',
-                                style: titleTextStyle,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => UserListPage(
-                                                tasksLists: Provider.of<ListCalls>(context,listen: false).userTasksLists,
-                                              ))).then(
-                                      (value) => Provider.of<ListCalls>(context,listen: false).getUserTaskLists());
-                                },
-                                child: Text(
-                                  'view more',
-                                  style: regularTextStyle,
-                                ),
-                              ),
-                            ],
+
+                connected
+                    ?  SmartRefresher(
+              controller: _refreshController,
+              onRefresh: _onRefresh,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CommonTextFieldView(
+                        onChanged: (String text) {
+                          _runFilter(text);
+                        },
+                        hintText: 'search',
+                        controller: searchController,
+                      ),
+                      _buildCategories(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'My lists',
+                            style: titleTextStyle,
                           ),
-                    for (int i = 0; i < Provider.of<ListCalls>(context,listen: false).userTasksLists.length; i++)
-                      _buildListUser(i),
-                    // TextButton(
-                    //     onPressed: () {
-                    //       checkIfTokenExists(() {
-                    //         Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //             builder: (context) => const AddList(),
-                    //           ),
-                    //         ).then((value) => callAllUserListes());
-                    //       }, context);
-                    //     },
-                    //     child: Container(
-                    //         width: double.infinity,
-                    //         decoration: BoxDecoration(
-                    //             // color: Colors.white,
-                    //             borderRadius: BorderRadius.circular(10),
-                    //             border: Border.all(color: secondaryColor)),
-                    //         child: Padding(
-                    //           padding: const EdgeInsets.all(16.0),
-                    //           child: Row(
-                    //             children: [
-                    //               const Icon(
-                    //                 EvaIcons.plusSquareOutline,
-                    //                 size: 24,
-                    //                 color: secondaryColor,
-                    //               ),
-                    //               const SizedBox(
-                    //                 width: 10,
-                    //               ),
-                    //               Text(
-                    //                 "Add new List",
-                    //                 style: subTitleTextStyle.copyWith(
-                    //                     color: secondaryColor),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ))),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Suggested lists',
-                          style: titleTextStyle,
-                        ),
-                        // GestureDetector(
-                        //   onTap: () {
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) => UserListPage(
-                        //                   tasksLists: taskLists,
-                        //                 )));
-                        //   },
-                        //   child: Text(
-                        //     'view more',
-                        //     style: regularTextStyle,
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                    // _buildListUser(),
-                  ] +
-                  getPList(),
-            ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UserListPage(
+                                        tasksLists: Provider.of<ListCalls>(
+                                            context,
+                                            listen: false)
+                                            .userTasksLists,
+                                      ))).then((value) =>
+                                  Provider.of<ListCalls>(context, listen: false)
+                                      .getUserTaskLists());
+                            },
+                            child: Text(
+                              'view more',
+                              style: regularTextStyle,
+                            ),
+                          ),
+                        ],
+                      ),
+                      for (int i = 0;
+                      i <
+                          Provider.of<ListCalls>(context, listen: false)
+                              .userTasksLists
+                              .length;
+                      i++)
+                        _buildListUser(i),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Suggested lists',
+                            style: titleTextStyle,
+                          ),
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //             builder: (context) => UserListPage(
+                          //                   tasksLists: taskLists,
+                          //                 )));
+                          //   },
+                          //   child: Text(
+                          //     'view more',
+                          //     style: regularTextStyle,
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                      // _buildListUser(),
+                    ] +
+                        getPList(),
+                  ),
+                ),
+              ),
+            )
+                    : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(EvaIcons.wifiOff,size: 70,),
+                      Text(
+                        'Turn on your internet connection',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'There are no bottons to push :)',
+              ),
+              Text(
+                'Just turn off your internet.',
+              ),
+            ],
           ),
         ),
+
+
+
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             checkIfTokenExists(() {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AddList(),
-                  )).then((value) =>Provider.of<ListCalls>(context,listen: false).getUserTaskLists());
-            }, context);
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddList(),
+                      ))
+                  .then((value) =>
+                      Provider.of<ListCalls>(context, listen: false)
+                          .getUserTaskLists());
+            }, context)
+                .then((value) => Provider.of<ListCalls>(context, listen: false)
+                    .getUserTaskLists());
           },
           backgroundColor: Colors.black,
           child: const Icon(Icons.add),
@@ -353,7 +305,9 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
               child: SizedBox(
                 height: 50,
                 child: ListView.builder(
-                    itemCount: Provider.of<TagsServices>(context,listen: false).servicesLists.length,
+                    itemCount: Provider.of<TagsServices>(context, listen: false)
+                        .servicesLists
+                        .length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       bool selected = false;
@@ -367,12 +321,20 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                       animationController.forward();
                       return FilterChipWidget(
                         //backgroundColor: primaryColor,
-                        chipName: Provider.of<TagsServices>(context,listen: false).servicesLists[index],
+                        chipName:
+                            Provider.of<TagsServices>(context, listen: false)
+                                .servicesLists[index],
                         onSelect: (bool value) {
-                          _filterByTags(Provider.of<TagsServices>(context,listen: false).servicesLists[index].toString());
+                          _filterByTags(
+                              Provider.of<TagsServices>(context, listen: false)
+                                  .servicesLists[index]
+                                  .toString());
                         },
                         onDeSelect: () {
-                          _removeByTags(Provider.of<TagsServices>(context,listen: false).servicesLists[index].toString());
+                          _removeByTags(
+                              Provider.of<TagsServices>(context, listen: false)
+                                  .servicesLists[index]
+                                  .toString());
                         },
                       );
                     }),
@@ -391,47 +353,15 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     return isLoading
         ? getShimmerLoading(80, 400)
         : ListItemHorizontal(
-            taskListData: Provider.of<ListCalls>(context,listen: false).userTasksLists[index],
+            taskListData: Provider.of<ListCalls>(context, listen: false)
+                .userTasksLists[index],
             animationController: animationController,
             animation: animation);
   }
 
-  Widget _buildListAdminLists() {
-    return SingleChildScrollView(
-        child: Column(
-      children: [
-        SizedBox(
-          height: 400,
-          child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  // crossAxisSpacing: 5,
-                  // mainAxisSpacing: 5,
-                  childAspectRatio: 0.6),
-              itemCount: taskLists.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                var animation = Tween(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: animationController,
-                    curve: const Interval((1 / 6) * 5, 1.0,
-                        curve: Curves.fastOutSlowIn),
-                  ),
-                );
-                animationController.forward();
-                return ListComponent(
-                  taskList: taskLists[index],
-                  animationController: animationController,
-                  animation: animation,
-                );
-              }),
-        )
-      ],
-    ));
-  }
-
   _filterByTags(text) {
-    for (var element in taskLists) {
+    for (var element
+        in Provider.of<ListCalls>(context, listen: false).tasksLists) {
       if (element.tags.contains(text)) {
         print(element.title);
         if (foundTaskLists.contains(element) == false) {
@@ -459,18 +389,6 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
   void _runFilter(String enteredKeyword) {
     List<TaskList> results = [];
     List<TaskList> userResults = [];
-    // if (enteredKeyword.isEmpty) {
-    //   // if the search field is empty or only contains white-space, we'll display all users
-    //   setState(() {
-    //     results = taskLists;
-    //
-    //   });
-    // } else {
-    //   results = taskLists
-    //       .where((taskList) => taskList.title!.toLowerCase()
-    //       .contains(enteredKeyword.toLowerCase()))
-    //       .toList();
-    // }
 
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
@@ -489,19 +407,28 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
     });
   }
 
+  bool? checkIsFavorite(List<String> list, listId) {
+    if (list.contains(listId)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   List<Widget> getPList() {
     List<Widget> noList = [];
     var cout = 0;
     final columCount = 2;
-    for (var i = 0; i < Provider.of<ListCalls>(context,listen :false).tasksLists.length / columCount; i++) {
+    for (var i = 0; i < taskLists.length / columCount; i++) {
       List<Widget> listUI = [];
       for (var i = 0; i < columCount; i++) {
         try {
-          final date = Provider.of<ListCalls>(context,listen :false).tasksLists[cout];
+          final date = taskLists[cout];
+
           var animation = Tween(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
               parent: animationController,
-              curve: Interval((1 / Provider.of<ListCalls>(context,listen :false).tasksLists.length) * cout, 1.0,
+              curve: Interval((1 / taskLists.length) * cout, 1.0,
                   curve: Curves.fastOutSlowIn),
             ),
           );
@@ -513,6 +440,10 @@ class _ListePageState extends State<ListePage> with TickerProviderStateMixin {
                     taskList: date,
                     animation: animation,
                     animationController: animationController,
+                    isSelected: checkIsFavorite(
+                        Provider.of<FavoriteCalls>(context, listen: false)
+                            .favoriteListId,
+                        date.id)!,
                   ),
           ));
           cout += 1;

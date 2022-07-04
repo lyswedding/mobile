@@ -17,7 +17,8 @@ import 'package:shimmer/shimmer.dart';
 class ListDetails extends StatefulWidget {
   final TaskList taskList;
   final bool isAdmin;
-  ListDetails({required this.taskList, this.isAdmin = true});
+  bool isSelected;
+  ListDetails({required this.taskList, this.isAdmin = true,required this.isSelected});
 
   @override
   _ListDetailsState createState() => _ListDetailsState();
@@ -26,7 +27,6 @@ class ListDetails extends StatefulWidget {
 class _ListDetailsState extends State<ListDetails>
     with TickerProviderStateMixin {
   late AnimationController animationController;
-  bool isSelected = false;
   bool isLoading = true;
   @override
   void initState() {
@@ -36,6 +36,7 @@ class _ListDetailsState extends State<ListDetails>
       });
     });
     // TODO: implement initState
+    print(widget.isSelected);
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
@@ -142,9 +143,9 @@ class _ListDetailsState extends State<ListDetails>
                             ),
                             onTap: () {
                               setState(() {
-                                isSelected = !isSelected;
+                                widget.isSelected = !widget.isSelected;
                               });
-                              if (isSelected) {
+                              if (widget.isSelected) {
                                 checkIfTokenExists(() {
                                   callAddToFavorite(widget.taskList.id);
                                 }, context);
@@ -152,11 +153,13 @@ class _ListDetailsState extends State<ListDetails>
                                 deleteFromFavorites(widget.taskList.id);
                               }
                             },
-                            child: const Padding(
+                            child: Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Icon(
-                                Icons.favorite_border_rounded,
-                                color: Color(0xffEB5890),
+                                widget.isSelected
+                                    ? EvaIcons.heart
+                                    : EvaIcons.heartOutline,
+                                color: const Color(0xffEB5890),
                               ),
                             ),
                           ),

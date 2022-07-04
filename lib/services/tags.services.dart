@@ -13,6 +13,7 @@ class TagsServices extends ChangeNotifier{
     var url;
     var response;
     isProcessing=true;
+    servicesLists.clear();
     url = Uri.parse('${URLS.BASE_URL}/taskslists/tags');
     response = await http.get(url, headers: {
       "Content-type": "application/json",
